@@ -1,5 +1,5 @@
 import { CssBaseline } from "@mui/material";
-import { TopBar } from "./components/global";
+import { TopBar, SideBar } from "./components/global";
 
 function App() {
   return (
@@ -7,6 +7,7 @@ function App() {
       {/* Reset CSS to default */}
       <CssBaseline />
       <div className="app">
+        <SideBar />
         <main className="content">
           <TopBar />
         </main>
