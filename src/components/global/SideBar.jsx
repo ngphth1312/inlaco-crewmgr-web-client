@@ -18,15 +18,21 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   return (
     <MenuItem
       active={selected === title}
-      style={
-        {
-          color: COLOR.primary_white,
-        }
-      }
+      style={{
+        color: COLOR.primary_white,
+      }}
       onClick={() => setSelected(title)}
       icon={icon}
     >
-      <Typography>{title}</Typography>
+      <Typography
+        sx={{
+          whiteSpace: "nowrap", // Prevent text wrapping
+          overflow: "hidden", // Hide overflowing text
+          textOverflow: "ellipsis", // Add the ellipsis
+        }}
+      >
+        {title}
+      </Typography>
       <Link to={to} />
     </MenuItem>
   );
@@ -38,7 +44,11 @@ const SideBar = () => {
 
   return (
     <Box>
-      <Sidebar collapsed={isCollapsed} backgroundColor={COLOR.primary_blue}>
+      <Sidebar
+        collapsed={isCollapsed}
+        backgroundColor={COLOR.primary_blue}
+        style={{ height: "100%" }}
+      >
         <Menu
           iconShape="square"
           menuItemStyles={{
@@ -47,6 +57,9 @@ const SideBar = () => {
               if (level === 0)
                 return {
                   backgroundColor: active ? COLOR.secondary_blue : undefined,
+                  "&:hover": {
+                    backgroundColor: COLOR.primary_hover_blue,
+                  },
                 };
             },
           }}
@@ -117,20 +130,23 @@ const SideBar = () => {
             <Typography
               variant="h6"
               color={COLOR.primary_gold}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{
+                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
             >
-              Thuyền viên
+              {isCollapsed ? "TV" : "Thuyền Viên"}
             </Typography>
             <Item
               title="Thông tin thuyền viên"
-              to="/team"
+              to="/crewInfos"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Lịch điều động"
-              to="/contacts"
+              to="/crewMobilization"
               icon={<DirectionsBoatOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -139,27 +155,30 @@ const SideBar = () => {
             <Typography
               variant="h6"
               color={COLOR.primary_gold}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{
+                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
             >
-              Hợp đồng
+              {isCollapsed ? "HĐ" : "Hợp Đồng"}
             </Typography>
             <Item
               title="Hợp đồng Thuyền viên"
-              to="/form"
+              to="/crewContract"
               icon={<AssignmentIndOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Hợp đồng Cung ứng"
-              to="/calendar"
+              to="/supplyContract"
               icon={<RequestQuoteOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Mẫu hợp đồng"
-              to="/faq"
+              to="/templateContract"
               icon={<DescriptionOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -168,27 +187,30 @@ const SideBar = () => {
             <Typography
               variant="h6"
               color={COLOR.primary_gold}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{
+                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
             >
               Khác
             </Typography>
             <Item
               title="Yêu cầu Cung ứng"
-              to="/bar"
+              to="/supplyRequest"
               icon={<MarkEmailUnreadOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Tuyển dụng"
-              to="/pie"
+              to="/crewRecruitment"
               icon={<HowToRegOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Đào tạo"
-              to="/line"
+              to="/crewTraining"
               icon={<WorkspacePremiumOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
