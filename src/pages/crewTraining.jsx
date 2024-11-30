@@ -1,10 +1,18 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Header } from "../components/global";
+import { Box } from "@mui/material";
 
 const CrewTraining = () => {
   return (
     <div>
-      <Typography>CrewTraining</Typography>
+      <Box m="20px">
+        <Box>
+          <Header
+            title="ĐÀO TẠO"
+            subtitle="Danh sách các khóa đào tạo"
+          />
+        </Box>
+      </Box>
     </div>
   );
 };

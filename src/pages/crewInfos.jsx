@@ -1,10 +1,18 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Header } from "../components/global";
+import { Box } from "@mui/material";
 
 const CrewInfos = () => {
   return (
     <div>
-      <Typography>CrewInfos</Typography>
+      <Box m="20px">
+        <Box>
+          <Header
+            title="THÔNG TIN THUYỀN VIÊN"
+            subtitle="Danh sách Thuyền viên công ty"
+          />
+        </Box>
+      </Box>
     </div>
   );
 };

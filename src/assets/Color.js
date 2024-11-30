@@ -16,6 +16,9 @@ export const COLOR = {
   primary_gold: "#FFC860 ",
 
   //Text color
+  primary_black: "#1A1A1A",
+  secondary_black: "#333333",
+  primary_black_placeholder: "#4F4F4F",
   primary_gray: "#0F3A6B",
   secondary_gray: "#4D5C70",
 };

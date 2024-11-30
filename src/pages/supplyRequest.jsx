@@ -1,10 +1,18 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Header } from "../components/global";
+import { Box } from "@mui/material";
 
 const SupplyRequest = () => {
   return (
     <div>
-      <Typography>SupplyRequest</Typography>
+      <Box m="20px">
+        <Box>
+          <Header
+            title="YÊU CẦU CUNG ỨNG"
+            subtitle="Danh sách các yêu cầu cung ứng thuyền viên"
+          />
+        </Box>
+      </Box>
     </div>
   );
 };
