@@ -16,25 +16,27 @@ import { COLOR } from "../../assets/Color";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   return (
-    <MenuItem
-      active={selected === title}
-      style={{
-        color: COLOR.primary_white,
-      }}
-      onClick={() => setSelected(title)}
-      icon={icon}
-    >
-      <Typography
-        sx={{
-          whiteSpace: "nowrap", // Prevent text wrapping
-          overflow: "hidden", // Hide overflowing text
-          textOverflow: "ellipsis", // Add the ellipsis
+    <Link to={to} style={{textDecoration: 'none'}}>
+      <MenuItem
+        active={selected === title}
+        style={{
+          color: COLOR.primary_white,
         }}
+        onClick={() => setSelected(title)}
+        icon={icon}
       >
-        {title}
-      </Typography>
-      <Link to={to} />
-    </MenuItem>
+        <Typography
+          sx={{
+            whiteSpace: "nowrap", // Prevent text wrapping
+            overflow: "hidden", // Hide overflowing text
+            textOverflow: "ellipsis", // Add the ellipsis
+            fontSize: 15,
+          }}
+        >
+          {title}
+        </Typography>
+      </MenuItem>
+    </Link>
   );
 };
 
@@ -47,7 +49,7 @@ const SideBar = () => {
       <Sidebar
         collapsed={isCollapsed}
         backgroundColor={COLOR.primary_blue}
-        style={{ height: "100%" }}
+        style={{ height: "100%", }}
       >
         <Menu
           iconShape="square"
@@ -111,7 +113,7 @@ const SideBar = () => {
                 >
                   Trần Võ Sơn Tùng
                 </Typography>
-                <Typography variant="h6" color={COLOR.primary_orange}>
+                <Typography variant="h6" color={COLOR.primary_gold}>
                   Admin
                 </Typography>
               </Box>
@@ -138,7 +140,7 @@ const SideBar = () => {
               {isCollapsed ? "TV" : "Thuyền Viên"}
             </Typography>
             <Item
-              title="Thông tin thuyền viên"
+              title="Thông tin Thuyền viên"
               to="/crewInfos"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
@@ -177,7 +179,7 @@ const SideBar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Mẫu hợp đồng"
+              title="Mẫu Hợp đồng"
               to="/templateContract"
               icon={<DescriptionOutlinedIcon />}
               selected={selected}

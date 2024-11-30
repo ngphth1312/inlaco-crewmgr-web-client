@@ -11,11 +11,11 @@ export const COLOR = {
   secondary_white: "#E8EFF7",
 
   //Alert
-  primary_green: "#5ABF80 ",
-  primary_orange: "#E74C3C ",
+  primary_green: "#5ABF80",
+  primary_orange: "#E74C3C",
   primary_gold: "#FFC860 ",
 
   //Text color
   primary_gray: "#0F3A6B",
-  secondary_gray: "#4D5C70 ",
+  secondary_gray: "#4D5C70",
 };
