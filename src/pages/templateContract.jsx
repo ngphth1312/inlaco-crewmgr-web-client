@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "../components/global";
+import { PageTitle } from "../components/global";
 import { Box } from "@mui/material";
 
 const TemplateContract = () => {
@@ -7,7 +7,7 @@ const TemplateContract = () => {
     <div>
       <Box m="20px">
         <Box>
-          <Header
+          <PageTitle
             title="MẪU HỢP ĐỒNG"
             subtitle="Danh sách các template mẫu của các loại hợp đồng"
           />

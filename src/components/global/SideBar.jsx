@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DirectionsBoatOutlinedIcon from "@mui/icons-material/DirectionsBoatOutlined";
@@ -15,28 +15,31 @@ import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOu
 import { COLOR } from "../../assets/Color";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
+  const navigate = useNavigate();
+  
   return (
-    <Link to={to} style={{textDecoration: 'none'}}>
-      <MenuItem
-        active={selected === title}
-        style={{
-          color: COLOR.primary_white,
+    <MenuItem
+      active={selected === title}
+      style={{
+        color: COLOR.primary_white,
+      }}
+      onClick={() => {
+        setSelected(title);
+        navigate(to);
+      }}
+      icon={icon}
+    >
+      <Typography
+        sx={{
+          whiteSpace: "nowrap", // Prevent text wrapping
+          overflow: "hidden", // Hide overflowing text
+          textOverflow: "ellipsis", // Add the ellipsis
+          fontSize: 15,
         }}
-        onClick={() => setSelected(title)}
-        icon={icon}
       >
-        <Typography
-          sx={{
-            whiteSpace: "nowrap", // Prevent text wrapping
-            overflow: "hidden", // Hide overflowing text
-            textOverflow: "ellipsis", // Add the ellipsis
-            fontSize: 15,
-          }}
-        >
-          {title}
-        </Typography>
-      </MenuItem>
-    </Link>
+        {title}
+      </Typography>
+    </MenuItem>
   );
 };
 

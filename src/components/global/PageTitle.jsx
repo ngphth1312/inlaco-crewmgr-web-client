@@ -1,7 +1,7 @@
 import { Typography, Box } from "@mui/material";
 import { COLOR } from "../../assets/Color";
 
-const Header = ({ title, subtitle }) => {
+const PageTitle = ({ title, subtitle }) => {
   return (
     <Box mb="30px">
       <Typography
@@ -18,4 +18,4 @@ const Header = ({ title, subtitle }) => {
   );
 };
 
-export default Header;
+export default PageTitle;

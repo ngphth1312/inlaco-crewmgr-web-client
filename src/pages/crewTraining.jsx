@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "../components/global";
+import { PageTitle } from "../components/global";
 import { Box } from "@mui/material";
 
 const CrewTraining = () => {
@@ -7,7 +7,7 @@ const CrewTraining = () => {
     <div>
       <Box m="20px">
         <Box>
-          <Header
+          <PageTitle
             title="ĐÀO TẠO"
             subtitle="Danh sách các khóa đào tạo"
           />

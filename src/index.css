@@ -3,18 +3,26 @@ body,
 #root,
 .app,
 .content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   height: 100%;
-  width: 100%;
 }
 
 .app{
   display: flex;
-  position: relative;
+  flex-direction: row;
   background-color: "#E8EFF7";
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
+main {
+  flex: 1; /* Fill remaining vertical space */
+  overflow-y: auto; /* Enable vertical scrolling for the main content */
+  background-color: #E8EFF7; /* Example background */
+}
 
 ::-webkit-scrollbar{
   /* width: 4px; */
