@@ -1,12 +1,20 @@
 html,
 body,
 #root,
+.login,
 .app,
 .content {
   display: flex;
   flex: 1;
   flex-direction: column;
   height: 100%;
+}
+
+.login {
+  background-color: #3374C5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app{
