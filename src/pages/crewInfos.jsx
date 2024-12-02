@@ -1,5 +1,5 @@
 import React from "react";
-import { PageTitle, NoValuesOverlay } from "../components/global";
+import { PageTitle, NoValuesOverlay, SearchBar } from "../components/global";
 import { Box, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { mockCrewMemberInfos } from "../data/mockData";
@@ -102,10 +102,9 @@ const CrewInfos = () => {
         </Box>
         <Box
           m="40px 0 0 0"
-          height="70vh"
+          height="62vh"
           maxHeight={550}
           maxWidth={1600}
-          backgroundColor="#FFFFFF"
           sx={{
             "& .MuiDataGrid-columnHeader": {
               backgroundColor: COLOR.secondary_blue,
@@ -117,6 +116,15 @@ const CrewInfos = () => {
             },
           }}
         >
+          <SearchBar
+            placeholder={"Nhập thông tin thuyền viên cần tìm kiếm (VD: Tên thuyền viên, Chức vụ,...)"}
+            color={COLOR.primary_black}
+            backgroundColor={COLOR.secondary_white}
+            sx={{
+              width: "40%",
+              marginBottom: 2,
+            }}
+          />
           <DataGrid
             disableRowSelectionOnClick
             disableColumnMenu
@@ -131,6 +139,7 @@ const CrewInfos = () => {
               },
             }}
             sx={{
+              backgroundColor: "#FFF",
               headerAlign: "center",
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontSize: 16,
