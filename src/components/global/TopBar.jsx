@@ -14,7 +14,7 @@ const TopBar = () => {
       {/* SEARCH BAR */}
       <Box
         display="flex"
-        backgroundColor={COLOR.primary_blue}
+        backgroundColor={COLOR.secondary_blue}
         borderRadius="3px"
       >
         <InputBase

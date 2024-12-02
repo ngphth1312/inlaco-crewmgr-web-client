@@ -12,7 +12,7 @@ body,
 .app{
   display: flex;
   flex-direction: row;
-  background-color: "#E8EFF7";
+  background-color: "#F5F9FC";
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -21,7 +21,7 @@ body,
 main {
   flex: 1; /* Fill remaining vertical space */
   overflow-y: auto; /* Enable vertical scrolling for the main content */
-  background-color: #E8EFF7; /* Example background */
+  background-color: #F5F9FC; /* Example background */
 }
 
 ::-webkit-scrollbar{
