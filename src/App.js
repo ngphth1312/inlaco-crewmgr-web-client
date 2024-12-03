@@ -2,7 +2,7 @@ import { CssBaseline } from "@mui/material";
 import { TopBar, SideBar } from "./components/global";
 import { Routes, Route } from "react-router";
 
-import LoginPage from "./pages/loginPage";
+// import LoginPage from "./pages/loginPage";
 import HomePage from "./pages/homePage";
 import CrewInfos from "./pages/crewInfos";
 import CrewMobilization from "./pages/crewMobilization";

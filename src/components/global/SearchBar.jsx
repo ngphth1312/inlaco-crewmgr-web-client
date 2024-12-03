@@ -9,7 +9,6 @@ const SearchBar = ({
   backgroundColor = COLOR.primary_white,
   color = COLOR.primary_black,
   sx = [],
-  style,
   onChange,
   onSearchClick,
 }) => {
