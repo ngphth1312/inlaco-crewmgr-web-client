@@ -1,9 +1,10 @@
 import React from "react";
 import { PageTitle, NoValuesOverlay, SearchBar } from "../components/global";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography, } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { mockCrewMemberInfos } from "../data/mockData";
 import { COLOR } from "../assets/Color";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 // import { useNavigate } from "react-router";
 
 const CrewInfos = () => {
@@ -74,7 +75,6 @@ const CrewInfos = () => {
         return (
           <Button
             variant="contained"
-            color="primary"
             size="small"
             onClick={() => onMemberDetailClick(params?.id)}
             sx={{
@@ -116,15 +116,37 @@ const CrewInfos = () => {
             },
           }}
         >
-          <SearchBar
-            placeholder={"Nhập thông tin thuyền viên cần tìm kiếm (VD: Tên thuyền viên, Chức vụ,...)"}
-            color={COLOR.primary_black}
-            backgroundColor={COLOR.secondary_white}
+          <Box
             sx={{
-              width: "40%",
-              marginBottom: 2,
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              paddingBottom: 2,
+              justifyContent: "space-between",
             }}
-          />
+          >
+            <SearchBar
+              placeholder={
+                "Nhập thông tin thuyền viên cần tìm kiếm (VD: Tên thuyền viên, Chức vụ,...)"
+              }
+              color={COLOR.primary_black}
+              backgroundColor={COLOR.secondary_white}
+              sx={{
+                width: "40%",
+              }}
+            />
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: COLOR.primary_gold,
+                color: COLOR.primary_black,
+                borderRadius: 2,
+              }}
+            >
+              <AddCircleRoundedIcon />
+              <Typography sx={{ fontWeight: 700, marginLeft: "4px", textTransform: "capitalize" }}>Thêm thuyền viên</Typography>
+            </Button>
+          </Box>
           <DataGrid
             disableRowSelectionOnClick
             disableColumnMenu
