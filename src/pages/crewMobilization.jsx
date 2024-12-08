@@ -3,7 +3,7 @@ import { PageTitle, NoValuesOverlay, SwitchBar } from "../components/global";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { masterAssignmentSchedule } from "../data/mockData";
-import { ShipInfoCard } from "../components/mobilization";
+import { ShipInfoCard, ScheduleCard } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 // import { useNavigate } from "react-router";
@@ -51,11 +51,11 @@ const CrewInfos = () => {
       renderCell: (params) => {
         return (
           <ShipInfoCard
-            IMONumber={params?.value?.IMONumber}
-            name={params?.value?.name}
-            countryCode={params?.value?.countryCode}
-            type={params?.value?.type}
-            imageUrl={params?.value?.imageUrl}
+            IMONumber={params?.row?.shipInfo?.IMONumber}
+            name={params?.row?.shipInfo?.name}
+            countryCode={params?.row?.shipInfo?.countryCode}
+            type={params?.row?.shipInfo?.type}
+            imageUrl={params?.row?.shipInfo?.imageUrl}
           />
         );
       },
@@ -67,6 +67,16 @@ const CrewInfos = () => {
       flex: 2,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <ScheduleCard
+            startLocation={params?.row?.startLocation}
+            startDate={params?.row?.startDate}
+            endLocation={params?.row?.endLocation}
+            estimatedEndTime={params?.row?.estimatedEndTime}
+          />
+        );
+      },
     },
     {
       field: "detail",

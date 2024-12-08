@@ -62,6 +62,7 @@ const ShipInfoCard = ({
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          color: COLOR.primary_black
         }}
       >
         <p style={{ margin: 0, textAlign: "left", overflow: "hidden" }}>
