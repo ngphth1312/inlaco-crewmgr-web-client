@@ -461,3 +461,120 @@ export const mockCrewMemberInfos = [
     workExp: "1 năm",
   },
 ];
+
+export const masterAssignmentSchedule = [
+  {
+    id: "MA-202401",
+    partnerName: "CÔNG TY TNHH KỸ THUẬT HÀNG HẢI SÀI GÒN CỬU LONG",
+    shipInfo: {
+      id: "SH-01",
+      IMONumber: "9538335",
+      name: "RUI NING 7",
+      countryCode: "CN",
+      type: "Tàu hàng",
+      description: "", //
+      imageUrl:
+        "https://images.marinetraffic.com/collection/3423988.webp?size=800",
+      registrationNumber: "", //
+    },
+    startDate: "2024-12-07 18:36 (UTC+7)", //timeOfDeparture
+    estimatedEndTime: "2024-12-12 07:00 (UTC+7)", //estimatedTimeOfArrival
+    startLocation: "VN SGN", //departureLocation
+    endLocation: "ID MUB", //arrivalLocation
+  },
+  {
+    id: "MA-202402",
+    partnerName: "VIETNAM SHIPCHANDLER AND REPAIR WORKSHOP",
+    shipInfo: {
+      id: "SH-02",
+      IMONumber: "9835056",
+      name: "ENDEAVOUR II",
+      countryCode: "SG",
+      type: "Tàu dầu",
+      description: "", //
+      imageUrl:
+        "https://images.marinetraffic.com/collection/5192604.webp?size=800",
+      registrationNumber: "", //
+    },
+    startDate: "2024-12-02 18:36 (UTC+7)", //timeOfDeparture
+    estimatedEndTime: "2024-12-08 12:49 (UTC+7)", //estimatedTimeOfArrival
+    startLocation: "ID MUB", //departureLocation
+    endLocation: "VN CMT", //arrivalLocation
+  },
+  {
+    id: "MA-202403",
+    partnerName: "CÔNG TY TNHH KỸ THUẬT QMI",
+    shipInfo: {
+      id: "SH-03",
+      IMONumber: "9426946",
+      name: "PVT MERCURY",
+      countryCode: "VN",
+      type: "Tàu chở dầu thô",
+      description: "", //
+      imageUrl:
+        "https://images.marinetraffic.com/collection/1837842.webp?size=800",
+      registrationNumber: "", //
+    },
+    startDate: "2024-11-19 13:58 (UTC+7)", //timeOfDeparture
+    estimatedEndTime: "2024-12-08 15:00 (UTC+7)", //estimatedTimeOfArrival
+    startLocation: "VN CLI", //departureLocation
+    endLocation: "SG SIN", //arrivalLocation
+  },
+  {
+    id: "MA-202404",
+    partnerName: "CÔNG TY TNHH ĐẠI LÝ VẬN TẢI HIGH SEA",
+    shipInfo: {
+      id: "SH-04",
+      IMONumber: "9187904",
+      name: "SC HONGKONG",
+      countryCode: "HK",
+      type: "Tàu chở dầu thô - Loại hàng nguy hiểm B",
+      description: "", //
+      imageUrl:
+        "https://images.marinetraffic.com/collection/593008.webp?size=800",
+      registrationNumber: "", //
+    },
+    startDate: "2024-12-06 04:59 (UTC+7)", //timeOfDeparture
+    estimatedEndTime: "2024-12-08 01:00 (UTC+7)", //estimatedTimeOfArrival
+    startLocation: "MY KUA", //departureLocation
+    endLocation: "VN DNA", //arrivalLocation
+  },
+  {
+    id: "MA-202405",
+    partnerName: "CÔNG TY CỔ PHẦN SỬA CHỮA TÀU VÀ DỊCH VỤ LẶN BIG SEA",
+    shipInfo: {
+      id: "SH-05",
+      IMONumber: "9406271",
+      name: "DANUM 173",
+      countryCode: "MY",
+      type: "Tàu hàng",
+      description: "", //
+      imageUrl:
+        "https://images.marinetraffic.com/collection/3413680.webp?size=800",
+      registrationNumber: "", //
+    },
+    startDate: "2024-12-05 21:52 (UTC+7)", //timeOfDeparture
+    estimatedEndTime: "2024-12-08 18:00 (UTC+7)", //estimatedTimeOfArrival
+    startLocation: "CN QZH", //departureLocation
+    endLocation: "VN SGN", //arrivalLocation
+  },
+  {
+    id: "MA-202406",
+    partnerName: "CÔNG TY TNHH KỸ THUẬT TÀU VÀ DỊCH VỤ HÀNG HẢI NICE SEA",
+    shipInfo: {
+      id: "SH-06",
+      IMONumber: "9146780",
+      name: "MORNING VINAFCO",
+      countryCode: "VN",
+      type: "Tàu hàng",
+      description: "", //
+      imageUrl:
+        "https://images.marinetraffic.com/collection/370804.webp?size=800",
+      registrationNumber: "", //
+    },
+    startDate: "2024-12-07 00:09 (UTC+7)", //timeOfDeparture
+    estimatedEndTime: "2024-12-08 22:00 (UTC+7)", //estimatedTimeOfArrival
+    startLocation: "VN DAD", //departureLocation
+    endLocation: "VN SGN", //arrivalLocation
+  },
+];

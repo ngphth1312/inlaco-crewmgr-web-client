@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { PageTitle, NoValuesOverlay, SwitchBar } from "../components/global";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockCrewMemberInfos } from "../data/mockData";
+import { masterAssignmentSchedule } from "../data/mockData";
+import { ShipInfoCard } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 // import { useNavigate } from "react-router";
@@ -11,56 +12,59 @@ const CrewInfos = () => {
   // const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    console.log("Navigate to info page of Member with ID: " + id);
+    console.log("Navigate to detail page of mobilization with ID: " + id);
   };
 
   const columns = [
     {
       field: "id",
-      headerName: "Mã TV",
+      headerName: "Mã ĐĐ",
       sortable: false,
-      flex: 1,
+      flex: 0.75,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
+          {params.value}
+        </div>
+      ),
     },
     {
-      field: "fullName",
-      headerName: "Họ tên",
+      field: "partnerName",
+      headerName: "Tên công ty",
       sortable: false,
       flex: 2,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
+          {params.value}
+        </div>
+      ),
     },
     {
-      field: "dob",
-      headerName: "Ngày sinh",
+      field: "shipInfo",
+      headerName: "Thông tin tàu",
       sortable: false,
-      flex: 1,
-      align: "center",
+      flex: 3,
       headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <ShipInfoCard
+            IMONumber={params?.value?.IMONumber}
+            name={params?.value?.name}
+            countryCode={params?.value?.countryCode}
+            type={params?.value?.type}
+            imageUrl={params?.value?.imageUrl}
+          />
+        );
+      },
     },
     {
-      field: "phoneNumber",
-      headerName: "SĐT",
-      sortable: false,
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "position",
-      headerName: "Chức vụ",
+      field: "schedule",
+      headerName: "Lịch trình",
       sortable: false,
       flex: 2,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: (params) => params?.name,
-    },
-    {
-      field: "workExp",
-      headerName: "Số năm KN",
-      sortable: false,
-      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -68,24 +72,28 @@ const CrewInfos = () => {
       field: "detail",
       headerName: "Chi tiết",
       sortable: false,
-      flex: 1,
+      flex: 0.75,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => onMemberDetailClick(params?.id)}
-            sx={{
-              backgroundColor: COLOR.primary_green,
-              color: COLOR.primary_black,
-              fontWeight: 700,
-              textTransform: "capitalize",
-            }}
+          <div
+            style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
-            Chi tiết
-          </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => onMemberDetailClick(params?.id)}
+              sx={{
+                backgroundColor: COLOR.primary_green,
+                color: COLOR.primary_black,
+                fontWeight: 700,
+                textTransform: "capitalize",
+              }}
+            >
+              Chi tiết
+            </Button>
+          </div>
         );
       },
     },
@@ -95,7 +103,7 @@ const CrewInfos = () => {
 
   const handleTabChange = (newValue) => {
     setTabValue(newValue);
-  }
+  };
 
   return (
     <div>
@@ -113,7 +121,7 @@ const CrewInfos = () => {
           onChange={(newValue) => handleTabChange(newValue)}
           color={COLOR.secondary_blue}
           sx={{
-            backgroundColor: COLOR.secondary_white
+            backgroundColor: COLOR.secondary_white,
           }}
         />
         {tabValue === 0 ? (
@@ -166,7 +174,8 @@ const CrewInfos = () => {
               disableRowSelectionOnClick
               disableColumnMenu
               disableColumnResize
-              rows={mockCrewMemberInfos}
+              getRowHeight={() => "auto"}
+              rows={masterAssignmentSchedule}
               columns={columns}
               slots={{ noRowsOverlay: NoValuesOverlay }}
               pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
@@ -186,12 +195,7 @@ const CrewInfos = () => {
             />
           </Box>
         ) : (
-          <Box
-            m="40px 0 0 0"
-            height="62vh"
-            maxHeight={550}
-            maxWidth={1600}
-          >
+          <Box m="40px 0 0 0" height="62vh" maxHeight={550} maxWidth={1600}>
             <Typography>THỜI GIAN BIỂU</Typography>
           </Box>
         )}
