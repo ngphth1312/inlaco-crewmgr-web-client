@@ -578,3 +578,60 @@ export const masterAssignmentSchedule = [
     endLocation: "VN SGN", //arrivalLocation
   },
 ];
+
+export const mockCrewContracts = [
+  {
+    id: "CT-202401",
+    parties: {
+      name: "Nguyễn Văn A",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 01",
+    activationDate: "10/12/2024",
+    expiredDate: "09/12/2025",
+  },
+  {
+    id: "CT-202402",
+    parties: {
+      name: "Nguyễn Phú B",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 02",
+    activationDate: "13/12/2024",
+    expiredDate: "13/12/2025",
+  },
+  {
+    id: "CT-202403",
+    parties: {
+      name: "Trần Võ Sơn C",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 03",
+    activationDate: "02/03/2024",
+    expiredDate: "01/03/2026",
+  },
+  {
+    id: "CT-202404",
+    parties: {
+      name: "Nguyễn Thị D",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 04",
+    activationDate: "08/10/2024",
+    expiredDate: "08/10/2027",
+  },
+  {
+    id: "CT-202405",
+    parties: {
+      name: "Nguyễn Văn Quốc E",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 05",
+    activationDate: "26/08/2024",
+    expiredDate: "25/02/2025",
+  },
+  {
+    id: "CT-202406",
+    parties: {
+      name: "Trần Văn F",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 06",
+    activationDate: "22/12/2024",
+    expiredDate: "21/06/2025",
+  },
+];
