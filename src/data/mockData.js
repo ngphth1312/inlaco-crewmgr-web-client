@@ -581,57 +581,120 @@ export const masterAssignmentSchedule = [
 
 export const mockCrewContracts = [
   {
-    id: "CT-202401",
+    id: "CCT-202401",
     parties: {
       name: "Nguyễn Văn A",
     },
-    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 01",
+    title: "HỢP ĐỒNG LAO ĐỘNG 01",
     activationDate: "10/12/2024",
     expiredDate: "09/12/2025",
   },
   {
-    id: "CT-202402",
+    id: "CCT-202402",
     parties: {
       name: "Nguyễn Phú B",
     },
-    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 02",
+    title: "HỢP ĐỒNG LAO ĐỘNG 02",
     activationDate: "13/12/2024",
-    expiredDate: "13/12/2025",
+    expiredDate: "12/12/2025",
   },
   {
-    id: "CT-202403",
+    id: "CCT-202403",
     parties: {
       name: "Trần Võ Sơn C",
     },
-    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 03",
+    title: "HỢP ĐỒNG LAO ĐỘNG 03",
     activationDate: "02/03/2024",
     expiredDate: "01/03/2026",
   },
   {
-    id: "CT-202404",
+    id: "CCT-202404",
     parties: {
       name: "Nguyễn Thị D",
     },
-    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 04",
+    title: "HỢP ĐỒNG LAO ĐỘNG 04",
     activationDate: "08/10/2024",
     expiredDate: "08/10/2027",
   },
   {
-    id: "CT-202405",
+    id: "CCT-202405",
     parties: {
       name: "Nguyễn Văn Quốc E",
     },
-    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 05",
+    title: "HỢP ĐỒNG LAO ĐỘNG 05",
     activationDate: "26/08/2024",
     expiredDate: "25/02/2025",
   },
   {
-    id: "CT-202406",
+    id: "CCT-202406",
     parties: {
       name: "Trần Văn F",
     },
-    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 06",
+    title: "HỢP ĐỒNG LAO ĐỘNG 06",
     activationDate: "22/12/2024",
     expiredDate: "21/06/2025",
+  },
+];
+
+export const mockSupplyContracts = [
+  {
+    id: "SCT-202401",
+    parties: {
+      name: "CÔNG TY TNHH KỸ THUẬT HÀNG HẢI SÀI GÒN CỬU LONG",
+      represent: "Nguyễn Văn A",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 01",
+    activationDate: "20/12/2024",
+    expiredDate: "19/02/2025",
+  },
+  {
+    id: "SCT-202402",
+    parties: {
+      name: "VIETNAM SHIPCHANDLER AND REPAIR WORKSHOP",
+      represent: "Nguyễn Phú B",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 02",
+    activationDate: "13/10/2024",
+    expiredDate: "12/01/2025",
+  },
+  {
+    id: "SCT-202403",
+    parties: {
+      name: "CÔNG TY TNHH KỸ THUẬT QMI",
+      represent: "Trần Võ Sơn C",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 03",
+    activationDate: "13/03/2024",
+    expiredDate: "12/01/2025",
+  },
+  {
+    id: "SCT-202404",
+    parties: {
+      name: "CÔNG TY TNHH ĐẠI LÝ VẬN TẢI HIGH SEA",
+      represent: "Nguyễn Thị D",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 04",
+    activationDate: "08/10/2024",
+    expiredDate: "07/12/2024",
+  },
+  {
+    id: "SCT-202405",
+    parties: {
+      name: "CÔNG TY CỔ PHẦN SỬA CHỮA TÀU VÀ DỊCH VỤ LẶN BIG SEA",
+      represent: "Nguyễn Văn Quốc E",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 05",
+    activationDate: "26/12/2024",
+    expiredDate: "25/01/2025",
+  },
+  {
+    id: "SCT-202406",
+    parties: {
+      name: "CÔNG TY TNHH KỸ THUẬT TÀU VÀ DỊCH VỤ HÀNG HẢI NICE SEA",
+      represent: "Trần Văn F",
+    },
+    title: "HỢP ĐỒNG CUNG ỨNG LAO ĐỘNG 06",
+    activationDate: "22/12/2024",
+    expiredDate: "21/03/2025",
   },
 ];
