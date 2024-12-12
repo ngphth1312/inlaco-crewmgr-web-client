@@ -42,7 +42,7 @@ const CrewContract = () => {
     },
     {
       field: "activationDate",
-      headerName: "SĐT",
+      headerName: "Ngày bắt đầu",
       sortable: false,
       flex: 1,
       align: "center",
@@ -50,7 +50,7 @@ const CrewContract = () => {
     },
     {
       field: "expiredDate",
-      headerName: "Chức vụ",
+      headerName: "Ngày kết thúc",
       sortable: false,
       flex: 1,
       align: "center",

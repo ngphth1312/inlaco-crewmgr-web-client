@@ -1,0 +1,1 @@
+export { default as TemplContrCard } from "./TemplContrCard.jsx"
