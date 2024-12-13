@@ -88,7 +88,7 @@ const CrewInfos = () => {
       renderCell: (params) => {
         return (
           <div
-            style={{ display: "flex", alignItems: "center", height: "100%" }}
+            style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "center" }}
           >
             <Button
               variant="contained"

@@ -23,13 +23,13 @@ const ShipInfoCard = ({
 
   return (
     <Grid key={id} size={3} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
-      <Card sx={{ position: "relative" }}>
+      <Card sx={{ position: "relative", }}>
         <IconButton
           aria-label="download"
           sx={{ position: "absolute", top: 5, right: 5, zIndex: 1 }}
         >
           <DownloadForOfflineRoundedIcon
-            sx={{ width: 32, height: 32, color: COLOR.secondary_blue }}
+            sx={{ width: 32, height: 32, color: COLOR.primary_gray }}
           />
         </IconButton>
         <CardMedia
