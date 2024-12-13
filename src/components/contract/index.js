@@ -1,1 +1,1 @@
-export { default as TemplContrCard } from "./TemplContrCard.jsx"
+export { default as TemplateContractCard } from "./TemplateContractCard"

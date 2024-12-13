@@ -5,44 +5,44 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { COLOR } from "../assets/Color";
-import { TemplContrCard } from "../components/contract";
+import { TemplateContractCard } from "../components/contract"
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
 const TemplateContract = () => {
 
   const mockData = [
     {
-      id: 1,
+      id: "001",
       title: "Mẫu hợp đồng Cung ứng thuyền viên 1",
       description: "Hợp đồng Cung ứng",
       image: "https://i.sstatic.net/y9DpT.jpg",
     },
     {
-      id: 2,
+      id: "002",
       title: "Mẫu hợp đồng Lao động thuyền viên 2",
       description: "Hợp đồng Lao động",
       image: "https://i.sstatic.net/y9DpT.jpg",
     },
     {
-      id: 3,
+      id: "003",
       title: "Mẫu hợp đồng Lao động thuyền viên 3",
       description: "Hợp đồng Lao động",
       image: "ttps://i.sstatic.net/y9DpT.jpg",
     },
     {
-      id: 4,
+      id: "004",
       title: "Mẫu hợp đồng Cung ứng thuyền viên 4",
       description: "Hợp đồng Cung ứng",
       image: "https://i.sstatic.net/y9DpT.jpg",
     },
     {
-      id: 5,
+      id: "005",
       title: "Mẫu hợp đồng Lao động thuyền viên 5",
       description: "Hợp đồng Lao động",
       image: "https://i.sstatic.net/y9DpT.jpg",
     },
     {
-      id: 6,
+      id: "006",
       title: "Mẫu hợp đồng Cung ứng thuyền viên 6",
       description: "Hợp đồng Cung ứng",
       image: "https://i.sstatic.net/y9DpT.jpg",
@@ -100,14 +100,16 @@ const TemplateContract = () => {
           </Button>
         </Box>
         <Grid container spacing={4}>
-          {mockData.map((item) => (
-            <TemplContrCard
-              id={item?.id}
-              image={item?.image}
-              title={item?.title}
-              description={item?.description}
-            />
-          ))}
+          {mockData.map((item) => {
+            return (
+              <TemplateContractCard
+                id={item?.id}
+                image={item?.image}
+                title={item?.title}
+                description={item?.description}
+              />
+            );
+          })}
         </Grid>
       </Box>
     </div>

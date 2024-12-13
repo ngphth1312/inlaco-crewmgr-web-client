@@ -3,9 +3,10 @@ import { PageTitle, NoValuesOverlay, SwitchBar } from "../components/global";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { masterAssignmentSchedule } from "../data/mockData";
-import { ShipInfoCard, ScheduleCard } from "../components/mobilization";
+import { ShipInfoCell, ScheduleCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 // import { useNavigate } from "react-router";
 
 const CrewInfos = () => {
@@ -24,7 +25,7 @@ const CrewInfos = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
           {params.value}
         </div>
       ),
@@ -37,7 +38,7 @@ const CrewInfos = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
           {params.value}
         </div>
       ),
@@ -50,12 +51,12 @@ const CrewInfos = () => {
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <ShipInfoCard
-            IMONumber={params?.row?.shipInfo?.IMONumber}
-            name={params?.row?.shipInfo?.name}
-            countryCode={params?.row?.shipInfo?.countryCode}
-            type={params?.row?.shipInfo?.type}
-            imageUrl={params?.row?.shipInfo?.imageUrl}
+          <ShipInfoCell
+            IMONumber={params?.value?.IMONumber}
+            name={params?.value?.name}
+            countryCode={params?.value?.countryCode}
+            type={params?.value?.type}
+            imageUrl={params?.value?.imageUrl}
           />
         );
       },
@@ -69,7 +70,7 @@ const CrewInfos = () => {
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <ScheduleCard
+          <ScheduleCell
             startLocation={params?.row?.startLocation}
             startDate={params?.row?.startDate}
             endLocation={params?.row?.endLocation}
@@ -88,7 +89,12 @@ const CrewInfos = () => {
       renderCell: (params) => {
         return (
           <div
-            style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "center" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+              justifyContent: "center",
+            }}
           >
             <Button
               variant="contained"
@@ -101,7 +107,14 @@ const CrewInfos = () => {
                 textTransform: "capitalize",
               }}
             >
-              Chi tiết
+              <ArrowForwardIosRoundedIcon
+                sx={{
+                  width: 18,
+                  height: 18,
+                  marginTop: "4px",
+                  marginBottom: "4px",
+                }}
+              />
             </Button>
           </div>
         );

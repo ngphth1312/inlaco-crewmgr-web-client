@@ -2,7 +2,7 @@ import { Box, } from "@mui/material";
 import { COLOR } from "../../assets/Color";
 import { useState } from "react";
 
-const ShipInfoCard = ({
+const ShipInfoCell = ({
   IMONumber,
   name,
   countryCode,
@@ -82,4 +82,4 @@ const ShipInfoCard = ({
   );
 };
 
-export default ShipInfoCard;
+export default ShipInfoCell;

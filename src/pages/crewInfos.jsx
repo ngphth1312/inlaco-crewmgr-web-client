@@ -5,6 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { mockCrewMemberInfos } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 // import { useNavigate } from "react-router";
 
 const CrewInfos = () => {
@@ -84,7 +85,14 @@ const CrewInfos = () => {
               textTransform: "capitalize",
             }}
           >
-            Chi tiết
+            <ArrowForwardIosRoundedIcon
+              sx={{
+                width: 18,
+                height: 18,
+                marginTop: "4px",
+                marginBottom: "4px",
+              }}
+            />
           </Button>
         );
       },

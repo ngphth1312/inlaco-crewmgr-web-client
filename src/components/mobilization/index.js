@@ -1,2 +1,2 @@
-export { default as ShipInfoCard } from "./ShipInfoCard";
-export { default as ScheduleCard } from "./ScheduleCard";
+export { default as ShipInfoCell } from "./ShipInfoCell";
+export { default as ScheduleCell } from "./ScheduleCell";

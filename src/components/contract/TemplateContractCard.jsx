@@ -10,11 +10,12 @@ import { useState } from "react";
 import DownloadForOfflineRoundedIcon from "@mui/icons-material/DownloadForOfflineRounded";
 import Grid from "@mui/material/Grid2";
 
-const ShipInfoCard = ({
+const TemplateContractCard = ({
   id,
   image,
   title,
   description,
+  size = 3,
   color = COLOR.primary_black,
   sx = [],
 }) => {
@@ -22,7 +23,7 @@ const ShipInfoCard = ({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Grid key={id} size={3} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid key={id} size={size} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card sx={{ position: "relative", }}>
         <IconButton
           aria-label="download"
@@ -72,4 +73,4 @@ const ShipInfoCard = ({
   );
 };
 
-export default ShipInfoCard;
+export default TemplateContractCard;
