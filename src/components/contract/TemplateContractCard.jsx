@@ -15,7 +15,7 @@ const TemplateContractCard = ({
   image,
   title,
   description,
-  size = 3,
+  gridSize = 3,
   color = COLOR.primary_black,
   sx = [],
 }) => {
@@ -23,7 +23,7 @@ const TemplateContractCard = ({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Grid key={id} size={size} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid key={id} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card sx={{ position: "relative", }}>
         <IconButton
           aria-label="download"

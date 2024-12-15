@@ -14,6 +14,7 @@ export const COLOR = {
   primary_green: "#5ABF80",
   primary_orange: "#E74C3C",
   primary_gold: "#FFC860 ",
+  secondary_gold: "#E6B350 ",
 
   //Text color
   primary_black: "#1A1A1A",

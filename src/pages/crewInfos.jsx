@@ -87,8 +87,8 @@ const CrewInfos = () => {
           >
             <ArrowForwardIosRoundedIcon
               sx={{
-                width: 18,
-                height: 18,
+                width: 15,
+                height: 15,
                 marginTop: "4px",
                 marginBottom: "4px",
               }}

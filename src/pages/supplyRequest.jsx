@@ -132,7 +132,7 @@ const CrewInfos = () => {
                 textTransform: "capitalize",
               }}
             >
-              <ArrowForwardIosRoundedIcon sx={{ width: 18, height: 18, marginTop: "4px", marginBottom: "4px", }} />
+              <ArrowForwardIosRoundedIcon sx={{ width: 15, height: 15, marginTop: "4px", marginBottom: "4px", }} />
             </Button>
           </div>
         );
