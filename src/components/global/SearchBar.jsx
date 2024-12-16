@@ -20,12 +20,16 @@ const SearchBar = ({
       borderRadius="3px"
     >
       <InputBase
-        sx={{ ml: 2, flex: 1, color: color, }}
+        sx={{ ml: 2, flex: 1, color: color }}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
       />
-      <IconButton onClick={onSearchClick} type="button" sx={{ p: 1, color: color }}>
+      <IconButton
+        onClick={onSearchClick}
+        type="button"
+        sx={{ p: 1, color: color }}
+      >
         <SearchIcon />
       </IconButton>
     </Box>

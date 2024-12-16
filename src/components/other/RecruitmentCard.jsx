@@ -13,6 +13,7 @@ const RecruitmentCard = ({ id, title, description, location, gridSize = 12, sx =
           borderRadius: 5,
           transition: "transform 0.3s, box-shadow 0.3s",
           "&:hover": {
+            cursor: "pointer",
             transform: "scale(1.005)", // Slight zoom
             boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.3)", // Darker shadow
           },
