@@ -8,8 +8,17 @@ const RecruitmentCard = ({ id, title, description, location, gridSize = 12, sx =
 
   return (
     <Grid size={gridSize} key={id} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
-      <Card sx={{ borderRadius: 5 }}>
-        <Box sx={{ display: "flex", position: "relative", padding: 4, }}>
+      <Card
+        sx={{
+          borderRadius: 5,
+          transition: "transform 0.3s, box-shadow 0.3s",
+          "&:hover": {
+            transform: "scale(1.005)", // Slight zoom
+            boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.3)", // Darker shadow
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", position: "relative", padding: 4 }}>
           <Box
             sx={{
               display: "flex",
@@ -33,8 +42,16 @@ const RecruitmentCard = ({ id, title, description, location, gridSize = 12, sx =
           </Box>
           <Box sx={{ width: "80%" }}>
             <Typography
-              variant="h4"
-              sx={{ fontWeight: "600", color: COLOR.primary_black }}
+              variant="h5"
+              sx={{
+                fontWeight: "600",
+                color: COLOR.primary_black,
+                display: "-webkit-box",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 1,
+              }}
               gutterBottom
             >
               {title}

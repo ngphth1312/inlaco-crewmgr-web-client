@@ -529,3 +529,124 @@ export const mockSupplyRequest = [
     endLocation: "VN SGN", //arrivalLocation
   },
 ];
+
+export const mockTemplateContracts = [
+  {
+    id: "TCT-001",
+    title: "Mẫu hợp đồng Cung ứng thuyền viên 1",
+    description: "Hợp đồng Cung ứng",
+    image: "",
+  },
+  {
+    id: "TCT-002",
+    title: "Mẫu hợp đồng Lao động thuyền viên 2",
+    description: "Hợp đồng Lao động",
+    image: "",
+  },
+  {
+    id: "TCT-003",
+    title: "Mẫu hợp đồng Lao động thuyền viên 3",
+    description: "Hợp đồng Lao động",
+    image: "",
+  },
+  {
+    id: "TCT-004",
+    title: "Mẫu hợp đồng Cung ứng thuyền viên 4",
+    description: "Hợp đồng Cung ứng",
+    image: "",
+  },
+  {
+    id: "TCT-005",
+    title: "Mẫu hợp đồng Lao động thuyền viên 5",
+    description: "Hợp đồng Lao động",
+    image: "",
+  },
+  {
+    id: "TCT-006",
+    title: "Mẫu hợp đồng Cung ứng thuyền viên 6",
+    description: "Hợp đồng Cung ứng",
+    image: "",
+  },
+];
+
+export const mockCourses = [
+  {
+    id: "COURSE-001",
+    name: "Khóa đào tạo thuyền viên 1",
+    description: "Khóa đào tạo thuyền viên của công ty INLACO",
+    courseImage:
+      "https://photo-cms-giaoduc.zadn.vn/w700/Uploaded/2022/juznus/2021_03_31/5-sinh-vien-khoa-hang-hai-thuc-hanh-tren-tau-vmu-viet-han-273-1014.jpg",
+    trainingPartner: "Đại học Hàng hải",
+    trainingPartnerLogo:
+      "https://upload.wikimedia.org/wikipedia/vi/thumb/1/11/Bi%E1%BB%83u_tr%C6%B0ng_Tr%C6%B0%E1%BB%9Dng_%C4%91%E1%BA%A1i_h%E1%BB%8Dc_H%C3%A0ng_h%E1%BA%A3i_Vi%E1%BB%87t_Nam.svg/220px-Bi%E1%BB%83u_tr%C6%B0ng_Tr%C6%B0%E1%BB%9Dng_%C4%91%E1%BA%A1i_h%E1%BB%8Dc_H%C3%A0ng_h%E1%BA%A3i_Vi%E1%BB%87t_Nam.svg.png",
+    positionAchieved: "",
+    isCertificateCourse: false,
+    limitStudent: 150,
+  },
+  {
+    id: "COURSE-002",
+    name: "Khóa đào tạo thuyền viên 2",
+    description: "Khóa đào tạo thuyền viên của công ty INLACO",
+    courseImage:
+      "https://media.vneconomy.vn/w800/images/upload/2022/10/18/dao-tao-thuyen-vien.jpg",
+    trainingPartner: "Đại học GTVT TPHCM",
+    trainingPartnerLogo:
+      "https://upload.wikimedia.org/wikipedia/commons/f/fa/LogoUTC.jpg",
+    positionAchieved: "Thợ máy",
+    isCertificateCourse: true,
+    limitStudent: 50,
+  },
+  {
+    id: "COURSE-003",
+    name: "Khóa đào tạo thuyền viên 3",
+    description: "Khóa đào tạo thuyền viên của công ty INLACO",
+    courseImage:
+      "https://baogiaothong.mediacdn.vn/upload/images/2022-3/article_img/2022-09-27/img-bgt-2021-dai-hoc-hang-hai-vn-trang-bi-phong-mo-phong-cho-cac-sinh-vien-nganh-di-bien-thuc-hanh-1664270470-width1280height854.jpg",
+    trainingPartner: "Đại học Nha Trang",
+    trainingPartnerLogo:
+      "https://upload.wikimedia.org/wikipedia/commons/2/2f/Logo_NTU.png",
+    positionAchieved: "",
+    isCertificateCourse: false,
+    limitStudent: 100,
+  },
+  {
+    id: "COURSE-004",
+    name: "Khóa đào tạo thuyền viên 4",
+    description: "Khóa đào tạo thuyền viên của công ty INLACO",
+    courseImage:
+      "https://media.vneconomy.vn/w800/images/upload/2022/10/18/dao-tao-thuyen-vien.jpg",
+    trainingPartner: "Đại học Tài nguyên và Môi trường TPHCM",
+    trainingPartnerLogo:
+      "https://upload.wikimedia.org/wikipedia/commons/4/4e/HUNRE_Logo.png",
+    positionAchieved: "",
+    isCertificateCourse: false,
+    limitStudent: 125,
+  },
+  {
+    id: "COURSE-005",
+    name: "Khóa đào tạo thuyền viên 5",
+    description: "Hợp đồng Lao động",
+    courseImage:
+      "https://baogiaothong.mediacdn.vn/upload/images/2022-3/article_img/2022-09-27/img-bgt-2021-dai-hoc-hang-hai-vn-trang-bi-phong-mo-phong-cho-cac-sinh-vien-nganh-di-bien-thuc-hanh-1664270470-width1280height854.jpg",
+    trainingPartner: "Đại học Bách khoa TPHCM",
+    trainingPartnerLogo:
+      "https://tuyensinhhot.com/file/5cc2997cc9e77c000112ff80/Logo-BK-HoChiMinh.png",
+    positionAchieved: "Sỹ quan boong",
+    isCertificateCourse: true,
+    limitStudent: 32,
+  },
+
+  {
+    id: "COURSE-006",
+    name: "Khóa đào tạo thuyền viên 6",
+    description: "Khóa đào tạo thuyền viên của công ty INLACO",
+    courseImage:
+      "https://photo-cms-giaoduc.zadn.vn/w700/Uploaded/2022/juznus/2021_03_31/5-sinh-vien-khoa-hang-hai-thuc-hanh-tren-tau-vmu-viet-han-273-1014.jpg",
+    trainingPartner: "Cao đẳng hàng hải I",
+    trainingPartnerLogo:
+      "https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Cao-dang-Hang-Hai-I-MC1.png",
+    positionAchieved: "",
+    isCertificateCourse: false,
+    limitStudent: 150,
+  },
+];

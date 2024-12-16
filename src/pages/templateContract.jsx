@@ -7,50 +7,9 @@ import Grid from "@mui/material/Grid2";
 import { COLOR } from "../assets/Color";
 import { TemplateContractCard } from "../components/contract"
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import { mockTemplateContracts } from "../data/mockData"
 
 const TemplateContract = () => {
-
-  const mockData = [
-    {
-      id: "001",
-      title: "Mẫu hợp đồng Cung ứng thuyền viên 1",
-      description: "Hợp đồng Cung ứng",
-      image: "https://i.sstatic.net/y9DpT.jpg",
-    },
-    {
-      id: "002",
-      title: "Mẫu hợp đồng Lao động thuyền viên 2",
-      description: "Hợp đồng Lao động",
-      image: "https://i.sstatic.net/y9DpT.jpg",
-    },
-    {
-      id: "003",
-      title: "Mẫu hợp đồng Lao động thuyền viên 3",
-      description: "Hợp đồng Lao động",
-      image: "ttps://i.sstatic.net/y9DpT.jpg",
-    },
-    {
-      id: "004",
-      title: "Mẫu hợp đồng Cung ứng thuyền viên 4",
-      description: "Hợp đồng Cung ứng",
-      image: "https://i.sstatic.net/y9DpT.jpg",
-    },
-    {
-      id: "005",
-      title: "Mẫu hợp đồng Lao động thuyền viên 5",
-      description: "Hợp đồng Lao động",
-      image: "https://i.sstatic.net/y9DpT.jpg",
-    },
-    {
-      id: "006",
-      title: "Mẫu hợp đồng Cung ứng thuyền viên 6",
-      description: "Hợp đồng Cung ứng",
-      image: "https://i.sstatic.net/y9DpT.jpg",
-    },
-  ];
-
-
-
   return (
     <div>
       <Box m="20px">
@@ -65,7 +24,7 @@ const TemplateContract = () => {
             display: "flex",
             flexDirection: "row",
             width: "100%",
-            paddingBottom: 2,
+            paddingBottom: 4,
             justifyContent: "space-between",
           }}
         >
@@ -100,7 +59,7 @@ const TemplateContract = () => {
           </Button>
         </Box>
         <Grid container spacing={4}>
-          {mockData.map((item) => {
+          {mockTemplateContracts.map((item) => {
             return (
               <TemplateContractCard
                 id={item?.id}
