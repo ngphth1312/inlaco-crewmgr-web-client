@@ -11,7 +11,7 @@ import SupplyContract from "./pages/supplyContract";
 import TemplateContract from "./pages/templateContract";
 import SupplyRequest from "./pages/supplyRequest";
 import CrewRecruitment from "./pages/crewRecruitment";
-import CrewTraining from "./pages/crewTraining";
+import CrewCourse from "./pages/crewCourse";
 
 function App() {
 
@@ -35,7 +35,7 @@ function App() {
               <Route path="/templateContract" element={<TemplateContract />} />
               <Route path="/supplyRequest" element={<SupplyRequest />} />
               <Route path="/crewRecruitment" element={<CrewRecruitment />} />
-              <Route path="/crewTraining" element={<CrewTraining />} />
+              <Route path="/crewCourse" element={<CrewCourse />} />
             </Routes>
           </main>
         </div>

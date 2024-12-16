@@ -215,7 +215,7 @@ const SideBar = () => {
             />
             <Item
               title="Đào tạo"
-              to="/crewTraining"
+              to="/crewCourse"
               icon={<WorkspacePremiumOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

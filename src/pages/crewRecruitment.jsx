@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Pagination, Box, Typography, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { PageTitle, SearchBar } from "../components/global";
+import { PageTitle, } from "../components/global";
 import { RecruitmentCard } from "../components/other";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";

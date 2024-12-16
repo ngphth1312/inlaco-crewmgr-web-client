@@ -2,7 +2,7 @@ import React from "react";
 import { PageTitle } from "../components/global";
 import { Box } from "@mui/material";
 
-const CrewTraining = () => {
+const CrewCourse = () => {
   return (
     <div>
       <Box m="20px">
@@ -17,4 +17,4 @@ const CrewTraining = () => {
   );
 };
 
-export default CrewTraining;
+export default CrewCourse;
