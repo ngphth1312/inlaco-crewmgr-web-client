@@ -6,7 +6,6 @@ import { RecruitmentCard } from "../components/other";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
-
 const CrewRecruitment = () => {
   // Mock recruitment data
   const recruitmentPosts = Array.from({ length: 20 }, (_, i) => ({
@@ -15,7 +14,7 @@ const CrewRecruitment = () => {
     description: `This is the description for recruitment post ${
       i + 1
     }. In this job, you will participate as a role of a Something for our company. Your main job is to always be ready to be mobilization to ship from our partner company that request for a crew supply for there ship. We would like to work with workers who are keen on their job and do something for the company. You will receive salary as well of course babe`,
-    location: "Thành phố Hồ Chí Minh",
+    location: "Hà Nội",
   }));
 
   const [page, setPage] = useState(1);
@@ -91,7 +90,7 @@ const CrewRecruitment = () => {
                 textTransform: "capitalize",
               }}
             >
-              Thêm thuyền viên
+              Thêm Bài tuyển dụng
             </Typography>
           </Button>
         </Box>
@@ -102,6 +101,7 @@ const CrewRecruitment = () => {
                 id={post?.id}
                 title={post?.title}
                 description={post?.description}
+                location={post?.location}
               />
             ))}
           </Grid>
