@@ -2,8 +2,8 @@ html,
 body,
 #root,
 .login,
-.app,
-.content {
+.content,
+.app {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -18,18 +18,16 @@ body,
 }
 
 .app{
-  display: flex;
   flex-direction: row;
-  background-color: "#F5F9FC";
-  height: 100%;
+  background-color: #F5F9FC;
   width: 100%;
   overflow: hidden;
 }
 
 main {
-  flex: 1; /* Fill remaining vertical space */
-  overflow-y: auto; /* Enable vertical scrolling for the main content */
-  background-color: #F5F9FC; /* Example background */
+  flex: 1; 
+  overflow-y: auto;
+  background-color: #F5F9FC;
 }
 
 ::-webkit-scrollbar{

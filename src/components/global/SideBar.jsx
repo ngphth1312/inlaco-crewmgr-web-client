@@ -126,7 +126,7 @@ const SideBar = () => {
           <Box>
             <Item
               title="Trang chủ"
-              to="/"
+              to="/homePage"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

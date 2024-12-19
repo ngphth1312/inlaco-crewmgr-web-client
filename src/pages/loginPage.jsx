@@ -8,8 +8,9 @@ import {
   InputAdornment,
   IconButton,
   Checkbox,
+  Divider,
 } from "@mui/material";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { COLOR } from "../assets/Color";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
@@ -27,14 +28,21 @@ const LoginPage = () => {
 
   const handleOnLoginClick = async () => {
     //validate login inputs and calling API to login
+    const mockAccessToken = "ashdajsikdnasd"; //Mock access token
+    localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
 
+    if(rememberMe) {
+    localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+    } else{
+    sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+    }
 
-    setAccessToken("asdnasjkdnsa");
-    navigate("/crewInfos");
+    setAccessToken(mockAccessToken);
+    navigate("/crewInfos", { replace: true });
   }
 
   return (
-    <div>
+    <div className="login">
       <Box
         sx={{
           display: "flex",
@@ -76,10 +84,13 @@ const LoginPage = () => {
             paddingLeft: 5,
             paddingRight: 5,
             width: "100%",
-            paddingTop: 8,
+            paddingTop: 2,
           }}
         >
-          <Typography mb={2} sx={{ fontSize: 28, fontWeight: 700 }}>
+          <Typography
+            mb={2}
+            sx={{ fontSize: 28, fontWeight: 700, color: COLOR.primary_blue }}
+          >
             Đăng nhập
           </Typography>
           {/* {error && (
@@ -144,36 +155,86 @@ const LoginPage = () => {
               backgroundColor: COLOR.secondary_white,
             }}
           />
-          <Box sx={{ display: "flex", alignItems: "center", width: "100%", marginTop: "2px", marginBottom: 1, }}>
-            <Checkbox
-              size="small"
-              checked={rememberMe}
-              onChange={(e) => {
-                setRememberMe(e.target.checked);
-              }}
-              sx={{
-                padding: 0,
-                marginRight: "4px",
-                color: COLOR.primary_gold,
-                "&.Mui-checked": {
-                  color: COLOR.secondary_gold,
-                },
-              }}
-            />
-            <Typography sx={{ color: COLOR.secondary_gold, fontSize: 14, }}>
-              Lưu đăng nhập
-            </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              marginTop: "2px",
+              marginBottom: 1,
+            }}
+          >
+            <Box sx={{ display: "flex" }}>
+              <Checkbox
+                size="small"
+                checked={rememberMe}
+                onChange={(e) => {
+                  setRememberMe(e.target.checked);
+                }}
+                sx={{
+                  padding: 0,
+                  marginRight: "4px",
+                  color: COLOR.primary_gray,
+                  "&.Mui-checked": {
+                    color: COLOR.primary_gray,
+                  },
+                }}
+              />
+              <Typography sx={{ color: COLOR.primary_gray, fontSize: 14 }}>
+                Lưu đăng nhập
+              </Typography>
+            </Box>
+            <NavLink
+              style={({ isActive }) => ({
+                fontSize: 14,
+                color: isActive ? COLOR.primary_gray : COLOR.primary_gray, //adjust this if needed
+              })}
+            >
+              Quên mật khẩu
+            </NavLink>
           </Box>
           <Button
             type="submit"
             variant="contained"
-            sx={{ mt: 1, mb: 2, pt: 1, pb: 1 }}
+            sx={{
+              mt: 1,
+              pt: 1,
+              pb: 1,
+              backgroundColor: COLOR.primary_blue,
+              color: COLOR.primary_white,
+            }}
             onClick={() => handleOnLoginClick()}
             // disabled={loading}
           >
             {/* {loading ? <CircularProgress size={24} /> : "Login"} */}
             Đăng nhập
           </Button>
+          <Divider
+            sx={{
+              borderWidth: 1,
+              borderColor: COLOR.primary_gray,
+              width: "100%",
+              marginTop: 3,
+              marginBottom: 3,
+            }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography>Chưa có tài khoản?&nbsp;</Typography>
+            <NavLink
+              style={({ isActive }) => ({
+                color: isActive ? COLOR.secondary_gold : COLOR.secondary_gold, //adjust this if needed
+              })}
+            >
+              Tạo ở đây
+            </NavLink>
+          </Box>
         </Box>
         <Box
           backgroundColor={COLOR.primary_gray}

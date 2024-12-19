@@ -3,13 +3,13 @@ import AppProperty from "../assets/constants/appProperty";
 export const localStorage = {
   setItem: (key, value) => {
     try {
-      console.log("setItem", key, value);
+      console.log("LocalStorage setItem", key, value);
       return window.localStorage.setItem(
         `${AppProperty.APP_NAME}_${key}`,
         JSON.stringify(value)
       );
     } catch (error) {
-      console.log("setItem error", error);
+      console.log("LocalStorage setItem error", error);
     }
   },
   getItem: (key) => {
@@ -18,7 +18,7 @@ export const localStorage = {
         window.localStorage.getItem(`${AppProperty.APP_NAME}_${key}`)
       );
     } catch (error) {
-      console.log("getItem error", error);
+      console.log("LocalStorage getItem error", error);
     }
   },
 
@@ -26,7 +26,7 @@ export const localStorage = {
     try {
       return window.localStorage.removeItem(`${AppProperty.APP_NAME}_${key}`);
     } catch (error) {
-      console.log("removeItem error", error);
+      console.log("LocalStorage removeItem error", error);
     }
   },
 };
@@ -34,13 +34,13 @@ export const localStorage = {
 export const sessionStorage = {
   setItem: (key, value) => {
     try {
-      console.log("setItem", key, value);
+      console.log("SessionStorage setItem", key, value);
       return window.sessionStorage.setItem(
         `${AppProperty.APP_NAME}_${key}`,
         JSON.stringify(value)
       );
     } catch (error) {
-      console.log("setItem error", error);
+      console.log("SessionStorage setItem error", error);
     }
   },
   getItem: (key) => {
@@ -49,7 +49,7 @@ export const sessionStorage = {
         window.sessionStorage.getItem(`${AppProperty.APP_NAME}_${key}`)
       );
     } catch (error) {
-      console.log("getItem error", error);
+      console.log("SessionStorage getItem error", error);
     }
   },
 
@@ -57,7 +57,7 @@ export const sessionStorage = {
     try {
       return window.sessionStorage.removeItem(`${AppProperty.APP_NAME}_${key}`);
     } catch (error) {
-      console.log("removeItem error", error);
+      console.log("SessionStorage removeItem error", error);
     }
   },
 };

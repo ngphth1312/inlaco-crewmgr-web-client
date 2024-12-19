@@ -5,3 +5,4 @@ export { default as NoValuesOverlay } from "./NoValuesOverlay";
 export { default as SearchBar } from "./SearchBar";
 export { default as NavSearchBar } from "./NavSearchBar";
 export { default as SwitchBar } from "./SwitchBar";
+export { default as MainLayout } from "./MainLayout";
