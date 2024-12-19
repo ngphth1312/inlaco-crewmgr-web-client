@@ -7,6 +7,7 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
+  Checkbox,
 } from "@mui/material";
 import { useNavigate } from "react-router";
 import { COLOR } from "../assets/Color";
@@ -15,15 +16,19 @@ import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useAppContext } from "../contexts/AppContext";
+import { localStorage, sessionStorage, StorageKey } from "../utils/storageUtils"
 
 const LoginPage = () => {
 
   const { setAccessToken } = useAppContext();
   const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleOnLoginClick = async () => {
     //validate login inputs and calling API to login
+
+
     setAccessToken("asdnasjkdnsa");
     navigate("/crewInfos");
   }
@@ -74,7 +79,7 @@ const LoginPage = () => {
             paddingTop: 8,
           }}
         >
-          <Typography mb={2} sx={{ fontSize: 28, fontWeight: 700, }}>
+          <Typography mb={2} sx={{ fontSize: 28, fontWeight: 700 }}>
             Đăng nhập
           </Typography>
           {/* {error && (
@@ -139,10 +144,30 @@ const LoginPage = () => {
               backgroundColor: COLOR.secondary_white,
             }}
           />
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%", marginTop: "2px", marginBottom: 1, }}>
+            <Checkbox
+              size="small"
+              checked={rememberMe}
+              onChange={(e) => {
+                setRememberMe(e.target.checked);
+              }}
+              sx={{
+                padding: 0,
+                marginRight: "4px",
+                color: COLOR.primary_gold,
+                "&.Mui-checked": {
+                  color: COLOR.secondary_gold,
+                },
+              }}
+            />
+            <Typography sx={{ color: COLOR.secondary_gold, fontSize: 14, }}>
+              Lưu đăng nhập
+            </Typography>
+          </Box>
           <Button
             type="submit"
             variant="contained"
-            sx={{ mt: 3, mb: 2, pt: 1, pb: 1 }}
+            sx={{ mt: 1, mb: 2, pt: 1, pb: 1 }}
             onClick={() => handleOnLoginClick()}
             // disabled={loading}
           >
@@ -163,10 +188,21 @@ const LoginPage = () => {
             alignItems: "center",
           }}
         >
-          <Typography color={COLOR.primary_white} sx={{ fontSize: 12, fontWeight: 700, textAlign: "center", marginBottom: "2px", }}>
+          <Typography
+            color={COLOR.primary_white}
+            sx={{
+              fontSize: 12,
+              fontWeight: 700,
+              textAlign: "center",
+              marginBottom: "2px",
+            }}
+          >
             CÔNG TY CỔ PHẦN HỢP TÁC LAO ĐỘNG VỚI NƯỚC NGOÀI
           </Typography>
-          <Typography color={COLOR.primary_white} sx={{ fontSize: 8, textAlign: "center" }}>
+          <Typography
+            color={COLOR.primary_white}
+            sx={{ fontSize: 8, textAlign: "center" }}
+          >
             INTERNATIONAL LABOUR AND SERVICES STOCK COMPANY (INLACO - HP)
           </Typography>
         </Box>
