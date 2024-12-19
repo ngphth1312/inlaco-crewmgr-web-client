@@ -13,15 +13,17 @@ import SupplyRequest from "./pages/supplyRequest";
 import CrewRecruitment from "./pages/crewRecruitment";
 import CrewCourse from "./pages/crewCourse";
 
+import { useAppContext } from "./contexts/AppContext";
+
 function App() {
 
-  const tempAccessToken = "qwo123ui12y3iu12y3i"; //Admin has logged in
+  const { accessToken, setAccessToken } = useAppContext();
 
   return (
     <>
       {/* Reset CSS to default */}
       <CssBaseline />
-      {tempAccessToken !== "" ? (
+      {accessToken !== "" ? (
         <div className="app">
           <SideBar />
           <main className="content">

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Container,
   Box,
   TextField,
   Button,
@@ -15,10 +14,19 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useAppContext } from "../contexts/AppContext";
 
 const LoginPage = () => {
 
+  const { setAccessToken } = useAppContext();
+  const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
+
+  const handleOnLoginClick = async () => {
+    //validate login inputs and calling API to login
+    setAccessToken("asdnasjkdnsa");
+    navigate("/crewInfos");
+  }
 
   return (
     <div>
@@ -118,7 +126,7 @@ const LoginPage = () => {
                       isShowPass ? setIsShowPass(false) : setIsShowPass(true);
                     }}
                   >
-                    <VisibilityOffIcon />
+                    {isShowPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
                   </IconButton>
                 ),
               },
@@ -135,6 +143,7 @@ const LoginPage = () => {
             type="submit"
             variant="contained"
             sx={{ mt: 3, mb: 2, pt: 1, pb: 1 }}
+            onClick={() => handleOnLoginClick()}
             // disabled={loading}
           >
             {/* {loading ? <CircularProgress size={24} /> : "Login"} */}

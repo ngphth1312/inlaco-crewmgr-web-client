@@ -45,7 +45,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 
 const SideBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+  const [selected, setSelected] = useState("Thông tin Thuyền viên");
 
   return (
     <Box>
