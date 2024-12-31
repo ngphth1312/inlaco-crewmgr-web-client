@@ -24,7 +24,7 @@ const TopBar = () => {
 
     localStorage.removeItem(StorageKey.REMEMBER_ME);
     setAccessToken("");
-    navigate("/");
+    navigate("/login");
   };
 
   return (

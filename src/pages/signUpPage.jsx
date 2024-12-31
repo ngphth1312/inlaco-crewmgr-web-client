@@ -7,7 +7,6 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
-  Checkbox,
   Divider,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router";
@@ -17,29 +16,22 @@ import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useAppContext } from "../contexts/AppContext";
-import { localStorage, sessionStorage, StorageKey } from "../utils/storageUtils"
+import {
+  localStorage,
+  sessionStorage,
+  StorageKey,
+} from "../utils/storageUtils";
 
-const LoginPage = () => {
-
+const SignUpPage = () => {
   const { setAccessToken } = useAppContext();
   const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
+  const [isShowConfirmPass, setIsShowConfirmPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleOnLoginClick = async () => {
-    //validate login inputs and calling API to login
-    const mockAccessToken = "ashdajsikdnasd"; //Mock access token
-    localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
-
-    if(rememberMe) {
-    localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-    } else{
-    sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-    }
-
-    setAccessToken(mockAccessToken);
-    navigate("/", { replace: true });
-  }
+    
+  };
 
   return (
     <div className="login">
@@ -91,7 +83,7 @@ const LoginPage = () => {
             mb={2}
             sx={{ fontSize: 28, fontWeight: 700, color: COLOR.primary_blue }}
           >
-            Đăng nhập
+            Đăng ký
           </Typography>
           {/* {error && (
             <Typography color="error" sx={{ mt: 2 }}>
@@ -157,6 +149,40 @@ const LoginPage = () => {
               backgroundColor: COLOR.secondary_white,
             }}
           />
+          <TextField
+            size="small"
+            margin="normal"
+            required
+            fullWidth
+            label="Xác nhận mật khẩu"
+            type={isShowConfirmPass ? "text" : "password"}
+            id="confirm_password"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <VpnKeyIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <IconButton
+                    onClick={() => {
+                      isShowConfirmPass ? setIsShowConfirmPass(false) : setIsShowConfirmPass(true);
+                    }}
+                  >
+                    {isShowConfirmPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                ),
+              },
+            }}
+            // name="password"
+            // autoComplete="current-password"
+            // value={password}
+            // onChange={(e) => setPassword(e.target.value)}
+            sx={{
+              backgroundColor: COLOR.secondary_white,
+            }}
+          />
           <Box
             sx={{
               display: "flex",
@@ -166,36 +192,7 @@ const LoginPage = () => {
               marginTop: "2px",
               marginBottom: 1,
             }}
-          >
-            <Box sx={{ display: "flex" }}>
-              <Checkbox
-                size="small"
-                checked={rememberMe}
-                onChange={(e) => {
-                  setRememberMe(e.target.checked);
-                }}
-                sx={{
-                  padding: 0,
-                  marginRight: "4px",
-                  color: COLOR.primary_gray,
-                  "&.Mui-checked": {
-                    color: COLOR.primary_gray,
-                  },
-                }}
-              />
-              <Typography sx={{ color: COLOR.primary_gray, fontSize: 14 }}>
-                Lưu đăng nhập
-              </Typography>
-            </Box>
-            <NavLink
-              style={({ isActive }) => ({
-                fontSize: 14,
-                color: isActive ? COLOR.primary_gray : COLOR.primary_gray, //adjust this if needed
-              })}
-            >
-              Quên mật khẩu
-            </NavLink>
-          </Box>
+          ></Box>
           <Button
             type="submit"
             variant="contained"
@@ -210,7 +207,7 @@ const LoginPage = () => {
             // disabled={loading}
           >
             {/* {loading ? <CircularProgress size={24} /> : "Login"} */}
-            Đăng nhập
+            Đăng ký
           </Button>
           <Divider
             sx={{
@@ -218,7 +215,7 @@ const LoginPage = () => {
               borderColor: COLOR.primary_gray,
               width: "100%",
               marginTop: 3,
-              marginBottom: 3,
+              marginBottom: 2,
             }}
           />
           <Box
@@ -228,14 +225,14 @@ const LoginPage = () => {
               alignItems: "center",
             }}
           >
-            <Typography>Chưa có tài khoản?&nbsp;</Typography>
+            <Typography>Đã có tài khoản?&nbsp;</Typography>
             <NavLink
               style={({ isActive }) => ({
                 color: isActive ? COLOR.secondary_gold : COLOR.secondary_gold, //adjust this if needed
               })}
-              to="/signUp"
+              to="/login"
             >
-              Tạo ở đây
+              Đăng nhập
             </NavLink>
           </Box>
         </Box>
@@ -273,6 +270,6 @@ const LoginPage = () => {
       </Box>
     </div>
   );
-};  
+};
 
-export default LoginPage;
+export default SignUpPage;

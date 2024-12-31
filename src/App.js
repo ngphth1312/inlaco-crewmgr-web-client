@@ -1,7 +1,8 @@
 import { CssBaseline } from "@mui/material";
-import { Routes, Route } from "react-router";
+import { Routes, Route, useNavigate } from "react-router";
 
 import LoginPage from "./pages/loginPage";
+import SignUpPage from "./pages/signUpPage";
 import HomePage from "./pages/homePage";
 import CrewInfos from "./pages/crewInfos";
 import CrewMobilization from "./pages/crewMobilization";
@@ -16,8 +17,10 @@ import { MainLayout } from "./components/global";
 import { useAppContext } from "./contexts/AppContext";
 import { useEffect } from "react";
 import { localStorage, sessionStorage, StorageKey } from "./utils/storageUtils";
+
 function App() {
 
+  let navigate = useNavigate();
   const { accessToken, setAccessToken } = useAppContext();
 
   useEffect(() => {
@@ -37,9 +40,12 @@ function App() {
           // );
 
           // console.log(tempAccessToken, tempRefreshToken, tempUserInfos);
-
-          console.log(tempAccessToken);
-          setAccessToken(tempAccessToken);
+          if(tempAccessToken){
+            setAccessToken(tempAccessToken);
+            navigate("/");
+          } else{
+            navigate("/login");
+          }
           // setRefreshToken(tempRefreshToken);
           // setUserInfos(tempUserInfos);
         } else {
@@ -55,7 +61,12 @@ function App() {
 
           // console.log(tempAccessToken, tempRefreshToken, tempUserInfos);
 
-          setAccessToken(tempAccessToken);
+          if (tempAccessToken) {
+            setAccessToken(tempAccessToken);
+            navigate("/");
+          } else {
+            navigate("/login");
+          }
           // setRefreshToken(tempRefreshToken);
           // setUserInfos(tempUserInfos);
         }
@@ -75,7 +86,7 @@ function App() {
         {/* Routes that require authentication and display Sidebar + TopBar */}
         {accessToken ? (
           <Route element={<MainLayout />}>
-            <Route path="/homePage" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/crewInfos" element={<CrewInfos />} />
             <Route path="/crewMobilization" element={<CrewMobilization />} />
             <Route path="/crewContract" element={<CrewContract />} />
@@ -87,7 +98,10 @@ function App() {
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */
-          <Route path="/" element={<LoginPage />} />
+          <>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signUp" element={<SignUpPage />} />
+          </>
         )}
       </Routes>
     </>
