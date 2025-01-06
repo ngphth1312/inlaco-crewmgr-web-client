@@ -22,4 +22,5 @@ export const COLOR = {
   primary_black_placeholder: "#4F4F4F",
   primary_gray: "#383e45", //footer color
   secondary_gray: "#4D5C70",
+  
 };

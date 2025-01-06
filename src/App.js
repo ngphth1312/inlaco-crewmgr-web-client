@@ -12,6 +12,7 @@ import TemplateContract from "./pages/templateContract";
 import SupplyRequest from "./pages/supplyRequest";
 import CrewRecruitment from "./pages/crewRecruitment";
 import CrewCourse from "./pages/crewCourse";
+import AddCrewMember from "./pages/addCrewMember";
 
 import { MainLayout } from "./components/global";
 import { useAppContext } from "./contexts/AppContext";
@@ -95,6 +96,7 @@ function App() {
             <Route path="/supplyRequest" element={<SupplyRequest />} />
             <Route path="/crewRecruitment" element={<CrewRecruitment />} />
             <Route path="/crewCourse" element={<CrewCourse />} />
+            <Route path="/addCrewMember" element={<AddCrewMember />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */

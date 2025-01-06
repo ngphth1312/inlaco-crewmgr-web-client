@@ -45,7 +45,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 
 const SideBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Thông tin Thuyền viên");
+  const [selected, setSelected] = useState("Trang chủ");
 
   return (
     <Box>
@@ -126,7 +126,7 @@ const SideBar = () => {
           <Box>
             <Item
               title="Trang chủ"
-              to="/homePage"
+              to="/"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
