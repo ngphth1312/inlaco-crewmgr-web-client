@@ -67,9 +67,9 @@ const AddCrewMember = () => {
   return (
     <div>
       <Formik
-        onSubmit={handleCreateCrewMemberSubmit}
         initialValues={initialValues}
         validationSchema={crewMemberInfosSchema}
+        onSubmit={handleCreateCrewMemberSubmit}
       >
         {({
           values,
@@ -102,7 +102,7 @@ const AddCrewMember = () => {
                     width: "50%",
                     padding: 1,
                     color: COLOR.primary_black,
-                    backgroundColor: (!isValid || !dirty) ? COLOR.primary_light_gold : COLOR.primary_gold,
+                    backgroundColor: COLOR.primary_gold,
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "end" }}>
@@ -138,6 +138,17 @@ const AddCrewMember = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#FFF", marginBottom: 1, }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -154,6 +165,17 @@ const AddCrewMember = () => {
                   helperText={touched.dob && errors.dob}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#fff" }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -170,6 +192,17 @@ const AddCrewMember = () => {
                   helperText={touched.ciNumber && errors.ciNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#fff" }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -186,6 +219,17 @@ const AddCrewMember = () => {
                   helperText={touched.gender && errors.gender}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#fff" }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={7}>
@@ -204,6 +248,17 @@ const AddCrewMember = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#FFF" }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -220,6 +275,17 @@ const AddCrewMember = () => {
                   helperText={touched.email && errors.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#fff" }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -236,6 +302,17 @@ const AddCrewMember = () => {
                   helperText={touched.phoneNumber && errors.phoneNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ backgroundColor: "#fff" }}
+                  slotProps={{
+                    formHelperText: {
+                      sx: {
+                        margin: 0,
+                        paddingRight: 1,
+                        paddingLeft: 1,
+                        backgroundColor: COLOR.primary_white,
+                      },
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
