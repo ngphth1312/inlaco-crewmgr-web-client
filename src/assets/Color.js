@@ -14,6 +14,7 @@ export const COLOR = {
   primary_green: "#5ABF80",
   primary_orange: "#E74C3C",
   primary_gold: "#FFC860 ",
+  primary_light_gold: "#FFDEA6",
   secondary_gold: "#E6B350 ",
 
   //Text color
@@ -22,5 +23,4 @@ export const COLOR = {
   primary_black_placeholder: "#4F4F4F",
   primary_gray: "#383e45", //footer color
   secondary_gray: "#4D5C70",
-  
 };

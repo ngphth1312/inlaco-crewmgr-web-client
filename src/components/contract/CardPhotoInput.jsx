@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Card, CardMedia, Typography, IconButton } from '@mui/material';
-import { maxWidth, styled } from '@mui/system';
+import { Card, CardMedia, IconButton } from '@mui/material';
+import { styled } from '@mui/system';
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
 const Input = styled('input')({
