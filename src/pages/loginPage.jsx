@@ -51,7 +51,7 @@ const LoginPage = () => {
       .required("Vui lòng nhập mật khẩu\n\n"),//"\n" is to make sure the error message will be displayed in 2 lines for fixed height
   });
 
-  const handleLoginClick = async () => {
+  const handleLoginClick = async (values) => {
     //validate login inputs and calling API to login
     const mockAccessToken = "ashdajsikdnasd"; //Mock access token
     localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
@@ -62,6 +62,7 @@ const LoginPage = () => {
       sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
     }
 
+    console.log("Login successfully: ", values);
     setAccessToken(mockAccessToken);
     navigate("/", { replace: true });
   };
@@ -115,6 +116,7 @@ const LoginPage = () => {
           }) => (
             <Box
               component="form"
+              onSubmit={handleSubmit}
               sx={{
                 flex: 1,
                 mt: 1,
@@ -268,16 +270,14 @@ const LoginPage = () => {
                 </NavLink>
               </Box>
               <Button
-                type="submit"
                 variant="contained"
+                type="submit"
                 sx={{
-                  mt: 1,
                   pt: 1,
                   pb: 1,
                   backgroundColor: COLOR.primary_blue,
                   color: COLOR.primary_white,
                 }}
-                onClick={() => handleLoginClick()}
                 disabled={!isValid || !dirty}
               >
                 {/* {loading ? <CircularProgress size={24} /> : "Login"} */}
@@ -288,8 +288,8 @@ const LoginPage = () => {
                   borderWidth: 1,
                   borderColor: COLOR.primary_gray,
                   width: "100%",
-                  marginTop: 3,
-                  marginBottom: 1,
+                  marginTop: 2,
+                  marginBottom: 2,
                 }}
               />
               <Box
