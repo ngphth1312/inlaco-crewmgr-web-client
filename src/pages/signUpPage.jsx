@@ -16,11 +16,6 @@ import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useAppContext } from "../contexts/AppContext";
-import {
-  localStorage,
-  sessionStorage,
-  StorageKey,
-} from "../utils/storageUtils";
 import { Formik } from "formik";
 import * as yup from "yup";
 

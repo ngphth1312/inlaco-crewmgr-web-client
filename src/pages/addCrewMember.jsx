@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { PageTitle, SectionDivider } from "../components/global";
+import { PageTitle, SectionDivider, } from "../components/global";
 import { CardPhotoInput } from "../components/contract";
-import { Box, Button, Typography, TextField, } from "@mui/material";
+import { Box, Button, Typography, TextField, MenuItem } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
@@ -11,6 +11,12 @@ import * as yup from "yup";
 
 const AddCrewMember = () => {
   // const navigate = useNavigate();
+
+  const genders = [
+    { label: "Nam", value: "Nam" },
+    { label: "Nữ", value: "Nữ" },
+    { label: "Khác", value: "Khác" },
+  ];
 
   const initialValues = {
     fullName: "",
@@ -27,10 +33,12 @@ const AddCrewMember = () => {
 
   const crewMemberInfosSchema = yup.object().shape({
     fullName: yup.string().required("Họ và tên không được để trống"),
-    dob: yup.string().required("Ngày sinh không được để trống"),
-    ciNumber: yup
-      .string()
-      .required("Số căn cước công dân không được để trống"),
+    dob: yup
+      .date()
+      .max(new Date(), "Ngày sinh không hợp lệ")
+      .required("Ngày sinh không được để trống"),
+
+    ciNumber: yup.string().required("Số căn cước công dân không được để trống"),
     gender: yup.string().required("Vui lòng chọn giới tính"),
     address: yup.string().required("Địa chỉ không được để trống"),
 
@@ -50,8 +58,6 @@ const AddCrewMember = () => {
   const handleCreateCrewMemberSubmit = async (values) => {
     console.log("Successfully submitted: ", values);
   };
-
-  const handleCreateCrewMemberClick = () => {};
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -138,7 +144,7 @@ const AddCrewMember = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#FFF", marginBottom: 1, }}
+                  sx={{ backgroundColor: "#FFF", marginBottom: 1 }}
                   slotProps={{
                     formHelperText: {
                       sx: {
@@ -153,6 +159,7 @@ const AddCrewMember = () => {
               </Grid>
               <Grid size={3}>
                 <TextField
+                  type="date"
                   id="dob"
                   label="Ngày sinh"
                   size="small"
@@ -174,6 +181,12 @@ const AddCrewMember = () => {
                         paddingLeft: 1,
                         backgroundColor: COLOR.primary_white,
                       },
+                    },
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
                     },
                   }}
                 />
@@ -207,6 +220,7 @@ const AddCrewMember = () => {
               </Grid>
               <Grid size={2}>
                 <TextField
+                  select
                   id="gender"
                   label="Giới tính"
                   size="small"
@@ -230,7 +244,13 @@ const AddCrewMember = () => {
                       },
                     },
                   }}
-                />
+                >
+                  {genders.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid size={7}>
                 <TextField
@@ -317,8 +337,77 @@ const AddCrewMember = () => {
               </Grid>
             </Grid>
             <SectionDivider sectionName="Thông tin công việc: " />
-            <Box sx={{}}></Box>
+            <Box sx={{ padding: 4 }}>
+              <Typography
+                sx={{ textAlign: "center", color: COLOR.primary_black }}
+              >
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: COLOR.primary_gray,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Thông tin công việc
+                </span>{" "}
+                và{" "}
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: COLOR.primary_gray,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Thông tin BHXH
+                </span>{" "}
+                sẽ được thêm khi{" "}
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: COLOR.primary_gray,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Tạo hợp đồng
+                </span>
+              </Typography>
+            </Box>
             <SectionDivider sectionName="Thông tin BHXH: " />
+            <Box sx={{ padding: 4 }}>
+              <Typography
+                sx={{ textAlign: "center", color: COLOR.primary_black }}
+              >
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: COLOR.primary_gray,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Thông tin công việc
+                </span>{" "}
+                và{" "}
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: COLOR.primary_gray,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Thông tin BHXH
+                </span>{" "}
+                sẽ được thêm khi{" "}
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: COLOR.primary_gray,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Tạo hợp đồng
+                </span>
+              </Typography>
+            </Box>
           </Box>
         )}
       </Formik>
