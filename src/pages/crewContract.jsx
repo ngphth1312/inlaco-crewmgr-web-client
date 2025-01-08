@@ -6,10 +6,10 @@ import { mockCrewContracts } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const CrewContract = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
     console.log("Navigate to info page of Member with ID: " + id);
@@ -137,6 +137,7 @@ const CrewContract = () => {
             />
             <Button
               variant="contained"
+              onClick={() => navigate("/createCrewContract")}
               sx={{
                 backgroundColor: COLOR.primary_gold,
                 color: COLOR.primary_black,

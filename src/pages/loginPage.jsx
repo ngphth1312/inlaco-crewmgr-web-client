@@ -4,11 +4,11 @@ import {
   TextField,
   Button,
   Typography,
-  CircularProgress,
   InputAdornment,
   IconButton,
   Checkbox,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router";
 import { COLOR } from "../assets/Color";
@@ -30,6 +30,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const initialValues = {
     email: "",
@@ -52,19 +53,29 @@ const LoginPage = () => {
   });
 
   const handleLoginClick = async (values) => {
-    //validate login inputs and calling API to login
-    const mockAccessToken = "ashdajsikdnasd"; //Mock access token
-    localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
+    console.log("Start Login");
+    setLoginLoading(true);
+    try{
+      //validate login inputs and calling API to login
+      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
-    if (rememberMe) {
-      localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-    } else {
-      sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+      const mockAccessToken = "ashdajsikdnasd"; //Mock access token
+      localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
+
+      if (rememberMe) {
+        localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+      } else {
+        sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+      }
+
+      console.log("Login successfully: ", values);
+      setAccessToken(mockAccessToken);
+      navigate("/", { replace: true });
+    } catch(err){
+      console.log("Error when login: ", err);
+    } finally {
+      setLoginLoading(false);
     }
-
-    console.log("Login successfully: ", values);
-    setAccessToken(mockAccessToken);
-    navigate("/", { replace: true });
   };
 
   return (
@@ -273,15 +284,16 @@ const LoginPage = () => {
                 variant="contained"
                 type="submit"
                 sx={{
+                  position: "relative",
                   pt: 1,
                   pb: 1,
                   backgroundColor: COLOR.primary_blue,
                   color: COLOR.primary_white,
+                  minWidth: 120,
                 }}
                 disabled={!isValid || !dirty}
               >
-                {/* {loading ? <CircularProgress size={24} /> : "Login"} */}
-                Đăng nhập
+                {loginLoading ? <CircularProgress color={COLOR.primary_white} size={24} /> : "Đăng nhập"}
               </Button>
               <Divider
                 sx={{

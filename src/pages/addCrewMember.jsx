@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { PageTitle, SectionDivider, } from "../components/global";
+import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
 import { CardPhotoInput } from "../components/contract";
-import { Box, Button, Typography, TextField, MenuItem } from "@mui/material";
+import { Box, Button, Typography, TextField, MenuItem, CircularProgress } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
@@ -30,6 +30,7 @@ const AddCrewMember = () => {
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
+  const ciNumberRegex = "^\\d{12}$";
 
   const crewMemberInfosSchema = yup.object().shape({
     fullName: yup.string().required("Họ và tên không được để trống"),
@@ -38,7 +39,11 @@ const AddCrewMember = () => {
       .max(new Date(), "Ngày sinh không hợp lệ")
       .required("Ngày sinh không được để trống"),
 
-    ciNumber: yup.string().required("Số căn cước công dân không được để trống"),
+    ciNumber: yup
+      .string()
+      .matches(ciNumberRegex, "Số CCCD không hợp lệ")
+      .required("Số căn cước công dân không được để trống"),
+
     gender: yup.string().required("Vui lòng chọn giới tính"),
     address: yup.string().required("Địa chỉ không được để trống"),
 
@@ -54,9 +59,21 @@ const AddCrewMember = () => {
   });
 
   const [image, setImage] = useState(null);
+  const [addCrewLoading, setAddCrewLoading] = useState(false);
 
-  const handleCreateCrewMemberSubmit = async (values) => {
-    console.log("Successfully submitted: ", values);
+  const handleCreateCrewMemberSubmit = async (values, { resetForm }) => {
+    setAddCrewLoading(true);
+    try{
+      //Calling API to create a new crew member
+      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+
+      console.log("Successfully submitted: ", values);
+      resetForm();
+    } catch(err){
+      console.log("Error when adding new crew member: ", err);
+    } finally{
+      setAddCrewLoading(false);
+    }
   };
 
   const handleImageChange = (event) => {
@@ -92,6 +109,7 @@ const AddCrewMember = () => {
               <Box
                 sx={{
                   display: "flex",
+                  flex: 1,
                   flexDirection: "column",
                   justifyContent: "space-between",
                 }}
@@ -105,18 +123,23 @@ const AddCrewMember = () => {
                   type="submit"
                   disabled={!isValid || !dirty}
                   sx={{
-                    width: "50%",
+                    width: "10%",
                     padding: 1,
                     color: COLOR.primary_black,
                     backgroundColor: COLOR.primary_gold,
+                    minWidth: 130,
                   }}
                 >
-                  <Box sx={{ display: "flex", alignItems: "end" }}>
-                    <PersonAddIcon
-                      sx={{ marginRight: "5px", marginBottom: "1px" }}
-                    />
-                    <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
-                  </Box>
+                  {addCrewLoading ? (
+                    <CircularProgress size={24} color={COLOR.primary_black} />
+                  ) : (
+                    <Box sx={{ display: "flex", alignItems: "end" }}>
+                      <PersonAddIcon
+                        sx={{ marginRight: "5px", marginBottom: "1px" }}
+                      />
+                      <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
+                    </Box>
+                  )}
                 </Button>
               </Box>
               <CardPhotoInput
@@ -129,7 +152,7 @@ const AddCrewMember = () => {
             <SectionDivider sectionName="Thông tin cá nhân: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
-                <TextField
+                <InfoTextField
                   id="full-name"
                   label="Họ và tên"
                   size="small"
@@ -144,21 +167,10 @@ const AddCrewMember = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#FFF", marginBottom: 1 }}
-                  slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={3}>
-                <TextField
+                <InfoTextField
                   type="date"
                   id="dob"
                   label="Ngày sinh"
@@ -172,16 +184,7 @@ const AddCrewMember = () => {
                   helperText={touched.dob && errors.dob}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#fff" }}
                   slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
                     input: {
                       placeholder: "asjdbnaskjd",
                     },
@@ -192,7 +195,7 @@ const AddCrewMember = () => {
                 />
               </Grid>
               <Grid size={3}>
-                <TextField
+                <InfoTextField
                   id="ci-number"
                   label="Số Căn cước công dân"
                   size="small"
@@ -205,21 +208,10 @@ const AddCrewMember = () => {
                   helperText={touched.ciNumber && errors.ciNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#fff" }}
-                  slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={2}>
-                <TextField
+                <InfoTextField
                   select
                   id="gender"
                   label="Giới tính"
@@ -233,27 +225,16 @@ const AddCrewMember = () => {
                   helperText={touched.gender && errors.gender}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#fff" }}
-                  slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
-                  }}
                 >
                   {genders.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
-                </TextField>
+                </InfoTextField>
               </Grid>
               <Grid size={7}>
-                <TextField
+                <InfoTextField
                   id="address"
                   label="Địa chỉ"
                   size="small"
@@ -268,21 +249,10 @@ const AddCrewMember = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#FFF" }}
-                  slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={3}>
-                <TextField
+                <InfoTextField
                   id="email"
                   label="Email"
                   size="small"
@@ -295,21 +265,10 @@ const AddCrewMember = () => {
                   helperText={touched.email && errors.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#fff" }}
-                  slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={2}>
-                <TextField
+                <InfoTextField
                   id="phone-number"
                   label="Số điện thoại"
                   size="small"
@@ -322,17 +281,6 @@ const AddCrewMember = () => {
                   helperText={touched.phoneNumber && errors.phoneNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#fff" }}
-                  slotProps={{
-                    formHelperText: {
-                      sx: {
-                        margin: 0,
-                        paddingRight: 1,
-                        paddingLeft: 1,
-                        backgroundColor: COLOR.primary_white,
-                      },
-                    },
-                  }}
                 />
               </Grid>
             </Grid>
@@ -358,7 +306,7 @@ const AddCrewMember = () => {
                     textDecoration: "underline",
                   }}
                 >
-                  Thông tin BHXH
+                  Thông tin Bảo hiểm
                 </span>{" "}
                 sẽ được thêm khi{" "}
                 <span
@@ -372,7 +320,7 @@ const AddCrewMember = () => {
                 </span>
               </Typography>
             </Box>
-            <SectionDivider sectionName="Thông tin BHXH: " />
+            <SectionDivider sectionName="Thông tin Bảo hiểm: " />
             <Box sx={{ padding: 4 }}>
               <Typography
                 sx={{ textAlign: "center", color: COLOR.primary_black }}
@@ -394,7 +342,7 @@ const AddCrewMember = () => {
                     textDecoration: "underline",
                   }}
                 >
-                  Thông tin BHXH
+                  Thông tin Bảo hiểm
                 </span>{" "}
                 sẽ được thêm khi{" "}
                 <span

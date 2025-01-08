@@ -4,10 +4,10 @@ import {
   TextField,
   Button,
   Typography,
-  CircularProgress,
   InputAdornment,
   IconButton,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router";
 import { COLOR } from "../assets/Color";
@@ -23,6 +23,7 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
   const [isShowConfirmPass, setIsShowConfirmPass] = useState(false);
+  const [signUpLoading, setSignUpLoading] = useState(false);
 
   const initialValues = {
     email: "",
@@ -42,7 +43,7 @@ const SignUpPage = () => {
       .string()
       .matches(
         passwordRegex,
-        "Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ hoa và 1 chữ thường"//no need to add \n cuz this one already takes 2 lines
+        "Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ hoa và 1 chữ thường" //no need to add \n cuz this one already takes 2 lines
       )
       .required("Vui lòng nhập mật khẩu\n\n"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
 
@@ -53,8 +54,18 @@ const SignUpPage = () => {
   });
 
   const handleSignUpClick = async (values) => {
-    console.log("Sign up sucessfully: ", values);
-    navigate("/login");
+    setSignUpLoading(true);
+    try {
+      //Calling API to sign up
+      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+
+      console.log("Sign up sucessfully: ", values);
+      navigate("/login");
+    } catch (err) {
+      console.log("Error when sign up: ", err);
+    } finally {
+      setSignUpLoading(false);
+    }
   };
 
   return (
@@ -307,12 +318,16 @@ const SignUpPage = () => {
                   pb: 1,
                   backgroundColor: COLOR.primary_blue,
                   color: COLOR.primary_white,
+                  minWidth: 120,
                 }}
                 onClick={() => handleSignUpClick()}
                 // disabled={loading}
               >
-                {/* {loading ? <CircularProgress size={24} /> : "Login"} */}
-                Đăng ký
+                {signUpLoading ? (
+                  <CircularProgress color={COLOR.primary_white} size={24} />
+                ) : (
+                  "Đăng ký"
+                )}
               </Button>
               <Divider
                 sx={{
