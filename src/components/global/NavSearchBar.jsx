@@ -3,9 +3,7 @@ import {
   IconButton,
   Autocomplete,
   TextField,
-  InputAdornment,
 } from "@mui/material";
-import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { COLOR } from "../../assets/Color";
 import { useNavigate } from "react-router";
@@ -22,6 +20,7 @@ const pages = [
   { label: "Yêu cầu cung ứng", path: "/supplyRequest" },
   { label: "Tuyển dụng", path: "/crewRecruitment" },
   { label: "Đào tạo", path: "/crewCourse" },
+  { label: "Thêm thuyền viên", path: "/addCrewMember" },
 ];
 
 const NavSearchBar = ({
@@ -101,11 +100,14 @@ const NavSearchBar = ({
           </IconButton>
         </Box>
       )}
-      renderOption={(props, option) => (
-        <Box component="li" {...props} sx={{ padding: 1 }}>
-          {option.label}
-        </Box>
-      )}
+      renderOption={(props, option) => {
+        const { key, ...otherProps } = props;
+        return (
+          <Box component="li" key={key} {...otherProps} sx={{ padding: 1 }}>
+            {option.label}
+          </Box>
+        );
+      }}
     />
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PageTitle, SectionDivider, } from "../components/global";
 import { CardPhotoInput } from "../components/contract";
-import { Box, Button, Typography, TextField, MenuItem } from "@mui/material";
+import { Box, Button, Typography, TextField, MenuItem, CircularProgress } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
@@ -30,6 +30,7 @@ const AddCrewMember = () => {
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
+  const ciNumberRegex = "^\\d{12}$";
 
   const crewMemberInfosSchema = yup.object().shape({
     fullName: yup.string().required("Họ và tên không được để trống"),
@@ -38,7 +39,11 @@ const AddCrewMember = () => {
       .max(new Date(), "Ngày sinh không hợp lệ")
       .required("Ngày sinh không được để trống"),
 
-    ciNumber: yup.string().required("Số căn cước công dân không được để trống"),
+    ciNumber: yup
+      .string()
+      .matches(ciNumberRegex, "Số CCCD không hợp lệ")
+      .required("Số căn cước công dân không được để trống"),
+
     gender: yup.string().required("Vui lòng chọn giới tính"),
     address: yup.string().required("Địa chỉ không được để trống"),
 
@@ -54,9 +59,21 @@ const AddCrewMember = () => {
   });
 
   const [image, setImage] = useState(null);
+  const [addCrewLoading, setAddCrewLoading] = useState(false);
 
-  const handleCreateCrewMemberSubmit = async (values) => {
-    console.log("Successfully submitted: ", values);
+  const handleCreateCrewMemberSubmit = async (values, { resetForm }) => {
+    setAddCrewLoading(true);
+    try{
+      //Calling API to create a new crew member
+      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+
+      console.log("Successfully submitted: ", values);
+      resetForm();
+    } catch(err){
+      console.log("Error when adding new crew member: ", err);
+    } finally{
+      setAddCrewLoading(false);
+    }
   };
 
   const handleImageChange = (event) => {
@@ -109,14 +126,19 @@ const AddCrewMember = () => {
                     padding: 1,
                     color: COLOR.primary_black,
                     backgroundColor: COLOR.primary_gold,
+                    minWidth: 130,
                   }}
                 >
-                  <Box sx={{ display: "flex", alignItems: "end" }}>
-                    <PersonAddIcon
-                      sx={{ marginRight: "5px", marginBottom: "1px" }}
-                    />
-                    <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
-                  </Box>
+                  {addCrewLoading ? (
+                    <CircularProgress size={24} color={COLOR.primary_black} />
+                  ) : (
+                    <Box sx={{ display: "flex", alignItems: "end" }}>
+                      <PersonAddIcon
+                        sx={{ marginRight: "5px", marginBottom: "1px" }}
+                      />
+                      <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
+                    </Box>
+                  )}
                 </Button>
               </Box>
               <CardPhotoInput
@@ -205,7 +227,9 @@ const AddCrewMember = () => {
                   helperText={touched.ciNumber && errors.ciNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ backgroundColor: "#fff" }}
+                  sx={{
+                    backgroundColor: "#fff",
+                  }}
                   slotProps={{
                     formHelperText: {
                       sx: {
