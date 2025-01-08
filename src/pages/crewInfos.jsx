@@ -6,10 +6,10 @@ import { mockCrewMemberInfos } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const CrewInfos = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
     console.log("Navigate to info page of Member with ID: " + id);
@@ -150,9 +150,18 @@ const CrewInfos = () => {
                 color: COLOR.primary_black,
                 borderRadius: 2,
               }}
+              onClick={() => navigate("/addCrewMember")}
             >
               <AddCircleRoundedIcon />
-              <Typography sx={{ fontWeight: 700, marginLeft: "4px", textTransform: "capitalize" }}>Thêm thuyền viên</Typography>
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  marginLeft: "4px",
+                  textTransform: "capitalize",
+                }}
+              >
+                Thêm thuyền viên
+              </Typography>
             </Button>
           </Box>
           <DataGrid
