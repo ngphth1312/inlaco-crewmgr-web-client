@@ -280,9 +280,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
@@ -466,9 +463,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
@@ -498,9 +492,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
@@ -618,9 +609,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
@@ -650,9 +638,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
@@ -770,9 +755,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
@@ -802,9 +784,6 @@ const AddCrewMember = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
                     inputLabel: {
                       shrink: true,
                     },
