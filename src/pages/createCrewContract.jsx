@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
-import { CardPhotoInput } from "../components/contract";
 import {
   Box,
   Button,
@@ -21,10 +20,10 @@ const CreateCrewContract = () => {
   // const navigate = useNavigate();
 
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
-  const paymentStatus = ["Chưa thanh toán", "Đã thanh toán"];
 
   const initialValues = {
     partyA: {
+      cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",
       compAddress: "",
       compPhoneNumber: "",
@@ -251,7 +250,6 @@ const CreateCrewContract = () => {
     }),
   });
 
-  const [image, setImage] = useState(null);
   const [addCrewLoading, setAddCrewLoading] = useState(false);
 
   const handleCreateCrewContractSubmit = async (values, { resetForm }) => {
@@ -263,20 +261,9 @@ const CreateCrewContract = () => {
       console.log("Successfully submitted: ", values);
       resetForm();
     } catch (err) {
-      console.log("Error when adding new crew member: ", err);
+      console.log("Error when creating crew contract: ", err);
     } finally {
       setAddCrewLoading(false);
-    }
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -336,14 +323,8 @@ const CreateCrewContract = () => {
                   )}
                 </Button>
               </Box>
-              <CardPhotoInput
-                sx={{ marginRight: 5 }}
-                image={image}
-                onClick={() => document.getElementById("upload-photo").click()}
-                onImageChange={handleImageChange}
-              />
             </Box>
-            <SectionDivider sectionName="Người sử dụng lao động (Bên A): " />
+            <SectionDivider sectionName="Người sử dụng lao động (Bên A)*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
                 <InfoTextField
@@ -461,7 +442,7 @@ const CreateCrewContract = () => {
                 />
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Người lao động (Bên B): " />
+            <SectionDivider sectionName="Người lao động (Bên B)*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={3}>
                 <InfoTextField
@@ -685,7 +666,7 @@ const CreateCrewContract = () => {
                 />
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Thông tin công việc: " />
+            <SectionDivider sectionName="Thông tin công việc*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={3}>
                 <InfoTextField
@@ -822,7 +803,7 @@ const CreateCrewContract = () => {
                 />
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Thông tin lương: " />
+            <SectionDivider sectionName="Thông tin lương*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={3}>
                 <InfoTextField
@@ -849,7 +830,7 @@ const CreateCrewContract = () => {
                   onBlur={handleBlur}
                   slotProps={{
                     input: {
-                      endAdornment: <InputAdornment>vnđ</InputAdornment>,
+                      endAdornment: <InputAdornment position="end">vnđ</InputAdornment>,
                     },
                   }}
                   sx={{
@@ -888,7 +869,7 @@ const CreateCrewContract = () => {
                   onBlur={handleBlur}
                   slotProps={{
                     input: {
-                      endAdornment: <InputAdornment>vnđ</InputAdornment>,
+                      endAdornment: <InputAdornment position="end">vnđ</InputAdornment>,
                     },
                   }}
                   sx={{
