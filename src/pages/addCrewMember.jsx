@@ -544,7 +544,7 @@ const AddCrewMember = () => {
                     name="insuranceInfo.socialInsImage"
                     onClick={() =>
                       document.getElementById("social-ins-image").click()
-                    }
+                    } 
                   />
                 </Box>
               </Grid>

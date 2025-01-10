@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
+import { FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
@@ -22,6 +23,7 @@ const CreateCrewContract = () => {
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 
   const initialValues = {
+    contractFile: null,
     partyA: {
       cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",
@@ -299,29 +301,38 @@ const CreateCrewContract = () => {
                   title="TẠO HỢP ĐỒNG THUYỀN VIÊN"
                   subtitle="Tạo và lưu Hợp đồng thuyền viên mới vào hệ thống"
                 />
-                <Button
-                  variant="contained"
-                  type="submit"
-                  disabled={!isValid || !dirty}
+                <Box
                   sx={{
-                    width: "10%",
-                    padding: 1,
-                    color: COLOR.primary_black,
-                    backgroundColor: COLOR.primary_gold,
-                    minWidth: 130,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  {addCrewLoading ? (
-                    <CircularProgress size={24} color={COLOR.primary_black} />
-                  ) : (
-                    <Box sx={{ display: "flex", alignItems: "end" }}>
-                      <PersonAddIcon
-                        sx={{ marginRight: "5px", marginBottom: "1px" }}
-                      />
-                      <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
-                    </Box>
-                  )}
-                </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={!isValid || !dirty}
+                    sx={{
+                      width: "10%",
+                      padding: 1,
+                      color: COLOR.primary_black,
+                      backgroundColor: COLOR.primary_gold,
+                      minWidth: 130,
+                    }}
+                  >
+                    {addCrewLoading ? (
+                      <CircularProgress size={24} color={COLOR.primary_black} />
+                    ) : (
+                      <Box sx={{ display: "flex", alignItems: "end" }}>
+                        <PersonAddIcon
+                          sx={{ marginRight: "5px", marginBottom: "1px" }}
+                        />
+                        <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
+                      </Box>
+                    )}
+                  </Button>
+                  <FileUploadField name="contractFileLink" />
+                </Box>
               </Box>
             </Box>
             <SectionDivider sectionName="Người sử dụng lao động (Bên A)*: " />
@@ -830,7 +841,9 @@ const CreateCrewContract = () => {
                   onBlur={handleBlur}
                   slotProps={{
                     input: {
-                      endAdornment: <InputAdornment position="end">vnđ</InputAdornment>,
+                      endAdornment: (
+                        <InputAdornment position="end">vnđ</InputAdornment>
+                      ),
                     },
                   }}
                   sx={{
@@ -869,7 +882,9 @@ const CreateCrewContract = () => {
                   onBlur={handleBlur}
                   slotProps={{
                     input: {
-                      endAdornment: <InputAdornment position="end">vnđ</InputAdornment>,
+                      endAdornment: (
+                        <InputAdornment position="end">vnđ</InputAdornment>
+                      ),
                     },
                   }}
                   sx={{
