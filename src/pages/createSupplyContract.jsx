@@ -53,7 +53,7 @@ const CreateSupplyContract = () => {
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
   const ciNumberRegex = "^\\d{12}$";
 
-  const crewContractSchema = yup.object().shape({
+  const supplyContractSchema = yup.object().shape({
     partyA: yup.object().shape({
       compName: yup.string().required("Tên công ty không được để trống"),
       compAddress: yup.string().required("Địa chỉ không được để trống"),
@@ -142,10 +142,10 @@ const CreateSupplyContract = () => {
     }),
   });
 
-  const [addCrewLoading, setAddCrewLoading] = useState(false);
+  const [createContractLoading, setCreateContractLoading] = useState(false);
 
-  const handleCreateCrewContractSubmit = async (values, { resetForm }) => {
-    setAddCrewLoading(true);
+  const handleCreateSupplyContractSubmit = async (values, { resetForm }) => {
+    setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
@@ -153,9 +153,9 @@ const CreateSupplyContract = () => {
       console.log("Successfully submitted: ", values);
       resetForm();
     } catch (err) {
-      console.log("Error when creating crew contract: ", err);
+      console.log("Error when creating supply contract: ", err);
     } finally {
-      setAddCrewLoading(false);
+      setCreateContractLoading(false);
     }
   };
 
@@ -164,8 +164,8 @@ const CreateSupplyContract = () => {
       <Formik
         validateOnChange={false}
         initialValues={initialValues}
-        validationSchema={crewContractSchema}
-        onSubmit={handleCreateCrewContractSubmit}
+        validationSchema={supplyContractSchema}
+        onSubmit={handleCreateSupplyContractSubmit}
       >
         {({
           values,
@@ -204,7 +204,7 @@ const CreateSupplyContract = () => {
                       minWidth: 130,
                     }}
                   >
-                    {addCrewLoading ? (
+                    {createContractLoading ? (
                       <CircularProgress size={24} color={COLOR.primary_black} />
                     ) : (
                       <Box sx={{ display: "flex", alignItems: "end" }}>

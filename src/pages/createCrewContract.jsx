@@ -252,10 +252,10 @@ const CreateCrewContract = () => {
     }),
   });
 
-  const [addCrewLoading, setAddCrewLoading] = useState(false);
+  const [createContractLoading, setCreateContractLoading] = useState(false);
 
   const handleCreateCrewContractSubmit = async (values, { resetForm }) => {
-    setAddCrewLoading(true);
+    setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
@@ -265,7 +265,7 @@ const CreateCrewContract = () => {
     } catch (err) {
       console.log("Error when creating crew contract: ", err);
     } finally {
-      setAddCrewLoading(false);
+      setCreateContractLoading(false);
     }
   };
 
@@ -320,7 +320,7 @@ const CreateCrewContract = () => {
                       minWidth: 130,
                     }}
                   >
-                    {addCrewLoading ? (
+                    {createContractLoading ? (
                       <CircularProgress size={24} color={COLOR.primary_black} />
                     ) : (
                       <Box sx={{ display: "flex", alignItems: "end" }}>

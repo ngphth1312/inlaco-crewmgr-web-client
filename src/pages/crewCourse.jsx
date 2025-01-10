@@ -6,9 +6,11 @@ import { COLOR } from "../assets/Color";
 import { CourseCard } from "../components/other";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { mockCourses } from "../data/mockData";
-
+import { useNavigate } from "react-router";
 
 const CrewCourse = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <Box m="20px">
@@ -34,6 +36,7 @@ const CrewCourse = () => {
               color: COLOR.primary_black,
               borderRadius: 2,
             }}
+            onClick={() => navigate("/createCourse")}
           >
             <AddCircleRoundedIcon />
             <Typography

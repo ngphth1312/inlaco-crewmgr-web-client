@@ -15,6 +15,7 @@ import CrewCourse from "./pages/crewCourse";
 import AddCrewMember from "./pages/addCrewMember";
 import CreateCrewContract from "./pages/createCrewContract";
 import CreateSupplyContract from "./pages/createSupplyContract";
+import CreateCourse from "./pages/createCourse";
 
 import { MainLayout } from "./components/global";
 import { useAppContext } from "./contexts/AppContext";
@@ -101,6 +102,7 @@ function App() {
             <Route path="/addCrewMember" element={<AddCrewMember />} />
             <Route path="/createCrewContract" element={<CreateCrewContract />} />
             <Route path="/createSupplyContract" element={<CreateSupplyContract />} />
+            <Route path="/createCourse" element={<CreateCourse />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */
