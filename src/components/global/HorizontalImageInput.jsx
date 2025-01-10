@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardMedia, IconButton } from "@mui/material";
+import { useField, useFormikContext } from "formik";
 import { styled } from "@mui/system";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
@@ -24,7 +25,29 @@ const Overlay = styled("div")({
   },
 });
 
-const HorizontalImageInput = ({ image, onClick, onImageChange, width, height, sx = [] }) => {
+const CardPhotoInput = ({
+  name,
+  onClick,
+  width = 200,
+  height = 120,
+  sx = [],
+  ...props
+}) => {
+  //3x4 image ratio
+  const { setFieldValue } = useFormikContext();
+  const [field, meta] = useField(name);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFieldValue(name, reader.result); // Set the image URL as the field value
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <Card
       sx={[
@@ -40,14 +63,16 @@ const HorizontalImageInput = ({ image, onClick, onImageChange, width, height, sx
     >
       <Input
         accept="image/*"
-        id="upload-photo"
         type="file"
-        onChange={onImageChange}
+        onChange={handleImageChange}
+        {...props}
       />
       <CardMedia
         component="img"
         image={
-          image ? image : require("../../assets/images/no-card-photo-3x4.png")
+          field.value
+            ? field.value
+            : require("../../assets/images/no-ship-photo.png")
         }
         alt="Selected Card Photo"
         sx={{
@@ -64,4 +89,4 @@ const HorizontalImageInput = ({ image, onClick, onImageChange, width, height, sx
   );
 };
 
-export default HorizontalImageInput;
+export default CardPhotoInput;

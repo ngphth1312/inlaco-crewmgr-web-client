@@ -70,7 +70,7 @@ const CardPhotoInput = ({
       <CardMedia
         component="img"
         image={
-          field.value ? field.value : require("../../assets/images/no-card-photo-3x4.png")
+          field.value ? field.value : require("../../assets/images/placeholder-3x4.gif")
         }
         alt="Selected Card Photo"
         sx={{

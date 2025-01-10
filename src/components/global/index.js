@@ -8,5 +8,6 @@ export { default as SwitchBar } from "./SwitchBar";
 export { default as SectionDivider } from "./SectionDivider";
 export { default as ConfirmActionDialog } from "./ConfirmActionDialog";
 export { default as InfoTextField } from "./InfoTextField";
+export { default as HorizontalImageInput } from "./HorizontalImageInput";
 
 export { default as MainLayout } from "./MainLayout";

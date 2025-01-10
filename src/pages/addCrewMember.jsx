@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
+import {
+  PageTitle,
+  SectionDivider,
+  InfoTextField,
+  HorizontalImageInput,
+} from "../components/global";
 import { CardPhotoInput } from "../components/contract";
 import {
   Box,
@@ -235,7 +240,7 @@ const AddCrewMember = () => {
               <CardPhotoInput
                 id="card-photo"
                 name="cardPhoto"
-                sx={{ marginRight: 5 }}
+                sx={{ marginRight: "10px" }}
                 onClick={() => document.getElementById("card-photo").click()}
               />
             </Box>
@@ -532,34 +537,31 @@ const AddCrewMember = () => {
                   ))}
                 </InfoTextField>
               </Grid>
-              <Grid size={6}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ảnh chụp tra cứu BHXH"
-                  size="small"
-                  margin="none"
-                  fullWidth
-                  name="insuranceInfo.socialInsImage"
-                  value={values.insuranceInfo?.socialInsImage}
-                  error={
-                    !!touched.insuranceInfo?.socialInsImage &&
-                    !!errors.insuranceInfo?.socialInsImage
-                  }
-                  helperText={
-                    touched.insuranceInfo?.socialInsImage &&
-                    errors.insuranceInfo?.socialInsImage
-                      ? errors.insuranceInfo?.socialInsImage
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
+              <Grid size={12}>
+                <Box sx={{ display: "flex", alignItems: "end" }}>
+                  <Typography
+                    mr={2}
+                    sx={{
+                      color: COLOR.primary_black_placeholder,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Ảnh chụp BHTN hoặc tra cứu BHTN:{" "}
+                  </Typography>
+                  <HorizontalImageInput
+                    id="social-ins-image"
+                    name="insuranceInfo.socialInsImage"
+                    onClick={() =>
+                      document.getElementById("social-ins-image").click()
+                    }
+                  />
+                </Box>
               </Grid>
             </Grid>
             {/* BHTN */}
             <Typography
               sx={{
-                mt: 1,
+                mt: 3,
                 ml: 2,
                 fontSize: 18,
                 textDecoration: "underline",
@@ -687,34 +689,31 @@ const AddCrewMember = () => {
                   ))}
                 </InfoTextField>
               </Grid>
-              <Grid size={6}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ảnh chụp tra cứu BHTN"
-                  size="small"
-                  margin="none"
-                  fullWidth
-                  name="insuranceInfo.accidentInsImage"
-                  value={values.insuranceInfo?.accidentInsImage}
-                  error={
-                    !!touched.insuranceInfo?.accidentInsImage &&
-                    !!errors.insuranceInfo?.accidentInsImage
-                  }
-                  helperText={
-                    touched.insuranceInfo?.accidentInsImage &&
-                    errors.insuranceInfo?.accidentInsImage
-                      ? errors.insuranceInfo?.accidentInsImage
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
+              <Grid size={12}>
+                <Box sx={{ display: "flex", alignItems: "end" }}>
+                  <Typography
+                    mr={2}
+                    sx={{
+                      color: COLOR.primary_black_placeholder,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Ảnh chụp BHXH hoặc tra cứu BHXH:{" "}
+                  </Typography>
+                  <HorizontalImageInput
+                    id="accident-ins-image"
+                    name="insuranceInfo.accidentInsImage"
+                    onClick={() =>
+                      document.getElementById("accident-ins-image").click()
+                    }
+                  />
+                </Box>
               </Grid>
             </Grid>
             {/* BHYT */}
             <Typography
               sx={{
-                mt: 1,
+                mt: 3,
                 ml: 2,
                 fontSize: 18,
                 textDecoration: "underline",
@@ -865,29 +864,25 @@ const AddCrewMember = () => {
                   onBlur={handleBlur}
                 />
               </Grid>
-              <Grid size={6}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ảnh chụp tra cứu BHYT"
-                  size="small"
-                  margin="none"
-                  fullWidth
+              <Grid size={6} />
+              <Box sx={{ display: "flex", alignItems: "end" }}>
+                <Typography
+                  mr={2}
+                  sx={{
+                    color: COLOR.primary_black_placeholder,
+                    fontWeight: 700,
+                  }}
+                >
+                  Ảnh chụp BHYT hoặc tra cứu BHYT:{" "}
+                </Typography>
+                <HorizontalImageInput
+                  id="health-ins-image"
                   name="insuranceInfo.healthInsImage"
-                  value={values.insuranceInfo?.healthInsImage}
-                  error={
-                    !!touched.insuranceInfo?.healthInsImage &&
-                    !!errors.insuranceInfo?.healthInsImage
+                  onClick={() =>
+                    document.getElementById("health-ins-image").click()
                   }
-                  helperText={
-                    touched.insuranceInfo?.healthInsImage &&
-                    errors.insuranceInfo?.healthInsImage
-                      ? errors.insuranceInfo?.healthInsImage
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
                 />
-              </Grid>
+              </Box>
             </Grid>
           </Box>
         )}
