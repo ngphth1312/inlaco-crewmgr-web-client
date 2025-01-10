@@ -2,10 +2,12 @@ import React from "react";
 import { TextField } from "@mui/material";
 import { COLOR } from "../../assets/Color";
 
-const StyledTextField = ({ sx, slotProps, ...props }) => {
+const InfoTextField = ({ sx, slotProps, multiline, minRow, maxRow, rows, ...props }) => {
   return (
     <TextField
       {...props}
+      multiline={multiline}
+      rows={rows}
       sx={[
         { backgroundColor: "#FFF", marginBottom: 1 },
         ...(Array.isArray(sx) ? sx : [sx]),
@@ -25,4 +27,4 @@ const StyledTextField = ({ sx, slotProps, ...props }) => {
   );
 };
 
-export default StyledTextField;
+export default InfoTextField;

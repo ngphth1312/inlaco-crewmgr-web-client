@@ -8,7 +8,6 @@ import {
   TextField,
   MenuItem,
   CircularProgress,
-  InputAdornment,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -173,7 +172,8 @@ const CreateCrewContract = () => {
         .required("Hình thức trả lương không được để trống"),
 
       payday: yup
-        .string()
+        .date()
+        .max(new Date(), "Thời hạn trả lương không hợp lệ")
         .required("Thời hạn trả lương không được để trống"),
 
       salaryReviewPeriod: yup
@@ -827,7 +827,6 @@ const CreateCrewContract = () => {
               <Grid size={3}>
                 <InfoTextField
                   id="basic-salary"
-                  type="number"
                   label="Lương cơ bản"
                   size="small"
                   margin="none"
@@ -847,26 +846,11 @@ const CreateCrewContract = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  slotProps={{
-                    input: {
-                      endAdornment: <InputAdornment>vnđ</InputAdornment>,
-                    },
-                  }}
-                  sx={{
-                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                      {
-                        display: "none",
-                      },
-                    "& input[type=number]": {
-                      MozAppearance: "textfield",
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={3}>
                 <InfoTextField
                   id="allowance"
-                  type="number"
                   label="Phụ cấp"
                   size="small"
                   margin="none"
@@ -886,20 +870,6 @@ const CreateCrewContract = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  slotProps={{
-                    input: {
-                      endAdornment: <InputAdornment>vnđ</InputAdornment>,
-                    },
-                  }}
-                  sx={{
-                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                      {
-                        display: "none",
-                      },
-                    "& input[type=number]": {
-                      MozAppearance: "textfield",
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -973,6 +943,495 @@ const CreateCrewContract = () => {
                     touched.salaryInfo?.salaryReviewPeriod &&
                     errors.salaryInfo?.salaryReviewPeriod
                       ? errors.salaryInfo?.salaryReviewPeriod
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            <SectionDivider sectionName="Thông tin Bảo hiểm: " />
+            {/* BHXH */}
+            <Typography
+              sx={{
+                mt: 1,
+                ml: 2,
+                fontSize: 18,
+                textDecoration: "underline",
+                fontStyle: "italic",
+                color: COLOR.primary_black_placeholder,
+              }}
+            >
+              1. Bảo hiểm Xã hội:
+            </Typography>
+            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+              <Grid size={4}>
+                <InfoTextField
+                  // id=""
+                  label="Mã số BHXH"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.socialInsID"
+                  value={values.insuranceInfo?.socialInsID}
+                  error={
+                    !!touched.insuranceInfo?.socialInsID &&
+                    !!errors.insuranceInfo?.socialInsID
+                  }
+                  helperText={
+                    touched.insuranceInfo?.socialInsID &&
+                    errors.insuranceInfo?.socialInsID
+                      ? errors.insuranceInfo?.socialInsID
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ngày tham gia"
+                  size="small"
+                  margin="none"
+                  type="date"
+                  fullWidth
+                  name="insuranceInfo.socialInsStartDate"
+                  value={values.insuranceInfo?.socialInsStartDate}
+                  error={
+                    !!touched.insuranceInfo?.socialInsStartDate &&
+                    !!errors.insuranceInfo?.socialInsStartDate
+                  }
+                  helperText={
+                    touched.insuranceInfo?.socialInsStartDate &&
+                    errors.insuranceInfo?.socialInsStartDate
+                      ? errors.insuranceInfo?.socialInsStartDate
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  slotProps={{
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ngày hết hạn"
+                  size="small"
+                  margin="none"
+                  type="date"
+                  fullWidth
+                  name="insuranceInfo.socialInsEndDate"
+                  value={values.insuranceInfo?.socialInsEndDate}
+                  error={
+                    !!touched.insuranceInfo?.socialInsEndDate &&
+                    !!errors.insuranceInfo?.socialInsEndDate
+                  }
+                  helperText={
+                    touched.insuranceInfo?.socialInsEndDate &&
+                    errors.insuranceInfo?.socialInsEndDate
+                      ? errors.insuranceInfo?.socialInsEndDate
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  slotProps={{
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={2}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Trạng thái"
+                  size="small"
+                  margin="none"
+                  select
+                  fullWidth
+                  name="insuranceInfo.socialInsStatus"
+                  value={values.insuranceInfo?.socialInsStatus}
+                  error={
+                    !!touched.insuranceInfo?.socialInsStatus &&
+                    !!errors.insuranceInfo?.socialInsStatus
+                  }
+                  helperText={
+                    touched.insuranceInfo?.socialInsStatus &&
+                    errors.insuranceInfo?.socialInsStatus
+                      ? errors.insuranceInfo?.socialInsStatus
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  {paymentStatus.map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {status}
+                    </MenuItem>
+                  ))}
+                </InfoTextField>
+              </Grid>
+              <Grid size={6}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ảnh chụp tra cứu BHXH"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.socialInsImage"
+                  value={values.insuranceInfo?.socialInsImage}
+                  error={
+                    !!touched.insuranceInfo?.socialInsImage &&
+                    !!errors.insuranceInfo?.socialInsImage
+                  }
+                  helperText={
+                    touched.insuranceInfo?.socialInsImage &&
+                    errors.insuranceInfo?.socialInsImage
+                      ? errors.insuranceInfo?.socialInsImage
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            {/* BHTN */}
+            <Typography
+              sx={{
+                mt: 1,
+                ml: 2,
+                fontSize: 18,
+                textDecoration: "underline",
+                fontStyle: "italic",
+                color: COLOR.primary_black_placeholder,
+              }}
+            >
+              2. Bảo hiểm Tai nạn:
+            </Typography>
+            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+              <Grid size={4}>
+                <InfoTextField
+                  // id=""
+                  label="Mã số BHTN"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.accidentInsID"
+                  value={values.insuranceInfo?.accidentInsID}
+                  error={
+                    !!touched.insuranceInfo?.accidentInsID &&
+                    !!errors.insuranceInfo?.accidentInsID
+                  }
+                  helperText={
+                    touched.insuranceInfo?.accidentInsID &&
+                    errors.insuranceInfo?.accidentInsID
+                      ? errors.insuranceInfo?.accidentInsID
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ngày tham gia"
+                  size="small"
+                  margin="none"
+                  type="date"
+                  fullWidth
+                  name="insuranceInfo.accidentInsStartDate"
+                  value={values.insuranceInfo?.accidentInsStartDate}
+                  error={
+                    !!touched.insuranceInfo?.accidentInsStartDate &&
+                    !!errors.insuranceInfo?.accidentInsStartDate
+                  }
+                  helperText={
+                    touched.insuranceInfo?.accidentInsStartDate &&
+                    errors.insuranceInfo?.accidentInsStartDate
+                      ? errors.insuranceInfo?.accidentInsStartDate
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  slotProps={{
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ngày hết hạn"
+                  size="small"
+                  margin="none"
+                  type="date"
+                  fullWidth
+                  name="insuranceInfo.accidentInsEndDate"
+                  value={values.insuranceInfo?.accidentInsEndDate}
+                  error={
+                    !!touched.insuranceInfo?.accidentInsEndDate &&
+                    !!errors.insuranceInfo?.accidentInsEndDate
+                  }
+                  helperText={
+                    touched.insuranceInfo?.accidentInsEndDate &&
+                    errors.insuranceInfo?.accidentInsEndDate
+                      ? errors.insuranceInfo?.accidentInsEndDate
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  slotProps={{
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={2}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Trạng thái"
+                  size="small"
+                  margin="none"
+                  select
+                  fullWidth
+                  name="insuranceInfo.accidentInsStatus"
+                  value={values.insuranceInfo?.accidentInsStatus}
+                  error={
+                    !!touched.insuranceInfo?.accidentInsStatus &&
+                    !!errors.insuranceInfo?.accidentInsStatus
+                  }
+                  helperText={
+                    touched.insuranceInfo?.accidentInsStatus &&
+                    errors.insuranceInfo?.accidentInsStatus
+                      ? errors.insuranceInfo?.accidentInsStatus
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  {paymentStatus.map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {status}
+                    </MenuItem>
+                  ))}
+                </InfoTextField>
+              </Grid>
+              <Grid size={6}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ảnh chụp tra cứu BHTN"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.accidentInsImage"
+                  value={values.insuranceInfo?.accidentInsImage}
+                  error={
+                    !!touched.insuranceInfo?.accidentInsImage &&
+                    !!errors.insuranceInfo?.accidentInsImage
+                  }
+                  helperText={
+                    touched.insuranceInfo?.accidentInsImage &&
+                    errors.insuranceInfo?.accidentInsImage
+                      ? errors.insuranceInfo?.accidentInsImage
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            {/* BHYT */}
+            <Typography
+              sx={{
+                mt: 1,
+                ml: 2,
+                fontSize: 18,
+                textDecoration: "underline",
+                fontStyle: "italic",
+                color: COLOR.primary_black_placeholder,
+              }}
+            >
+              3. Bảo hiểm Y tế:
+            </Typography>
+            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+              <Grid size={4}>
+                <InfoTextField
+                  // id=""
+                  label="Mã số BHYT"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.healthInsID"
+                  value={values.insuranceInfo?.healthInsID}
+                  error={
+                    !!touched.insuranceInfo?.healthInsID &&
+                    !!errors.insuranceInfo?.healthInsID
+                  }
+                  helperText={
+                    touched.insuranceInfo?.healthInsID &&
+                    errors.insuranceInfo?.healthInsID
+                      ? errors.insuranceInfo?.healthInsID
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ngày tham gia"
+                  size="small"
+                  margin="none"
+                  type="date"
+                  fullWidth
+                  name="insuranceInfo.healthInsStartDate"
+                  value={values.insuranceInfo?.healthInsStartDate}
+                  error={
+                    !!touched.insuranceInfo?.healthInsStartDate &&
+                    !!errors.insuranceInfo?.healthInsStartDate
+                  }
+                  helperText={
+                    touched.insuranceInfo?.healthInsStartDate &&
+                    errors.insuranceInfo?.healthInsStartDate
+                      ? errors.insuranceInfo?.healthInsStartDate
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  slotProps={{
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ngày hết hạn"
+                  size="small"
+                  margin="none"
+                  type="date"
+                  fullWidth
+                  name="insuranceInfo.healthInsEndDate"
+                  value={values.insuranceInfo?.healthInsEndDate}
+                  error={
+                    !!touched.insuranceInfo?.healthInsEndDate &&
+                    !!errors.insuranceInfo?.healthInsEndDate
+                  }
+                  helperText={
+                    touched.insuranceInfo?.healthInsEndDate &&
+                    errors.insuranceInfo?.healthInsEndDate
+                      ? errors.insuranceInfo?.healthInsEndDate
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  slotProps={{
+                    input: {
+                      placeholder: "asjdbnaskjd",
+                    },
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={2}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Trạng thái"
+                  size="small"
+                  margin="none"
+                  select
+                  fullWidth
+                  name="insuranceInfo.healthInsStatus"
+                  value={values.insuranceInfo?.healthInsStatus}
+                  error={
+                    !!touched.insuranceInfo?.healthInsStatus &&
+                    !!errors.insuranceInfo?.healthInsStatus
+                  }
+                  helperText={
+                    touched.insuranceInfo?.healthInsStatus &&
+                    errors.insuranceInfo?.healthInsStatus
+                      ? errors.insuranceInfo?.healthInsStatus
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  {paymentStatus.map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {status}
+                    </MenuItem>
+                  ))}
+                </InfoTextField>
+              </Grid>
+              <Grid size={6}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Nơi đăng ký khám chữa bệnh ban đầu"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.healthInsHospital"
+                  value={values.insuranceInfo?.healthInsHospital}
+                  error={
+                    !!touched.insuranceInfo?.healthInsHospital &&
+                    !!errors.insuranceInfo?.healthInsHospital
+                  }
+                  helperText={
+                    touched.insuranceInfo?.healthInsHospital &&
+                    errors.insuranceInfo?.healthInsHospital
+                      ? errors.insuranceInfo?.healthInsHospital
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={6}>
+                <InfoTextField
+                  // id="salary-review-period"
+                  label="Ảnh chụp tra cứu BHYT"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="insuranceInfo.healthInsImage"
+                  value={values.insuranceInfo?.healthInsImage}
+                  error={
+                    !!touched.insuranceInfo?.healthInsImage &&
+                    !!errors.insuranceInfo?.healthInsImage
+                  }
+                  helperText={
+                    touched.insuranceInfo?.healthInsImage &&
+                    errors.insuranceInfo?.healthInsImage
+                      ? errors.insuranceInfo?.healthInsImage
                       : " "
                   }
                   onChange={handleChange}
