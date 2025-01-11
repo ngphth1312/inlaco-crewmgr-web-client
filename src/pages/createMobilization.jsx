@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageTitle, SectionDivider, InfoTextField, HorizontalImageInput } from "../components/global";
+import { PageTitle, SectionDivider, InfoTextField, HorizontalImageInput, EditableDataGrid } from "../components/global";
 import { FileUploadField } from "../components/contract";
 import {
   Box,
@@ -529,7 +529,11 @@ const CreateMobilization = () => {
               </Grid>
             </Grid>
             <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}></Grid>
+            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+                <Grid size={12}>
+                    <EditableDataGrid/>
+                </Grid>
+            </Grid>
           </Box>
         )}
       </Formik>

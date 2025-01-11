@@ -12,12 +12,13 @@ const CrewInfos = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    console.log("Navigate to info page of Member with ID: " + id);
+    console.log(id);
+    console.log("Navigate to info page of Member with crewID: " + id);
   };
 
   const columns = [
     {
-      field: "id",
+      field: "crewID",
       headerName: "Mã TV",
       sortable: false,
       flex: 1,
@@ -77,7 +78,7 @@ const CrewInfos = () => {
           <Button
             variant="contained"
             size="small"
-            onClick={() => onMemberDetailClick(params?.id)}
+            onClick={() => {onMemberDetailClick(params?.id)}}//if you want to pass the crewID as params, use params?.row?.crewID
             sx={{
               backgroundColor: COLOR.primary_green,
               color: COLOR.primary_black,
