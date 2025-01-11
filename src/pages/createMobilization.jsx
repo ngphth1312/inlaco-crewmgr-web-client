@@ -38,6 +38,8 @@ const CreateMobilization = () => {
       shipNationality: "",  
       shipType: "",
     },
+
+    mobilizedCrewMembers: [],
   };
 
   const phoneRegex =
@@ -79,8 +81,6 @@ const CreateMobilization = () => {
         ),
       UN_LOCODE_ArrivalLocation: yup.string().required("UN/LOCODE điểm đến không được để trống"),
       arrivalLocation: yup.string().required("Tên điểm đến không được để trống"),
-
-
     }),
   });
 
@@ -170,23 +170,17 @@ const CreateMobilization = () => {
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={5}>
                 <InfoTextField
-                  id="end-date"
+                  id="comp-name"
                   label="Điều động đến công ty"
                   size="small"
                   margin="none"
                   required
                   fullWidth
-                  name="mobilizationInfo.endDate"
-                  value={values.mobilizationInfo?.endDate}
-                  error={
-                    !!touched.mobilizationInfo?.endDate &&
-                    !!errors.mobilizationInfo?.endDate
-                  }
+                  name="compName"
+                  value={values.compName}
+                  error={!!touched.compName && !!errors.compName}
                   helperText={
-                    touched.mobilizationInfo?.endDate &&
-                    errors.mobilizationInfo?.endDate
-                      ? errors.mobilizationInfo?.endDate
-                      : " "
+                    touched.compName && errors.compName ? errors.compName : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -201,16 +195,14 @@ const CreateMobilization = () => {
                   margin="none"
                   required
                   fullWidth
-                  name="mobilizationInfo.numOfCrewMember"
-                  value={values.mobilizationInfo?.numOfCrewMember}
+                  name="numOfMobilizedCrew"
+                  value={values.numOfMobilizedCrew}
                   error={
-                    !!touched.mobilizationInfo?.numOfCrewMember &&
-                    !!errors.mobilizationInfo?.numOfCrewMember
+                    !!touched.numOfMobilizedCrew && !!errors.numOfMobilizedCrew
                   }
                   helperText={
-                    touched.mobilizationInfo?.numOfCrewMember &&
-                    errors.mobilizationInfo?.numOfCrewMember
-                      ? errors.mobilizationInfo?.numOfCrewMember
+                    touched.numOfMobilizedCrew && errors.numOfMobilizedCrew
+                      ? errors.numOfMobilizedCrew
                       : " "
                   }
                   onChange={handleChange}
@@ -424,7 +416,7 @@ const CreateMobilization = () => {
                   id="social-ins-image"
                   width={300}
                   height={180}
-                  name="insuranceInfo.socialInsImage"
+                  name="mobilizationInfo.shipImage"
                   sx={{ marginBottom: 2 }}
                   onClick={() =>
                     document.getElementById("social-ins-image").click()
@@ -433,9 +425,8 @@ const CreateMobilization = () => {
               </Grid>
               <Grid size={2}>
                 <InfoTextField
-                  id="arrival-location"
+                  id="ship-imo"
                   label="IMO"
-                  required
                   size="small"
                   margin="none"
                   fullWidth
@@ -457,9 +448,8 @@ const CreateMobilization = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="arrival-location"
+                  id="ship-name"
                   label="Tên tàu"
-                  required
                   size="small"
                   margin="none"
                   fullWidth
@@ -481,9 +471,8 @@ const CreateMobilization = () => {
               </Grid>
               <Grid size={2}>
                 <InfoTextField
-                  id="arrival-location"
+                  id="ship-nationality"
                   label="Quốc tịch"
-                  required
                   size="small"
                   margin="none"
                   fullWidth
@@ -505,9 +494,8 @@ const CreateMobilization = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="arrival-location"
+                  id="ship-type"
                   label="Loại tàu"
-                  required
                   size="small"
                   margin="none"
                   fullWidth
@@ -530,9 +518,9 @@ const CreateMobilization = () => {
             </Grid>
             <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-                <Grid size={12}>
-                    <EditableDataGrid/>
-                </Grid>
+              <Grid size={12}>
+                <EditableDataGrid name="mobilizedCrewMembers" />
+              </Grid>
             </Grid>
           </Box>
         )}

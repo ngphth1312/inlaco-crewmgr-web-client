@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
@@ -11,29 +11,44 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { mockCrewMemberInfos } from "../../data/mockData";
+// import { mockCrewMemberInfos } from "../../data/mockData";
 import { COLOR } from "../../assets/Color";
 import { NoValuesOverlay } from "../global";
+import { useField, useFormikContext } from "formik";
 
-function replacePositionName(arr) {
-  return arr.map((item) => {
-    if (item.position && item.position.name) {
-      item.positionName = item.position.name;
-      delete item.position;
-    }
-    return item;
-  });
-}
+// function replacePositionName(arr) {
+//   return arr.map((item) => {
+//     if (item.position && item.position.name) {
+//       item.positionName = item.position.name;
+//       delete item.position;
+//     }
+//     return item;
+//   });
+// }
 
-const initialRows = replacePositionName(mockCrewMemberInfos);
+// const initialRows = replacePositionName(mockCrewMemberInfos);
 
 function randomID() {
   return Math.random().toString(36).substring(2, 12);
 }
 
-export default function EditableDataGrid() {
-  const [rows, setRows] = React.useState(initialRows);
-  const [rowModesModel, setRowModesModel] = React.useState({});
+export default function EditableDataGrid({ name, sx = [], ...props }) {
+  const [rows, setRows] = useState([]);
+  const [rowModesModel, setRowModesModel] = useState({});
+  const [isEditable, setIsEditable] = useState(true);
+
+  const { setFieldValue } = useFormikContext();
+  // const [field, meta] = useField(name);
+
+    const handleEditButtonClick = () => {
+      setIsEditable(true);
+    };
+
+    const handleSaveButtonClick = () => {
+      console.log(rows);
+      setIsEditable(false);
+      setFieldValue(name, rows);
+    };
 
   const handleAddCrewClick = () => {
     const id = randomID();
@@ -89,6 +104,12 @@ export default function EditableDataGrid() {
   };
 
   const processRowUpdate = (newRow) => {
+    console.log(newRow.dob);
+    if (newRow.dob) {
+      newRow.dob = new Date(newRow.dob).toISOString().split("T")[0]; // Format the date as YYYY-MM-DD
+      console.log(newRow.dob);
+    }
+
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
@@ -195,43 +216,99 @@ export default function EditableDataGrid() {
 
   return (
     <Box
-      sx={{
-        width: "100%",
-        "& .actions": {
-          color: COLOR.primary_black_placeholder,
+      {...props}
+      sx={[
+        {
+          width: "100%",
+          "& .actions": {
+            color: COLOR.primary_black_placeholder,
+          },
+          "& .MuiDataGrid-columnHeader": {
+            backgroundColor: COLOR.secondary_blue,
+            color: COLOR.primary_white,
+          },
+          "& .MuiTablePagination-root": {
+            backgroundColor: COLOR.secondary_blue,
+            color: COLOR.primary_white,
+          },
         },
-        "& .MuiDataGrid-columnHeader": {
-          backgroundColor: COLOR.secondary_blue,
-          color: COLOR.primary_white,
-        },
-        "& .MuiTablePagination-root": {
-          backgroundColor: COLOR.secondary_blue,
-          color: COLOR.primary_white,
-        },
-      }}
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
-      <Button
-        variant="contained"
-        sx={{
-          width: "18%",
-          padding: 1,
-          color: COLOR.primary_black,
-          backgroundColor: COLOR.primary_gold,
-          minWidth: 130,
-          marginBottom: 2,
-        }}
-        onClick={handleAddCrewClick}
-      >
-        <Box sx={{ display: "flex", alignItems: "end" }}>
-          <PersonAddIcon sx={{ marginRight: "5px", marginBottom: "1px" }} />
-          <Typography sx={{ fontWeight: 700 }}>Thêm thuyền viên</Typography>
-        </Box>
-      </Button>
+      <Box sx={{ display: "flex", width: "100%" }}>
+        <Button
+          variant="contained"
+          sx={{
+            width: "16%",
+            padding: 1,
+            color: COLOR.primary_black,
+            backgroundColor: COLOR.primary_gold,
+            minWidth: 130,
+            marginBottom: 2,
+            marginRight: 2,
+          }}
+          onClick={handleAddCrewClick}
+          disabled={!isEditable}
+        >
+          <Box sx={{ display: "flex", alignItems: "end" }}>
+            <PersonAddIcon
+              sx={{
+                width: 20,
+                height: 20,
+                marginRight: "5px",
+                marginBottom: "2px",
+              }}
+            />
+            <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
+              Thêm thuyền viên
+            </Typography>
+          </Box>
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            width: "12%",
+            padding: 1,
+            color: COLOR.primary_black,
+            backgroundColor: isEditable ? COLOR.primary_blue : COLOR.primary_gold,
+            minWidth: 130,
+            marginBottom: 2,
+          }}
+          onClick={isEditable ? handleSaveButtonClick : handleEditButtonClick}
+        >
+          <Box sx={{ display: "flex", alignItems: "end" }}>
+            {isEditable ? (
+              <SaveIcon
+                sx={{
+                  width: 20,
+                  height: 20,
+                  marginRight: "5px",
+                  marginBottom: "2px",
+                  color: COLOR.primary_white,
+                }}
+              />
+            ) : (
+              <PersonAddIcon
+                sx={{
+                  width: 20,
+                  height: 20,
+                  marginRight: "5px",
+                  marginBottom: "2px",
+                }}
+              />
+            )}
+            <Typography sx={{ fontWeight: 700, fontSize: 14, color: isEditable ? COLOR.primary_white : COLOR.primary_black }}>
+              {isEditable ? "Lưu" : "Chỉnh sửa"}
+            </Typography>
+          </Box>
+        </Button>
+      </Box>
       <DataGrid
         rows={rows}
         columns={columns}
         editMode="row"
         disableColumnMenu
+        disableRowSelectionOnClick
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
