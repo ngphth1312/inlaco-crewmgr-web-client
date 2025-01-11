@@ -244,7 +244,7 @@ const AddCrewMember = () => {
                 onClick={() => document.getElementById("card-photo").click()}
               />
             </Box>
-            <SectionDivider sectionName="Thông tin cá nhân: " />
+            <SectionDivider sectionName="Thông tin cá nhân*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
                 <InfoTextField

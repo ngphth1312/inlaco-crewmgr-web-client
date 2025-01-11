@@ -7,10 +7,10 @@ import { ShipInfoCell, ScheduleCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const CrewInfos = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
     console.log("Navigate to detail page of mobilization with ID: " + id);
@@ -137,7 +137,8 @@ const CrewInfos = () => {
             subtitle="Thông tin các điều động đã tạo"
           />
         </Box>
-        <SwitchBar
+        {/* Switch bar component only for Crew Member role */}
+        {/* <SwitchBar
           tabLabel1={"Danh Sách"}
           tabLabel2={"Thời Gian Biểu"}
           variant={"fullWidth"}
@@ -170,7 +171,7 @@ const CrewInfos = () => {
                 flexDirection: "row",
                 width: "100%",
                 paddingBottom: 2,
-                justifyContent: "space-between",
+                justifyContent: "end",
               }}
             >
               <Button
@@ -180,6 +181,7 @@ const CrewInfos = () => {
                   color: COLOR.primary_black,
                   borderRadius: 2,
                 }}
+                onClick={() => navigate("/createMobilization")}
               >
                 <AddCircleRoundedIcon />
                 <Typography
@@ -221,7 +223,77 @@ const CrewInfos = () => {
           <Box m="40px 0 0 0" height="62vh" maxHeight={550} maxWidth={1600}>
             <Typography>THỜI GIAN BIỂU</Typography>
           </Box>
-        )}
+        )} */}
+        <Box
+          m="40px 0 0 0"
+          height="62vh"
+          maxHeight={550}
+          maxWidth={1600}
+          sx={{
+            "& .MuiDataGrid-columnHeader": {
+              backgroundColor: COLOR.secondary_blue,
+              color: COLOR.primary_white,
+            },
+            "& .MuiTablePagination-root": {
+              backgroundColor: COLOR.secondary_blue,
+              color: COLOR.primary_white,
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              paddingBottom: 2,
+              justifyContent: "end",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: COLOR.primary_gold,
+                color: COLOR.primary_black,
+                borderRadius: 2,
+              }}
+              onClick={() => navigate("/createMobilization")}
+            >
+              <AddCircleRoundedIcon />
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  marginLeft: "4px",
+                  textTransform: "capitalize",
+                }}
+              >
+                Tạo điều động
+              </Typography>
+            </Button>
+          </Box>
+          <DataGrid
+            disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnResize
+            getRowHeight={() => "auto"}
+            rows={masterAssignmentSchedule}
+            columns={columns}
+            slots={{ noRowsOverlay: NoValuesOverlay }}
+            pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5, page: 0 },
+              },
+            }}
+            sx={{
+              backgroundColor: "#FFF",
+              headerAlign: "center",
+              "& .MuiDataGrid-columnHeaderTitle": {
+                fontSize: 16,
+                fontWeight: 700,
+              },
+            }}
+          />
+        </Box>
       </Box>
     </div>
   );

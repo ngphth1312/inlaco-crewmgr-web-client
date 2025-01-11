@@ -9,5 +9,6 @@ export { default as SectionDivider } from "./SectionDivider";
 export { default as ConfirmActionDialog } from "./ConfirmActionDialog";
 export { default as InfoTextField } from "./InfoTextField";
 export { default as HorizontalImageInput } from "./HorizontalImageInput";
+export { default as EditableDataGrid } from "./EditableDataGrid";
 
 export { default as MainLayout } from "./MainLayout";

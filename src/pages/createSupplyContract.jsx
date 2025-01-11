@@ -42,10 +42,14 @@ const CreateSupplyContract = () => {
       startDate: "",
       endDate: "",
       numOfCrewMember: "",
+
       timeOfDeparture: "",
       departureLocation: "",
+      UN_LOCODE_DepartureLocation: "",
+
       estimatedTimeOfArrival: "",
       arrivalLocation: "",
+      UN_LOCODE_ArrivalLocation: "",
     },
   };
 
@@ -191,7 +195,13 @@ const CreateSupplyContract = () => {
                   title="TẠO HỢP ĐỒNG CUNG ỨNG THUYỀN VIÊN"
                   subtitle="Tạo và lưu Hợp đồng cung ứng thuyền viên mới vào hệ thống"
                 />
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <Button
                     variant="contained"
                     type="submit"
@@ -600,10 +610,33 @@ const CreateSupplyContract = () => {
                   }}
                 />
               </Grid>
-              <Grid size={8}>
+              <Grid size={2}>
+                <InfoTextField
+                  id="arrival-location"
+                  label="UN/LOCODE điểm khởi hành"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="contractInfo.UN_LOCODE_DepartureLocation"
+                  value={values.contractInfo?.UN_LOCODE_DepartureLocation}
+                  error={
+                    !!touched.contractInfo?.UN_LOCODE_DepartureLocation &&
+                    !!errors.contractInfo?.UN_LOCODE_DepartureLocation
+                  }
+                  helperText={
+                    touched.contractInfo?.UN_LOCODE_DepartureLocation &&
+                    errors.contractInfo?.UN_LOCODE_DepartureLocation
+                      ? errors.contractInfo?.UN_LOCODE_DepartureLocation
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={6}>
                 <InfoTextField
                   id="departure-location"
-                  label="Địa điểm xuất phát"
+                  label="Tên điểm khởi hành"
                   size="small"
                   margin="none"
                   fullWidth
@@ -652,10 +685,33 @@ const CreateSupplyContract = () => {
                   }}
                 />
               </Grid>
-              <Grid size={8}>
+              <Grid size={2}>
                 <InfoTextField
                   id="arrival-location"
-                  label="Địa điểm đến"
+                  label="UN/LOCODE điểm đến"
+                  size="small"
+                  margin="none"
+                  fullWidth
+                  name="contractInfo.UN_LOCODE_ArrivalLocation"
+                  value={values.contractInfo?.UN_LOCODE_ArrivalLocation}
+                  error={
+                    !!touched.contractInfo?.UN_LOCODE_ArrivalLocation &&
+                    !!errors.contractInfo?.UN_LOCODE_ArrivalLocation
+                  }
+                  helperText={
+                    touched.contractInfo?.UN_LOCODE_ArrivalLocation &&
+                    errors.contractInfo?.UN_LOCODE_ArrivalLocation
+                      ? errors.contractInfo?.UN_LOCODE_ArrivalLocation
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={6}>
+                <InfoTextField
+                  id="arrival-location"
+                  label="Tên điểm đến"
                   size="small"
                   margin="none"
                   fullWidth
