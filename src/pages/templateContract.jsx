@@ -8,8 +8,101 @@ import { COLOR } from "../assets/Color";
 import { TemplateContractCard } from "../components/contract"
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { mockTemplateContracts } from "../data/mockData"
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+import { saveAs } from "file-saver";
+import JSZipUtils from "jszip-utils";
 
 const TemplateContract = () => {
+
+  const generateDocument = async () => {
+    // Load the .docx template
+    const loadFile = (url, callback) => {
+      JSZipUtils.getBinaryContent(url, callback);
+    };
+
+    loadFile(require("../assets/templates/template-hop-dong-thuyen-vien.docx"), (error, content) => {
+      if (error) {
+        throw error;
+      }
+
+      // Initialize PizZip with the .docx content
+      const zip = new PizZip(content);
+
+      // Initialize docxtemplater
+      const doc = new Docxtemplater(zip, {
+        paragraphLoop: true,
+        linebreaks: true,
+      });
+
+      // Set dynamic values for placeholders
+      doc.setData({
+        compName: "CONG TY TESTING",
+        compAddress: "123 Đường ABC, Quận XYZ, TPHCM",
+      });
+
+      try {
+        // Render the document with dynamic data
+        doc.render();
+
+        // Generate the final document
+        const out = doc.getZip().generate({
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+
+        // Save the file locally
+        saveAs(out, "Generated_Contract.docx");
+      } catch (error) {
+        console.error("Error generating document:", error);
+      }
+    });
+
+    //If the template is stored on the internet, use the following code
+    // try {
+    //   // Fetch the .docx template from the URL
+    //   const response = await fetch(
+    //     "https://example.com/path/to/template-hop-dong-thuyen-vien.docx"
+    //   );
+    //   if (!response.ok) {
+    //     throw new Error("Failed to fetch the template");
+    //   }
+    //   const content = await response.arrayBuffer();
+
+    //   // Initialize PizZip with the .docx content
+    //   const zip = new PizZip(content);
+
+    //   // Initialize docxtemplater
+    //   const doc = new Docxtemplater(zip, {
+    //     paragraphLoop: true,
+    //     linebreaks: true,
+    //   });
+
+    //   // Set dynamic values for placeholders
+    //   doc.setData({
+    //     compName: "CONG TY TESTING",
+    //     compAddress: "123 Đường ABC, Quận XYZ, TPHCM",
+    //   });
+
+    //   // Render the document with dynamic data
+    //   doc.render();
+
+    //   // Generate the final document
+    //   const out = doc.getZip().generate({
+    //     type: "blob",
+    //     mimeType:
+    //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    //   });
+
+    //   // Save the file locally
+    //   saveAs(out, "Generated_Contract.docx");
+    // } catch (error) {
+    //   console.error("Error generating document:", error);
+    // }
+  };
+
+
   return (
     <div>
       <Box m="20px">
@@ -45,6 +138,7 @@ const TemplateContract = () => {
               color: COLOR.primary_black,
               borderRadius: 2,
             }}
+            onClick={() => generateDocument()}
           >
             <AddCircleRoundedIcon />
             <Typography
@@ -54,7 +148,7 @@ const TemplateContract = () => {
                 textTransform: "capitalize",
               }}
             >
-              Tạo template
+              Tải lên template
             </Typography>
           </Button>
         </Box>
