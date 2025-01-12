@@ -24,7 +24,6 @@ const CreateCourse = () => {
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
-  const ciNumberRegex = "^\\d{12}$";
 
   const crewContractSchema = yup.object().shape({});
 
@@ -110,13 +109,9 @@ const CreateCourse = () => {
                 </Box>
               </Box>
             </Box>
-            <SectionDivider sectionName="Người sử dụng lao động (Bên A)*: " />
+            <SectionDivider sectionName="Thông tin cơ sở đào tạo*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}></Grid>
-            <SectionDivider sectionName="Người lao động (Bên B)*: " />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}></Grid>
-            <SectionDivider sectionName="Thông tin công việc*: " />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}></Grid>
-            <SectionDivider sectionName="Thông tin lương*: " />
+            <SectionDivider sectionName="Thông tin khóa đào tạo*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}></Grid>
           </Box>
         )}

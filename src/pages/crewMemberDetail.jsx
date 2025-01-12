@@ -215,11 +215,11 @@ const CrewMemberDetail = () => {
 
   const [isEditable, setIsEditable] = useState(false);
 
-  const handleEditPersonalInfClick = () => {
+  const handleEditClick = () => {
     setIsEditable(true);
   };
 
-  const handleSavePersonalInfClick = () => {
+  const handleSaveClick = () => {
     // console.log(rows);
     setIsEditable(false);
     // setFieldValue(name, rows);
@@ -230,7 +230,7 @@ const CrewMemberDetail = () => {
   };
 
 
-  const handleCreateCrewMemberSubmit = async (values, { resetForm }) => {
+  const handleSaveCrewMemberSubmit = async (values, { resetForm }) => {
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
@@ -238,7 +238,7 @@ const CrewMemberDetail = () => {
       console.log("Successfully submitted: ", values);
       resetForm();
     } catch (err) {
-      console.log("Error when adding new crew member: ", err);
+      console.log("Error when saving crew member info: ", err);
     }
   };
 
@@ -248,7 +248,7 @@ const CrewMemberDetail = () => {
         validateOnChange={false}
         initialValues={initialValues}
         validationSchema={crewMemberInfosSchema}
-        onSubmit={handleCreateCrewMemberSubmit}
+        onSubmit={handleSaveCrewMemberSubmit}
       >
         {({
           values,
@@ -271,7 +271,7 @@ const CrewMemberDetail = () => {
                 }}
               >
                 <PageTitle
-                  title="THÊM THUYỀN VIÊN"
+                  title="CHI TIẾT THUYỀN VIÊN"
                   subtitle={`Mã thuyền viên: ${id}`} //Change this to the actual crew ID, this currently display an id, not crewID
                 />
                 <Box
@@ -327,8 +327,8 @@ const CrewMemberDetail = () => {
                     }}
                     onClick={
                       isEditable
-                        ? handleSavePersonalInfClick
-                        : handleEditPersonalInfClick
+                        ? handleSaveClick
+                        : handleEditClick
                     }
                   >
                     <Box sx={{ display: "flex", alignItems: "end" }}>

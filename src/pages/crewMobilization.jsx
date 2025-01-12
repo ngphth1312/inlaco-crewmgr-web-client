@@ -9,11 +9,11 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
 
-const CrewInfos = () => {
+const CrewMobilization = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    console.log("Navigate to detail page of mobilization with ID: " + id);
+    navigate(`/mobilizationDetail/${id}`);
   };
 
   const columns = [
@@ -299,4 +299,4 @@ const CrewInfos = () => {
   );
 };
 
-export default CrewInfos;
+export default CrewMobilization;

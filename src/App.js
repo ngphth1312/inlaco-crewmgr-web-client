@@ -12,6 +12,7 @@ import CrewMemberDetail from "./pages/crewMemberDetail";
 
 import CrewMobilization from "./pages/crewMobilization";
 import CreateMobilization from "./pages/createMobilization";
+import MobilizationDetail from "./pages/mobilizationDetail";
 
 import CrewContract from "./pages/crewContract";
 import CreateCrewContract from "./pages/createCrewContract";
@@ -113,6 +114,7 @@ function App() {
             <Route path="/createCourse" element={<CreateCourse />} />
             <Route path="/createMobilization" element={<CreateMobilization />} />
             <Route path="/crewMemberDetail/:id" element={<CrewMemberDetail />} />
+            <Route path="/mobilizationDetail/:id" element={<MobilizationDetail />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */

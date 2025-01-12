@@ -33,10 +33,10 @@ function randomID() {
   return Math.random().toString(36).substring(2, 12);
 }
 
-export default function EditableDataGrid({ name, sx = [], ...props }) {
+export default function EditableDataGrid({ name, initialIsEditable = true, disabled, sx = [], ...props }) {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [isEditable, setIsEditable] = useState(true);
+  const [isEditable, setIsEditable] = useState(initialIsEditable);
 
   const { setFieldValue } = useFormikContext();
   // const [field, meta] = useField(name);
@@ -122,7 +122,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
       field: "crewID",
       headerName: "Mã TV",
       flex: 2,
-      editable: true,
+      editable: isEditable,
       align: "center",
       headerAlign: "center",
     },
@@ -130,7 +130,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
       field: "fullName",
       headerName: "Họ tên",
       flex: 3,
-      editable: true,
+      editable: isEditable,
       align: "center",
       headerAlign: "center",
     },
@@ -139,7 +139,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
       headerName: "Ngày sinh",
       type: "date",
       flex: 2,
-      editable: true,
+      editable: isEditable,
       align: "center",
       headerAlign: "center",
       valueGetter: (params) => {
@@ -157,7 +157,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
       flex: 2,
       align: "left",
       headerAlign: "left",
-      editable: true,
+      editable: isEditable,
       align: "center",
       headerAlign: "center",
     },
@@ -165,7 +165,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
       field: "positionName",
       headerName: "Vị trí chuyên môn",
       flex: 3,
-      editable: true,
+      editable: isEditable,
       align: "center",
       headerAlign: "center",
     },
@@ -205,12 +205,14 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
+            disabled={!isEditable}
             onClick={handleEditClick(id)}
             color="inherit"
           />,
           <GridActionsCellItem
             icon={<DeleteForeverRoundedIcon />}
             label="Delete"
+            disabled={!isEditable}
             onClick={handleDeleteClick(id)}
             sx={{ color: COLOR.primary_orange }}
           />,
