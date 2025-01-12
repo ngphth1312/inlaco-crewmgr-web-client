@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PageTitle, SectionDivider, InfoTextField, HorizontalImageInput, EditableDataGrid } from "../components/global";
+import { NationalityTextField } from "../components/mobilization";
 import { FileUploadField } from "../components/contract";
 import {
   Box,
@@ -242,7 +243,7 @@ const CreateMobilization = () => {
               <Grid size={4}>
                 <InfoTextField
                   id="time-of-departure"
-                  type="date"
+                  type="datetime-local"
                   required
                   label="Thời gian khởi hành dự kiến"
                   size="small"
@@ -320,7 +321,7 @@ const CreateMobilization = () => {
               <Grid size={4}>
                 <InfoTextField
                   id="estimated-time-of-arrival"
-                  type="date"
+                  type="datetime-local"
                   required
                   label="Thời gian đến nơi dự kiến"
                   size="small"
@@ -470,7 +471,7 @@ const CreateMobilization = () => {
                 />
               </Grid>
               <Grid size={2}>
-                <InfoTextField
+                <NationalityTextField
                   id="ship-nationality"
                   label="Quốc tịch"
                   size="small"

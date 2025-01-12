@@ -60,9 +60,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
         fullName: "",
         dob: "",
         phoneNumber: "",
-        position: {
-          name: "",
-        },
+        positionName: "",
         isNew: true,
       },
     ]);
@@ -104,10 +102,9 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
   };
 
   const processRowUpdate = (newRow) => {
-    console.log(newRow.dob);
     if (newRow.dob) {
-      newRow.dob = new Date(newRow.dob).toISOString().split("T")[0]; // Format the date as YYYY-MM-DD
-      console.log(newRow.dob);
+      const date = new Date(newRow.dob);
+      newRow.dob = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())).toISOString(); // Convert to ISOString and format as YYYY-MM-DD
     }
 
     const updatedRow = { ...newRow, isNew: false };
@@ -144,7 +141,14 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
       editable: true,
       align: "center",
       headerAlign: "center",
-      valueGetter: (params) => new Date(params?.value),
+      valueGetter: (params) => {
+        return params ? new Date(params) : null;
+      },
+      valueFormatter: (params) => {
+        if (!params) return "Invalid date";
+        const date = new Date(params);
+        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+      },
     },
     {
       field: "phoneNumber",
