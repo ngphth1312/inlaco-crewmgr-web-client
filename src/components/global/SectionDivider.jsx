@@ -1,9 +1,10 @@
 import { Typography, Box } from "@mui/material";
 import { COLOR } from "../../assets/Color";
 
-const SectionDivider = ({ sectionName, color = COLOR.primary_black_placeholder, my = 3, sx }) => {
+const SectionDivider = ({ sectionName, color = COLOR.primary_black_placeholder, my = 3, sx, ...props }) => {
   return (
     <Box
+      {...props}
       my={my}
       sx={[
         {

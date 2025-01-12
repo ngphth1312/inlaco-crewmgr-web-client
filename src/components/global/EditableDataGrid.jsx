@@ -4,6 +4,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import CancelIcon from "@mui/icons-material/Close";
 import {
   GridRowModes,
@@ -274,7 +275,9 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
             width: "12%",
             padding: 1,
             color: COLOR.primary_black,
-            backgroundColor: isEditable ? COLOR.primary_blue : COLOR.primary_gold,
+            backgroundColor: isEditable
+              ? COLOR.primary_blue
+              : COLOR.primary_gold,
             minWidth: 130,
             marginBottom: 2,
           }}
@@ -292,7 +295,7 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
                 }}
               />
             ) : (
-              <PersonAddIcon
+              <EditIcon
                 sx={{
                   width: 20,
                   height: 20,
@@ -301,7 +304,13 @@ export default function EditableDataGrid({ name, sx = [], ...props }) {
                 }}
               />
             )}
-            <Typography sx={{ fontWeight: 700, fontSize: 14, color: isEditable ? COLOR.primary_white : COLOR.primary_black }}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: 14,
+                color: isEditable ? COLOR.primary_white : COLOR.primary_black,
+              }}
+            >
               {isEditable ? "Lưu" : "Chỉnh sửa"}
             </Typography>
           </Box>

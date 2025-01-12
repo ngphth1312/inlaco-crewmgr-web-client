@@ -12,8 +12,7 @@ const CrewInfos = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    console.log(id);
-    console.log("Navigate to info page of Member with crewID: " + id);
+    navigate(`/crewMemberDetail/${id}`);
   };
 
   const columns = [
