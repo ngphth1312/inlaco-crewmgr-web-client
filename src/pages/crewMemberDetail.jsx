@@ -219,26 +219,20 @@ const CrewMemberDetail = () => {
     setIsEditable(true);
   };
 
-  const handleSaveClick = () => {
-    // console.log(rows);
-    setIsEditable(false);
-    // setFieldValue(name, rows);
-  };
-
   const handleCancelClick = () => {
     setIsEditable(false);
   };
 
 
-  const handleSaveCrewMemberSubmit = async (values, { resetForm }) => {
+  const handleSaveCrewMemberSubmit = async (values) => {
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      console.log("Successfully saving update: ", values);
+      setIsEditable(false);
     } catch (err) {
-      console.log("Error when saving crew member info: ", err);
+      console.log("Error when saving crew member info update: ", err);
     }
   };
 
@@ -315,6 +309,8 @@ const CrewMemberDetail = () => {
                   )}
                   <Button
                     variant="contained"
+                    type={isEditable ? "submit" : "button"}
+                    disabled={isEditable && (!isValid || !dirty)}
                     sx={{
                       padding: 1,
                       color: COLOR.primary_black,
@@ -326,9 +322,7 @@ const CrewMemberDetail = () => {
                       marginBottom: "1px",
                     }}
                     onClick={
-                      isEditable
-                        ? handleSaveClick
-                        : handleEditClick
+                      isEditable ? handleSaveCrewMemberSubmit : handleEditClick
                     }
                   >
                     <Box sx={{ display: "flex", alignItems: "end" }}>

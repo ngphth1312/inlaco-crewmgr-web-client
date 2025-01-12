@@ -17,6 +17,7 @@ import { COLOR } from "../../assets/Color";
 import { NoValuesOverlay } from "../global";
 import { useField, useFormikContext } from "formik";
 
+// Use to replace the "position.name" field with "positionName" field
 // function replacePositionName(arr) {
 //   return arr.map((item) => {
 //     if (item.position && item.position.name) {
@@ -115,6 +116,12 @@ export default function EditableDataGrid({ name, initialIsEditable = true, disab
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
+  };
+
+  const isAnyRowInEditMode = () => {
+    return Object.values(rowModesModel).some(
+      (mode) => mode.mode === GridRowModes.Edit
+    );
   };
 
   const columns = [
@@ -276,7 +283,7 @@ export default function EditableDataGrid({ name, initialIsEditable = true, disab
           sx={{
             width: "12%",
             padding: 1,
-            color: COLOR.primary_black,
+            color: isEditable ? COLOR.primary_white : COLOR.primary_black,
             backgroundColor: isEditable
               ? COLOR.primary_blue
               : COLOR.primary_gold,
@@ -284,6 +291,7 @@ export default function EditableDataGrid({ name, initialIsEditable = true, disab
             marginBottom: 2,
           }}
           onClick={isEditable ? handleSaveButtonClick : handleEditButtonClick}
+          disabled={isAnyRowInEditMode() || disabled}
         >
           <Box sx={{ display: "flex", alignItems: "end" }}>
             {isEditable ? (
@@ -310,7 +318,7 @@ export default function EditableDataGrid({ name, initialIsEditable = true, disab
               sx={{
                 fontWeight: 700,
                 fontSize: 14,
-                color: isEditable ? COLOR.primary_white : COLOR.primary_black,
+                // color: isEditable ? COLOR.primary_white : COLOR.primary_black,
               }}
             >
               {isEditable ? "Lưu" : "Chỉnh sửa"}

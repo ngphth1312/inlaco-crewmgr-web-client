@@ -103,37 +103,31 @@ const MobilizationDetail = () => {
     }),
   });
 
-//   const [createMobilizationLoading, setCreateMobilizationLoading] =
-//     useState(false);
+  //   const [createMobilizationLoading, setCreateMobilizationLoading] =
+  //     useState(false);
 
-    const [isEditable, setIsEditable] = useState(false);
-  
-    const handleEditClick = () => {
-      setIsEditable(true);
-    };
-  
-    const handleSaveClick = () => {
-      // console.log(rows);
-      setIsEditable(false);
-      // setFieldValue(name, rows);
-    };
-  
-    const handleCancelClick = () => {
-      setIsEditable(false);
-    };
+  const [isEditable, setIsEditable] = useState(false);
 
-  const handleSaveMobilizationSubmit = async (values, { resetForm }) => {
+  const handleEditClick = () => {
+    setIsEditable(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditable(false);
+  };
+
+  const handleSaveMobilizationSubmit = async (values) => {
     // setCreateMobilizationLoading(true);
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      console.log("Successfully saving update: ", values);
+      setIsEditable(false);
     } catch (err) {
-      console.log("Error when creating mobilization: ", err);
+      console.log("Error when saving editing mobilization: ", err);
     } finally {
-    //   setCreateMobilizationLoading(false);
+      //   setCreateMobilizationLoading(false);
     }
   };
 
@@ -210,6 +204,8 @@ const MobilizationDetail = () => {
                   )}
                   <Button
                     variant="contained"
+                    type={isEditable ? "submit" : "button"}
+                    disabled={isEditable && (!isValid || !dirty)}
                     sx={{
                       padding: 1,
                       color: COLOR.primary_black,
@@ -220,7 +216,11 @@ const MobilizationDetail = () => {
                       marginTop: "1px",
                       marginBottom: "1px",
                     }}
-                    onClick={isEditable ? handleSaveClick : handleEditClick}
+                    onClick={
+                      isEditable
+                        ? handleSaveMobilizationSubmit
+                        : handleEditClick
+                    }
                   >
                     <Box sx={{ display: "flex", alignItems: "end" }}>
                       {isEditable ? (
@@ -298,6 +298,7 @@ const MobilizationDetail = () => {
                   label="Điều động đến công ty"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="compName"
@@ -317,6 +318,7 @@ const MobilizationDetail = () => {
                   label="Tổng số nhân lực cần điều động"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="numOfMobilizedCrew"
@@ -371,6 +373,7 @@ const MobilizationDetail = () => {
                   label="Thời gian khởi hành dự kiến"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.timeOfDeparture"
                   value={values.mobilizationInfo?.timeOfDeparture}
@@ -400,6 +403,7 @@ const MobilizationDetail = () => {
                   required
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.UN_LOCODE_DepartureLocation"
                   value={values.mobilizationInfo?.UN_LOCODE_DepartureLocation}
@@ -424,6 +428,7 @@ const MobilizationDetail = () => {
                   required
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.departureLocation"
                   value={values.mobilizationInfo?.departureLocation}
@@ -449,6 +454,7 @@ const MobilizationDetail = () => {
                   label="Thời gian đến nơi dự kiến"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.estimatedTimeOfArrival"
                   value={values.mobilizationInfo?.estimatedTimeOfArrival}
@@ -478,6 +484,7 @@ const MobilizationDetail = () => {
                   required
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.UN_LOCODE_ArrivalLocation"
                   value={values.mobilizationInfo?.UN_LOCODE_ArrivalLocation}
@@ -502,6 +509,7 @@ const MobilizationDetail = () => {
                   required
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.arrivalLocation"
                   value={values.mobilizationInfo?.arrivalLocation}
@@ -538,6 +546,7 @@ const MobilizationDetail = () => {
               >
                 <HorizontalImageInput
                   id="social-ins-image"
+                  disabled={!isEditable}
                   width={300}
                   height={180}
                   name="mobilizationInfo.shipImage"
@@ -553,6 +562,7 @@ const MobilizationDetail = () => {
                   label="IMO"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.shipIMO"
                   value={values.mobilizationInfo?.shipIMO}
@@ -576,6 +586,7 @@ const MobilizationDetail = () => {
                   label="Tên tàu"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.shipName"
                   value={values.mobilizationInfo?.shipName}
@@ -599,6 +610,7 @@ const MobilizationDetail = () => {
                   label="Quốc tịch"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.shipNationality"
                   value={values.mobilizationInfo?.shipNationality}
@@ -622,6 +634,7 @@ const MobilizationDetail = () => {
                   label="Loại tàu"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="mobilizationInfo.shipType"
                   value={values.mobilizationInfo?.shipType}
@@ -645,7 +658,8 @@ const MobilizationDetail = () => {
               <Grid size={12}>
                 <EditableDataGrid
                   name="mobilizedCrewMembers"
-                  initialIsEditable={false}
+                  initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
+                  disabled={!isEditable}
                 />
               </Grid>
             </Grid>
