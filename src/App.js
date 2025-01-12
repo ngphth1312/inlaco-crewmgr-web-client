@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate } from "react-router";
 
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signUpPage";
+import VerifyEmailConfirmation from "./pages/verifyEmailConfirmation";
 
 import HomePage from "./pages/homePage";
 
@@ -121,6 +122,7 @@ function App() {
           <>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signUp" element={<SignUpPage />} />
+            <Route path="/verifyEmailConfirmation" element={<VerifyEmailConfirmation />} />
           </>
         )}
       </Routes>

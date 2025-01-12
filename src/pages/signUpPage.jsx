@@ -59,8 +59,8 @@ const SignUpPage = () => {
       //Calling API to sign up
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
-      console.log("Sign up sucessfully: ", values);
-      navigate("/login");
+      console.log("Sign up successfully: ", values);
+      navigate("/verifyEmailConfirmation");
     } catch (err) {
       console.log("Error when sign up: ", err);
     } finally {
