@@ -4,9 +4,9 @@ import Grid from "@mui/material/Grid2";
 import { COLOR } from "../../assets/Color";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 
-const RecruitmentCard = ({ title, description, location, gridSize = 12, sx = [], onClick, ...props }) => {
+const RecruitmentCard = ({ isAdmin, title, description, location, gridSize = 12, sx = [], onClick, ...props }) => {
   return (
-    <Grid {...props} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid {...props} onClick={onClick} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card
         sx={{
           borderRadius: 5,
@@ -83,7 +83,7 @@ const RecruitmentCard = ({ title, description, location, gridSize = 12, sx = [],
               variant="contained"
               sx={{ backgroundColor: COLOR.secondary_blue }}
             >
-              Ứng tuyển ngay
+              {isAdmin ? "Xem chi tiết" : "Ứng tuyển ngay"}
             </Button>
           </Box>
         </Box>

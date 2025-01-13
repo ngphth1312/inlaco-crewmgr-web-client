@@ -26,6 +26,7 @@ import TemplateContract from "./pages/templateContract";
 import SupplyRequest from "./pages/supplyRequest";
 import CrewRecruitment from "./pages/crewRecruitment";
 import CreateRecruitment from "./pages/createRecruitment";
+import RecruitmentDetail from "./pages/recruitmentDetail";
 import CrewCourse from "./pages/crewCourse";
 import CreateCourse from "./pages/createCourse";
 
@@ -122,6 +123,7 @@ function App() {
             <Route path="/crewContractDetail/:id" element={<CrewContractDetail />} />
             <Route path="/supplyContractDetail/:id" element={<SupplyContractDetail />} />
             <Route path="/createRecruitment" element={<CreateRecruitment />} />
+            <Route path="/recruitmentDetail/:id" element={<RecruitmentDetail />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */

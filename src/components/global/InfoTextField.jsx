@@ -2,10 +2,11 @@ import React from "react";
 import { TextField } from "@mui/material";
 import { COLOR } from "../../assets/Color";
 
-const InfoTextField = ({ sx, slotProps, multiline, minRow, maxRow, rows, ...props }) => {
+const InfoTextField = ({ sx, disabled, slotProps, multiline, minRow, maxRow, rows, ...props }) => {
   return (
     <TextField
       {...props}
+      disabled={disabled}
       multiline={multiline}
       rows={rows}
       sx={[
@@ -17,6 +18,9 @@ const InfoTextField = ({ sx, slotProps, multiline, minRow, maxRow, rows, ...prop
             WebkitTextFillColor: COLOR.primary_black, // Keep text color the same for Safari
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: COLOR.primary_black, // Keep border color the same
+            },
+            "& .MuiInputLabel-root": {
+              color: COLOR.primary_black, // Keep label color the same
             },
           },
         },
@@ -30,6 +34,7 @@ const InfoTextField = ({ sx, slotProps, multiline, minRow, maxRow, rows, ...prop
             backgroundColor: COLOR.primary_white,
           },
         },
+        input: {},
         ...slotProps, // Merging slotProps with spread operator
       }}
     />

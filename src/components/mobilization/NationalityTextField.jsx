@@ -88,6 +88,18 @@ const NationalityTextField = ({
       sx={[
         { backgroundColor: "#FFF", marginBottom: 1 },
         ...(Array.isArray(sx) ? sx : [sx]),
+        {
+          "& .Mui-disabled": {
+            color: "inherit", // Keep text color the same
+            WebkitTextFillColor: "inherit", // Keep text color the same for Safari
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "inherit", // Keep border color the same
+            },
+            "& .MuiInputLabel-root": {
+              color: "inherit", // Keep label color the same
+            },
+          },
+        },
       ]} // Merging styles with spread operator
       slotProps={{
         formHelperText: {

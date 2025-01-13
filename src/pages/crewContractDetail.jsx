@@ -171,21 +171,20 @@ const CrewContractDetail = () => {
     }),
   });
 
-//   const [createContractLoading, setCreateContractLoading] = useState(false);
+  //   const [createContractLoading, setCreateContractLoading] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
 
-   const handleAddContractAddendum = () => {
-     console.log("Navigate to addendum page");
-   };
+  const handleAddContractAddendum = () => {
+    console.log("Navigate to addendum page");
+  };
 
-    const handleEditClick = () => {
-      setIsEditable(true);
-    };
+  const handleEditClick = () => {
+    setIsEditable(true);
+  };
 
-    const handleCancelClick = () => {
-      setIsEditable(false);
-    };
-
+  const handleCancelClick = () => {
+    setIsEditable(false);
+  };
 
   const handleUpdateCrewContractSubmit = async (values) => {
     // setCreateContractLoading(true);
@@ -198,7 +197,7 @@ const CrewContractDetail = () => {
     } catch (err) {
       console.log("Error when updating crew contract: ", err);
     } finally {
-    //   setCreateContractLoading(false);
+      //   setCreateContractLoading(false);
     }
   };
 
@@ -390,7 +389,10 @@ const CrewContractDetail = () => {
                       </Typography>
                     </Button>
                   )}
-                  <FileUploadField disabled={!isEditable} name="contractFileLink" />
+                  <FileUploadField
+                    disabled={!isEditable}
+                    name="contractFileLink"
+                  />
                 </Box>
               </Box>
             </Box>
@@ -417,6 +419,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -441,6 +451,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -464,6 +482,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -489,6 +515,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -514,6 +548,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -540,6 +582,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -562,6 +612,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -593,6 +651,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -617,6 +683,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -642,6 +716,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -667,6 +749,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -690,6 +780,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -715,6 +813,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -747,6 +853,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -774,6 +888,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -806,6 +928,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -839,6 +969,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -862,6 +1000,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={12}>
@@ -889,6 +1035,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -918,20 +1072,26 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">vnđ</InputAdornment>
-                      ),
-                    },
-                  }}
                   sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
                     "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
                       {
                         display: "none",
                       },
                     "& input[type=number]": {
                       MozAppearance: "textfield",
+                    },
+                  }}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">vnđ</InputAdornment>
+                      ),
                     },
                   }}
                 />
@@ -960,20 +1120,26 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">vnđ</InputAdornment>
-                      ),
-                    },
-                  }}
                   sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
                     "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
                       {
                         display: "none",
                       },
                     "& input[type=number]": {
                       MozAppearance: "textfield",
+                    },
+                  }}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">vnđ</InputAdornment>
+                      ),
                     },
                   }}
                 />
@@ -1002,6 +1168,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 >
                   {receiveMethod.map((method) => (
                     <MenuItem key={method} value={method}>
@@ -1031,6 +1205,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -1056,6 +1238,14 @@ const CrewContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>

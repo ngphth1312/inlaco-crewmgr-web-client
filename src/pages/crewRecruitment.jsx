@@ -14,6 +14,8 @@ const CrewRecruitment = () => {
     navigate("/createRecruitment");
   }
 
+  const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
+
   // Mock recruitment data
   const recruitmentPosts = Array.from({ length: 20 }, (_, i) => ({
     id: i + 1,
@@ -108,6 +110,8 @@ const CrewRecruitment = () => {
                 title={post?.title}
                 description={post?.description}
                 location={post?.location}
+                isAdmin={isAdmin}
+                onClick={() => navigate(`/recruitmentDetail/${post?.id}`)}
               />
             ))}
           </Grid>

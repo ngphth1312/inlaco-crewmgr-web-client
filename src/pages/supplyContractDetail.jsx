@@ -152,20 +152,20 @@ const SupplyContractDetail = () => {
     }),
   });
 
-//   const [createContractLoading, setCreateContractLoading] = useState(false);
+  //   const [createContractLoading, setCreateContractLoading] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
 
-     const handleAddContractAddendum = () => {
-       console.log("Navigate to addendum page");
-     };
+  const handleAddContractAddendum = () => {
+    console.log("Navigate to addendum page");
+  };
 
-     const handleEditClick = () => {
-       setIsEditable(true);
-     };
+  const handleEditClick = () => {
+    setIsEditable(true);
+  };
 
-     const handleCancelClick = () => {
-       setIsEditable(false);
-     };
+  const handleCancelClick = () => {
+    setIsEditable(false);
+  };
 
   const handleCreateSupplyContractSubmit = async (values) => {
     // setCreateContractLoading(true);
@@ -178,7 +178,7 @@ const SupplyContractDetail = () => {
     } catch (err) {
       console.log("Error when creating supply contract: ", err);
     } finally {
-    //   setCreateContractLoading(false);
+      //   setCreateContractLoading(false);
     }
   };
 
@@ -400,6 +400,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -424,6 +432,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -447,6 +463,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -472,6 +496,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -497,6 +529,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -523,6 +563,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -547,6 +595,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -570,6 +626,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -595,6 +659,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -620,6 +692,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -649,6 +729,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -680,6 +768,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -711,20 +807,26 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">người</InputAdornment>
-                      ),
-                    },
-                  }}
                   sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
                     "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
                       {
                         display: "none",
                       },
                     "& input[type=number]": {
                       MozAppearance: "textfield",
+                    },
+                  }}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">người</InputAdornment>
+                      ),
                     },
                   }}
                 />
@@ -765,6 +867,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -794,6 +904,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -818,6 +936,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -843,6 +969,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -872,6 +1006,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -896,6 +1038,14 @@ const SupplyContractDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>

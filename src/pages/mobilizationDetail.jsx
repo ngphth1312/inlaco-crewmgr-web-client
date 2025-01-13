@@ -324,6 +324,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -348,20 +356,19 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">người</InputAdornment>
                       ),
-                    },
-                  }}
-                  sx={{
-                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                      {
-                        display: "none",
-                      },
-                    "& input[type=number]": {
-                      MozAppearance: "textfield",
                     },
                   }}
                 />
@@ -404,6 +411,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -434,6 +449,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -459,6 +482,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -485,6 +516,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -515,6 +554,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -540,6 +587,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -593,6 +648,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -617,6 +680,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -641,6 +712,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -665,6 +744,14 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>

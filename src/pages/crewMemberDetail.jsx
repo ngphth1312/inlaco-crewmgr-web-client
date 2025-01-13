@@ -109,39 +109,39 @@ const CrewMemberDetail = () => {
       .required("Email không được để trống"),
 
     jobInfo: yup.object().shape({
-          startDate: yup
-            .date()
-            .max(new Date(), "Ngày bắt đầu không hợp lệ")
-            .required("Ngày bắt đầu không được để trống")
-            .test(
-              "is-before-end-date",
-              "Ngày bắt đầu phải trước ngày kết thúc",
-              function (value) {
-                const { endDate } = this.parent; // Access sibling field endDate
-                return !endDate || value < endDate;
-              }
-            ),
-    
-          endDate: yup
-            .date()
-            .required("Ngày kết thúc không được để trống")
-            .test(
-              "is-after-start-date",
-              "Ngày kết thúc phải sau ngày bắt đầu",
-              function (value) {
-                const { startDate } = this.parent; // Access sibling field startDate
-                return !startDate || value > startDate;
-              }
-            ),
-    
-          workingLocation: yup
-            .string()
-            .required("Địa điểm làm việc không được để trống"),
-          position: yup.string().required("Vị trí chuyên môn không được để trống"),
-          jobDescription: yup
-            .string()
-            .required("Mô tả công việc không được để trống"),
-        }),
+      startDate: yup
+        .date()
+        .max(new Date(), "Ngày bắt đầu không hợp lệ")
+        .required("Ngày bắt đầu không được để trống")
+        .test(
+          "is-before-end-date",
+          "Ngày bắt đầu phải trước ngày kết thúc",
+          function (value) {
+            const { endDate } = this.parent; // Access sibling field endDate
+            return !endDate || value < endDate;
+          }
+        ),
+
+      endDate: yup
+        .date()
+        .required("Ngày kết thúc không được để trống")
+        .test(
+          "is-after-start-date",
+          "Ngày kết thúc phải sau ngày bắt đầu",
+          function (value) {
+            const { startDate } = this.parent; // Access sibling field startDate
+            return !startDate || value > startDate;
+          }
+        ),
+
+      workingLocation: yup
+        .string()
+        .required("Địa điểm làm việc không được để trống"),
+      position: yup.string().required("Vị trí chuyên môn không được để trống"),
+      jobDescription: yup
+        .string()
+        .required("Mô tả công việc không được để trống"),
+    }),
 
     insuranceInfo: yup.object().shape({
       // BHXH:
@@ -400,6 +400,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -418,6 +426,14 @@ const CrewMemberDetail = () => {
                   helperText={touched.dob && errors.dob}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -440,6 +456,14 @@ const CrewMemberDetail = () => {
                   helperText={touched.ciNumber && errors.ciNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -458,6 +482,14 @@ const CrewMemberDetail = () => {
                   helperText={touched.gender && errors.gender}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 >
                   {genders.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -483,6 +515,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -500,6 +540,14 @@ const CrewMemberDetail = () => {
                   helperText={touched.email && errors.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -517,6 +565,14 @@ const CrewMemberDetail = () => {
                   helperText={touched.phoneNumber && errors.phoneNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -544,6 +600,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -576,6 +640,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -609,6 +681,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -632,6 +712,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={12}>
@@ -659,6 +747,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
@@ -699,6 +795,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -724,6 +828,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -754,6 +866,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -784,6 +904,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 >
                   {paymentStatus.map((status) => (
                     <MenuItem key={status} value={status}>
@@ -850,6 +978,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -875,6 +1011,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -905,6 +1049,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -935,6 +1087,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 >
                   {paymentStatus.map((status) => (
                     <MenuItem key={status} value={status}>
@@ -1001,6 +1161,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -1026,6 +1194,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -1056,6 +1232,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -1086,6 +1270,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 >
                   {paymentStatus.map((status) => (
                     <MenuItem key={status} value={status}>
@@ -1116,6 +1308,14 @@ const CrewMemberDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
                 />
               </Grid>
               <Grid size={6} />
