@@ -17,6 +17,7 @@ import MobilizationDetail from "./pages/mobilizationDetail";
 
 import CrewContract from "./pages/crewContract";
 import CreateCrewContract from "./pages/createCrewContract";
+import CrewContractDetail from "./pages/crewContractDetail";
 import SupplyContract from "./pages/supplyContract";
 import CreateSupplyContract from "./pages/createSupplyContract";
 import TemplateContract from "./pages/templateContract";
@@ -116,6 +117,7 @@ function App() {
             <Route path="/createMobilization" element={<CreateMobilization />} />
             <Route path="/crewMemberDetail/:id" element={<CrewMemberDetail />} />
             <Route path="/mobilizationDetail/:id" element={<MobilizationDetail />} />
+            <Route path="/crewContractDetail/:id" element={<CrewContractDetail />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */

@@ -223,7 +223,6 @@ const CrewMemberDetail = () => {
     setIsEditable(false);
   };
 
-
   const handleSaveCrewMemberSubmit = async (values) => {
     try {
       //Calling API to create a new crew member
@@ -275,20 +274,84 @@ const CrewMemberDetail = () => {
                     marginRight: 2,
                   }}
                 >
-                  {isEditable && (
+                  {isEditable ? (
+                    <>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          color: COLOR.primary_orange,
+                          padding: "8px",
+                          marginRight: 2,
+                          borderColor: COLOR.primary_orange,
+                        }}
+                        onClick={handleCancelClick}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "end" }}>
+                          <DeleteForeverRoundedIcon
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              marginRight: "2px",
+                              marginBottom: "2px",
+                            }}
+                          />
+                          <Typography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: 14,
+                            }}
+                          >
+                            Hủy
+                          </Typography>
+                        </Box>
+                      </Button>
+                      <Button
+                        variant="contained"
+                        type={"submit"}
+                        disabled={!isValid || !dirty}
+                        sx={{
+                          color: COLOR.primary_white,
+                          backgroundColor: COLOR.primary_blue,
+                          padding: "10px",
+                          marginTop: "1px",
+                          marginBottom: "1px",
+                        }}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "end" }}>
+                          <SaveIcon
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              marginRight: "2px",
+                              marginBottom: "2px",
+                            }}
+                          />
+                          <Typography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: 14,
+                            }}
+                          >
+                            Lưu
+                          </Typography>
+                        </Box>
+                      </Button>
+                    </>
+                  ) : (
                     <Button
-                      variant="outlined"
+                      variant="contained"
+                      type={"button"}
                       sx={{
-                        padding: 1,
-                        color: COLOR.primary_orange,
-                        padding: "8px",
-                        marginRight: 2,
-                        borderColor: COLOR.primary_orange,
+                        color: COLOR.primary_black,
+                        backgroundColor: COLOR.primary_gold,
+                        padding: "10px",
+                        marginTop: "1px",
+                        marginBottom: "1px",
                       }}
-                      onClick={handleCancelClick}
+                      onClick={handleEditClick}
                     >
                       <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <DeleteForeverRoundedIcon
+                        <EditIcon
                           sx={{
                             width: 20,
                             height: 20,
@@ -300,65 +363,14 @@ const CrewMemberDetail = () => {
                           sx={{
                             fontWeight: 700,
                             fontSize: 14,
+                            color: COLOR.primary_black,
                           }}
                         >
-                          Hủy
+                          Chỉnh sửa
                         </Typography>
                       </Box>
                     </Button>
                   )}
-                  <Button
-                    variant="contained"
-                    type={isEditable ? "submit" : "button"}
-                    disabled={isEditable && (!isValid || !dirty)}
-                    sx={{
-                      padding: 1,
-                      color: COLOR.primary_black,
-                      backgroundColor: isEditable
-                        ? COLOR.primary_blue
-                        : COLOR.primary_gold,
-                      padding: "10px",
-                      marginTop: "1px",
-                      marginBottom: "1px",
-                    }}
-                    onClick={
-                      isEditable ? handleSaveCrewMemberSubmit : handleEditClick
-                    }
-                  >
-                    <Box sx={{ display: "flex", alignItems: "end" }}>
-                      {isEditable ? (
-                        <SaveIcon
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            marginRight: "2px",
-                            marginBottom: "2px",
-                            color: COLOR.primary_white,
-                          }}
-                        />
-                      ) : (
-                        <EditIcon
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            marginRight: "2px",
-                            marginBottom: "2px",
-                          }}
-                        />
-                      )}
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: 14,
-                          color: isEditable
-                            ? COLOR.primary_white
-                            : COLOR.primary_black,
-                        }}
-                      >
-                        {isEditable ? "Lưu" : "Chỉnh sửa"}
-                      </Typography>
-                    </Box>
-                  </Button>
                 </Box>
               </Box>
               <CardPhotoInput

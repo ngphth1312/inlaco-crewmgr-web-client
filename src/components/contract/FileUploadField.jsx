@@ -4,7 +4,7 @@ import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { COLOR } from "../../assets/Color";
 import { useField, useFormikContext } from "formik";
 
-const FileUploadField = ({ name, sx = [], ...props }) => {
+const FileUploadField = ({ name, disabled, sx = [], ...props }) => {
   
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
@@ -43,12 +43,14 @@ const FileUploadField = ({ name, sx = [], ...props }) => {
         <label>
           <input
             id="file-upload"
+            disabled={disabled}
             type="file"
             accept=".doc,.docx"
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
           <Button
+            disabled={disabled}
             onClick={() => document.getElementById("file-upload").click()}
             variant="contained"
           >
@@ -64,7 +66,7 @@ const FileUploadField = ({ name, sx = [], ...props }) => {
             onClick={handleDelete}
             sx={{ color: COLOR.primary_orange }}
           >
-            <DeleteForeverRoundedIcon sx={{ width: 24, height: 24 }} />
+            {!disabled && (<DeleteForeverRoundedIcon sx={{ width: 24, height: 24 }} />)}
           </IconButton>
         </Box>
       )}

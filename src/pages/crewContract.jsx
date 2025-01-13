@@ -12,7 +12,7 @@ const CrewContract = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    console.log("Navigate to info page of Member with ID: " + id);
+    navigate(`/crewContractDetail/${id}`);
   };
 
   const columns = [

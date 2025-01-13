@@ -11,14 +11,24 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import SaveIcon from "@mui/icons-material/Save";
+import DifferenceRoundedIcon from "@mui/icons-material/DifferenceRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-const CreateCrewContract = () => {
-  // const navigate = useNavigate();
+const CrewContractDetail = () => {
+  const navigate = useNavigate();
+
+  const { id } = useParams();
+  const isOfficialContract = false; //temp variable, this must be fetched from the API
+
+  // useEffect(() => {
+  //   fetchCrewContractInfos(id);
+  // },[]);
 
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 
@@ -153,9 +163,7 @@ const CreateCrewContract = () => {
         .string()
         .required("Hình thức trả lương không được để trống"),
 
-      payday: yup
-        .string()
-        .required("Thời hạn trả lương không được để trống"),
+      payday: yup.string().required("Thời hạn trả lương không được để trống"),
 
       salaryReviewPeriod: yup
         .string()
@@ -163,20 +171,34 @@ const CreateCrewContract = () => {
     }),
   });
 
-  const [createContractLoading, setCreateContractLoading] = useState(false);
+//   const [createContractLoading, setCreateContractLoading] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
 
-  const handleCreateCrewContractSubmit = async (values, { resetForm }) => {
-    setCreateContractLoading(true);
+   const handleAddContractAddendum = () => {
+     console.log("Navigate to addendum page");
+   };
+
+    const handleEditClick = () => {
+      setIsEditable(true);
+    };
+
+    const handleCancelClick = () => {
+      setIsEditable(false);
+    };
+
+
+  const handleUpdateCrewContractSubmit = async (values) => {
+    // setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      console.log("Successfully updating: ", values);
+      setIsEditable(false);
     } catch (err) {
-      console.log("Error when creating crew contract: ", err);
+      console.log("Error when updating crew contract: ", err);
     } finally {
-      setCreateContractLoading(false);
+    //   setCreateContractLoading(false);
     }
   };
 
@@ -186,7 +208,7 @@ const CreateCrewContract = () => {
         validateOnChange={false}
         initialValues={initialValues}
         validationSchema={crewContractSchema}
-        onSubmit={handleCreateCrewContractSubmit}
+        onSubmit={handleUpdateCrewContractSubmit}
       >
         {({
           values,
@@ -209,17 +231,17 @@ const CreateCrewContract = () => {
                 }}
               >
                 <PageTitle
-                  title="TẠO HỢP ĐỒNG THUYỀN VIÊN"
-                  subtitle="Tạo và lưu Hợp đồng thuyền viên mới vào hệ thống"
+                  title="CHI TIẾT HỢP ĐỒNG THUYỀN VIÊN"
+                  subtitle={`Mã hợp đồng: ${id}`} //Change this to the actual contractID, this currently display an id, not contractID
                 />
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between",
                     alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Button
+                  {/* <Button
                     variant="contained"
                     type="submit"
                     disabled={!isValid || !dirty}
@@ -241,8 +263,134 @@ const CreateCrewContract = () => {
                         <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
                       </Box>
                     )}
-                  </Button>
-                  <FileUploadField name="contractFileLink" />
+                  </Button> */}
+                  {!isOfficialContract ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "start",
+                        marginRight: 2,
+                      }}
+                    >
+                      {isEditable ? (
+                        <>
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              color: COLOR.primary_orange,
+                              padding: "8px",
+                              marginRight: 2,
+                              borderColor: COLOR.primary_orange,
+                            }}
+                            onClick={handleCancelClick}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <DeleteForeverRoundedIcon
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  marginRight: "2px",
+                                  marginBottom: "2px",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 14,
+                                }}
+                              >
+                                Hủy
+                              </Typography>
+                            </Box>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            type={"submit"}
+                            disabled={!isValid || !dirty}
+                            sx={{
+                              color: COLOR.primary_white,
+                              backgroundColor: COLOR.primary_blue,
+                              padding: "10px",
+                              marginTop: "1px",
+                              marginBottom: "1px",
+                            }}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <SaveIcon
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  marginRight: "2px",
+                                  marginBottom: "2px",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 14,
+                                }}
+                              >
+                                Lưu
+                              </Typography>
+                            </Box>
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          type={"button"}
+                          sx={{
+                            color: COLOR.primary_black,
+                            backgroundColor: COLOR.primary_gold,
+                            padding: "10px",
+                            marginTop: "1px",
+                            marginBottom: "1px",
+                          }}
+                          onClick={handleEditClick}
+                        >
+                          <Box sx={{ display: "flex", alignItems: "end" }}>
+                            <EditIcon
+                              sx={{
+                                width: 20,
+                                height: 20,
+                                marginRight: "2px",
+                                marginBottom: "2px",
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontSize: 14,
+                                color: COLOR.primary_black,
+                              }}
+                            >
+                              Chỉnh sửa
+                            </Typography>
+                          </Box>
+                        </Button>
+                      )}
+                    </Box>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleAddContractAddendum()}
+                      sx={{
+                        width: "15%",
+                        padding: 1,
+                        color: COLOR.primary_black,
+                        backgroundColor: COLOR.primary_gold,
+                        minWidth: 130,
+                      }}
+                    >
+                      <DifferenceRoundedIcon
+                        sx={{ width: 22, height: 22, marginRight: "5px" }}
+                      />
+                      <Typography sx={{ fontWeight: 700 }}>
+                        Thêm Phụ lục
+                      </Typography>
+                    </Button>
+                  )}
+                  <FileUploadField disabled={!isEditable} name="contractFileLink" />
                 </Box>
               </Box>
             </Box>
@@ -254,6 +402,7 @@ const CreateCrewContract = () => {
                   label="Tên công ty"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyA.compName"
@@ -276,6 +425,7 @@ const CreateCrewContract = () => {
                   label="Địa chỉ"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyA.compAddress"
@@ -299,6 +449,7 @@ const CreateCrewContract = () => {
                   label="Số điện thoại"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyA.compPhoneNumber"
@@ -321,6 +472,7 @@ const CreateCrewContract = () => {
                   label="Người đại diện"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyA.representative"
@@ -345,6 +497,7 @@ const CreateCrewContract = () => {
                   label="Chức vụ"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyA.representativePos"
@@ -372,6 +525,7 @@ const CreateCrewContract = () => {
                   label="Họ và tên"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.fullName"
@@ -395,6 +549,7 @@ const CreateCrewContract = () => {
                   label="Ngày sinh"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.dob"
@@ -423,6 +578,7 @@ const CreateCrewContract = () => {
                   label="Nơi sinh"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.birthplace"
@@ -445,6 +601,7 @@ const CreateCrewContract = () => {
                   label="Quốc tịch"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.nationality"
@@ -468,6 +625,7 @@ const CreateCrewContract = () => {
                   label="Địa chỉ thường trú"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.permanentAddr"
@@ -492,6 +650,7 @@ const CreateCrewContract = () => {
                   label="Địa chỉ tạm trú"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.temporaryAddr"
@@ -516,6 +675,7 @@ const CreateCrewContract = () => {
                   label="Số Căn cước công dân"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.ciNumber"
@@ -539,6 +699,7 @@ const CreateCrewContract = () => {
                   label="Ngày cấp"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.ciIssueDate"
@@ -570,6 +731,7 @@ const CreateCrewContract = () => {
                   label="Nơi cấp"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="partyB.ciIssuePlace"
@@ -597,6 +759,7 @@ const CreateCrewContract = () => {
                   label="Ngày bắt đầu"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="jobInfo.startDate"
@@ -628,6 +791,7 @@ const CreateCrewContract = () => {
                   label="Ngày kết thúc"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="jobInfo.endDate"
@@ -658,6 +822,7 @@ const CreateCrewContract = () => {
                   label="Địa điểm làm việc"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="jobInfo.workingLocation"
@@ -682,6 +847,7 @@ const CreateCrewContract = () => {
                   label="Vị trí chuyên môn"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="jobInfo.position"
@@ -706,6 +872,7 @@ const CreateCrewContract = () => {
                   multiline
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="jobInfo.jobDescription"
@@ -734,6 +901,7 @@ const CreateCrewContract = () => {
                   label="Lương cơ bản"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="salaryInfo.basicSalary"
@@ -775,6 +943,7 @@ const CreateCrewContract = () => {
                   label="Phụ cấp"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="salaryInfo.allowance"
@@ -816,6 +985,7 @@ const CreateCrewContract = () => {
                   label="Hình thức trả lương"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="salaryInfo.receiveMethod"
@@ -846,6 +1016,7 @@ const CreateCrewContract = () => {
                   label="Thời hạn trả lương"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="salaryInfo.payday"
@@ -868,6 +1039,7 @@ const CreateCrewContract = () => {
                   label="Thời hạn được xét nâng lương"
                   size="small"
                   margin="none"
+                  disabled={!isEditable || isOfficialContract}
                   required
                   fullWidth
                   name="salaryInfo.salaryReviewPeriod"
@@ -894,4 +1066,4 @@ const CreateCrewContract = () => {
   );
 };
 
-export default CreateCrewContract;
+export default CrewContractDetail;
