@@ -5,8 +5,15 @@ import { PageTitle, } from "../components/global";
 import { RecruitmentCard } from "../components/other";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import { useNavigate } from "react-router";
 
 const CrewRecruitment = () => {
+  const navigate = useNavigate();
+
+  const handleCreateRecruitmentClick = () => {
+    navigate("/createRecruitment");
+  }
+
   // Mock recruitment data
   const recruitmentPosts = Array.from({ length: 20 }, (_, i) => ({
     id: i + 1,
@@ -50,9 +57,7 @@ const CrewRecruitment = () => {
             alignItems: "flex-end",
           }}
         >
-          <Box
-            sx={{ display: "flex", justifyContent: "right", marginLeft: 1, }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "right", marginLeft: 1 }}>
             <Typography
               sx={{
                 fontSize: 16,
@@ -76,6 +81,7 @@ const CrewRecruitment = () => {
           </Box>
           <Button
             variant="contained"
+            onClick={handleCreateRecruitmentClick}
             sx={{
               backgroundColor: COLOR.primary_gold,
               color: COLOR.primary_black,
@@ -98,7 +104,7 @@ const CrewRecruitment = () => {
           <Grid container spacing={4}>
             {currentPosts.map((post) => (
               <RecruitmentCard
-                id={post?.id}
+                key={post?.id}
                 title={post?.title}
                 description={post?.description}
                 location={post?.location}

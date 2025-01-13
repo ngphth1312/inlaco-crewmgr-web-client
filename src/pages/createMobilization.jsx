@@ -12,7 +12,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import SaveIcon from "@mui/icons-material/Save";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -157,10 +157,10 @@ const CreateMobilization = () => {
                       <CircularProgress size={24} color={COLOR.primary_black} />
                     ) : (
                       <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <PersonAddIcon
+                        <SaveIcon
                           sx={{ marginRight: "5px", marginBottom: "1px" }}
                         />
-                        <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
+                        <Typography sx={{ fontWeight: 700 }}>Tạo</Typography>
                       </Box>
                     )}
                   </Button>

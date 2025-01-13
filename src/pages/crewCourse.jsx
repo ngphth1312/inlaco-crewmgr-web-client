@@ -54,7 +54,7 @@ const CrewCourse = () => {
           {mockCourses.map((item) => {
             return (
               <CourseCard
-                id={item?.id}
+                key={item?.id}
                 name={item?.name}
                 description={item?.description}
                 courseImage={item?.courseImage}

@@ -7,7 +7,6 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 
 const CourseCard = ({
-  id,
   name,
   description,
   courseImage,
@@ -23,7 +22,7 @@ const CourseCard = ({
   const [logoImageError, setLogoImageError] = useState(false);
 
   return (
-    <Grid key={id} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card
         sx={{
           position: "relative",

@@ -4,10 +4,9 @@ import Grid from "@mui/material/Grid2";
 import { COLOR } from "../../assets/Color";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 
-const RecruitmentCard = ({ id, title, description, location, gridSize = 12, sx = [], onClick }) => {
-
+const RecruitmentCard = ({ title, description, location, gridSize = 12, sx = [], onClick, ...props }) => {
   return (
-    <Grid size={gridSize} key={id} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid {...props} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card
         sx={{
           borderRadius: 5,

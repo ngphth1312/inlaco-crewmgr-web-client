@@ -12,7 +12,6 @@ import DownloadForOfflineRoundedIcon from "@mui/icons-material/DownloadForOfflin
 import Grid from "@mui/material/Grid2";
 
 const TemplateContractCard = ({
-  id,
   image,
   title,
   description,
@@ -24,7 +23,7 @@ const TemplateContractCard = ({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Grid key={id} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card
         sx={{
           position: "relative",
