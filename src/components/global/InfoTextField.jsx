@@ -13,10 +13,10 @@ const InfoTextField = ({ sx, slotProps, multiline, minRow, maxRow, rows, ...prop
         ...(Array.isArray(sx) ? sx : [sx]),
         {
           "& .Mui-disabled": {
-            color: "inherit", // Keep text color the same
-            WebkitTextFillColor: "inherit", // Keep text color the same for Safari
+            color: COLOR.primary_black, // Keep text color the same
+            WebkitTextFillColor: COLOR.primary_black, // Keep text color the same for Safari
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "inherit", // Keep border color the same
+              borderColor: COLOR.primary_black, // Keep border color the same
             },
           },
         },

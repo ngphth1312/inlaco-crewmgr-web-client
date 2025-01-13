@@ -11,17 +11,23 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import SaveIcon from "@mui/icons-material/Save";
+import DifferenceRoundedIcon from "@mui/icons-material/DifferenceRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-const CreateSupplyContract = () => {
-  // const navigate = useNavigate();
+const SupplyContractDetail = () => {
+  const navigate = useNavigate();
+
+  const { id } = useParams();
+  const isOfficialContract = false; //edit this later
 
   const initialValues = {
-    contractFile: null,
+    contractFileLink: "",
     partyA: {
       cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",
@@ -146,20 +152,33 @@ const CreateSupplyContract = () => {
     }),
   });
 
-  const [createContractLoading, setCreateContractLoading] = useState(false);
+//   const [createContractLoading, setCreateContractLoading] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
 
-  const handleCreateSupplyContractSubmit = async (values, { resetForm }) => {
-    setCreateContractLoading(true);
+     const handleAddContractAddendum = () => {
+       console.log("Navigate to addendum page");
+     };
+
+     const handleEditClick = () => {
+       setIsEditable(true);
+     };
+
+     const handleCancelClick = () => {
+       setIsEditable(false);
+     };
+
+  const handleCreateSupplyContractSubmit = async (values) => {
+    // setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
       console.log("Successfully submitted: ", values);
-      resetForm();
+      setIsEditable(false);
     } catch (err) {
       console.log("Error when creating supply contract: ", err);
     } finally {
-      setCreateContractLoading(false);
+    //   setCreateContractLoading(false);
     }
   };
 
@@ -192,8 +211,8 @@ const CreateSupplyContract = () => {
                 }}
               >
                 <PageTitle
-                  title="TẠO HỢP ĐỒNG CUNG ỨNG THUYỀN VIÊN"
-                  subtitle="Tạo và lưu Hợp đồng cung ứng thuyền viên mới vào hệ thống"
+                  title="CHI TIẾT HỢP ĐỒNG CUNG ỨNG THUYỀN VIÊN"
+                  subtitle={`Mã hợp đồng: ${id}`} //Change this to the actual contractID, this currently display an id, not contractID
                 />
                 <Box
                   sx={{
@@ -202,7 +221,7 @@ const CreateSupplyContract = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Button
+                  {/* <Button
                     variant="contained"
                     type="submit"
                     disabled={!isValid || !dirty}
@@ -224,8 +243,137 @@ const CreateSupplyContract = () => {
                         <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
                       </Box>
                     )}
-                  </Button>
-                  <FileUploadField name="contractFileLink" />
+                  </Button> */}
+                  {!isOfficialContract ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "start",
+                        marginRight: 2,
+                      }}
+                    >
+                      {isEditable ? (
+                        <>
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              color: COLOR.primary_orange,
+                              padding: "8px",
+                              marginRight: 2,
+                              borderColor: COLOR.primary_orange,
+                            }}
+                            onClick={handleCancelClick}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <DeleteForeverRoundedIcon
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  marginRight: "2px",
+                                  marginBottom: "2px",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 14,
+                                }}
+                              >
+                                Hủy
+                              </Typography>
+                            </Box>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            type={"submit"}
+                            disabled={!isValid || !dirty}
+                            sx={{
+                              color: COLOR.primary_white,
+                              backgroundColor: COLOR.primary_blue,
+                              padding: "10px",
+                              marginTop: "1px",
+                              marginBottom: "1px",
+                            }}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <SaveIcon
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  marginRight: "2px",
+                                  marginBottom: "2px",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 14,
+                                }}
+                              >
+                                Lưu
+                              </Typography>
+                            </Box>
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          type={"button"}
+                          sx={{
+                            color: COLOR.primary_black,
+                            backgroundColor: COLOR.primary_gold,
+                            padding: "10px",
+                            marginTop: "1px",
+                            marginBottom: "1px",
+                          }}
+                          onClick={handleEditClick}
+                        >
+                          <Box sx={{ display: "flex", alignItems: "end" }}>
+                            <EditIcon
+                              sx={{
+                                width: 20,
+                                height: 20,
+                                marginRight: "2px",
+                                marginBottom: "2px",
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontSize: 14,
+                                color: COLOR.primary_black,
+                              }}
+                            >
+                              Chỉnh sửa
+                            </Typography>
+                          </Box>
+                        </Button>
+                      )}
+                    </Box>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleAddContractAddendum()}
+                      sx={{
+                        width: "15%",
+                        padding: 1,
+                        color: COLOR.primary_black,
+                        backgroundColor: COLOR.primary_gold,
+                        minWidth: 130,
+                      }}
+                    >
+                      <DifferenceRoundedIcon
+                        sx={{ width: 22, height: 22, marginRight: "5px" }}
+                      />
+                      <Typography sx={{ fontWeight: 700 }}>
+                        Thêm Phụ lục
+                      </Typography>
+                    </Button>
+                  )}
+                  <FileUploadField
+                    disabled={!isEditable}
+                    name="contractFileLink"
+                  />
                 </Box>
               </Box>
             </Box>
@@ -237,6 +385,7 @@ const CreateSupplyContract = () => {
                   label="Tên công ty"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyA.compName"
@@ -259,6 +408,7 @@ const CreateSupplyContract = () => {
                   label="Địa chỉ"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyA.compAddress"
@@ -282,6 +432,7 @@ const CreateSupplyContract = () => {
                   label="Số điện thoại"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyA.compPhoneNumber"
@@ -304,6 +455,7 @@ const CreateSupplyContract = () => {
                   label="Người đại diện"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyA.representative"
@@ -328,6 +480,7 @@ const CreateSupplyContract = () => {
                   label="Chức vụ"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyA.representativePos"
@@ -355,6 +508,7 @@ const CreateSupplyContract = () => {
                   label="Tên công ty"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyB.compName"
@@ -377,6 +531,7 @@ const CreateSupplyContract = () => {
                   label="Địa chỉ"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyB.compAddress"
@@ -400,6 +555,7 @@ const CreateSupplyContract = () => {
                   label="Số điện thoại"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyB.compPhoneNumber"
@@ -422,6 +578,7 @@ const CreateSupplyContract = () => {
                   label="Người đại diện"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyB.representative"
@@ -446,6 +603,7 @@ const CreateSupplyContract = () => {
                   label="Chức vụ"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="partyB.representativePos"
@@ -474,6 +632,7 @@ const CreateSupplyContract = () => {
                   label="Ngày bắt đầu"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="contractInfo.startDate"
@@ -504,6 +663,7 @@ const CreateSupplyContract = () => {
                   label="Ngày kết thúc"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="contractInfo.endDate"
@@ -534,6 +694,7 @@ const CreateSupplyContract = () => {
                   label="Tổng số nhân lực cần cung ứng"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   required
                   fullWidth
                   name="contractInfo.numOfCrewMember"
@@ -588,6 +749,7 @@ const CreateSupplyContract = () => {
                   label="Thời gian khởi hành dự kiến"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="contractInfo.timeOfDeparture"
                   value={values.contractInfo?.timeOfDeparture}
@@ -616,6 +778,7 @@ const CreateSupplyContract = () => {
                   label="UN/LOCODE điểm khởi hành"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="contractInfo.UN_LOCODE_DepartureLocation"
                   value={values.contractInfo?.UN_LOCODE_DepartureLocation}
@@ -639,6 +802,7 @@ const CreateSupplyContract = () => {
                   label="Tên điểm khởi hành"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="contractInfo.departureLocation"
                   value={values.contractInfo?.departureLocation}
@@ -663,6 +827,7 @@ const CreateSupplyContract = () => {
                   label="Thời gian đến nơi dự kiến"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="contractInfo.estimatedTimeOfArrival"
                   value={values.contractInfo?.estimatedTimeOfArrival}
@@ -691,6 +856,7 @@ const CreateSupplyContract = () => {
                   label="UN/LOCODE điểm đến"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="contractInfo.UN_LOCODE_ArrivalLocation"
                   value={values.contractInfo?.UN_LOCODE_ArrivalLocation}
@@ -714,6 +880,7 @@ const CreateSupplyContract = () => {
                   label="Tên điểm đến"
                   size="small"
                   margin="none"
+                  disabled={!isEditable}
                   fullWidth
                   name="contractInfo.arrivalLocation"
                   value={values.contractInfo?.arrivalLocation}
@@ -739,4 +906,4 @@ const CreateSupplyContract = () => {
   );
 };
 
-export default CreateSupplyContract;
+export default SupplyContractDetail;

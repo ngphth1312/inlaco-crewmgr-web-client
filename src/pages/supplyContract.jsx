@@ -8,11 +8,11 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
 
-const CrewContract = () => {
+const SupplyContract = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    console.log("Navigate to info page of Member with ID: " + id);
+    navigate(`/supplyContractDetail/${id}`);
   };
 
   const columns = [
@@ -184,4 +184,4 @@ const CrewContract = () => {
   );
 };
 
-export default CrewContract;
+export default SupplyContract;
