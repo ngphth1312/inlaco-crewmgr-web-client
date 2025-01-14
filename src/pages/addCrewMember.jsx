@@ -163,7 +163,6 @@ const AddCrewMember = () => {
     }),
   });
 
-  const [image, setImage] = useState(null);
   const [addCrewLoading, setAddCrewLoading] = useState(false);
 
   const handleCreateCrewMemberSubmit = async (values, { resetForm }) => {

@@ -42,6 +42,7 @@ const RecruitmentDetail = () => {
   // };
 
   const handleSwitchingOpenClosedClick = async () => {
+    console.log("Switching open closed click");
     setOpenClosedLoading(true);
     try{
       //Call API to update the status of the recruitment
@@ -123,6 +124,7 @@ const RecruitmentDetail = () => {
               <Button
                 variant="contained"
                 onClick={() => handleSwitchingOpenClosedClick()}
+                disabled={openClosedLoading}
                 sx={{
                   width: "15%",
                   padding: 1,

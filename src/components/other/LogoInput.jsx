@@ -25,15 +25,13 @@ const Overlay = styled("div")({
   },
 });
 
-const HorizontalImageInput = ({
+const CardPhotoInput = ({
   name,
   onClick,
-  width = 200,
-  height = 120,
+  diameter = 78,
   sx = [],
   ...props
 }) => {
-  //3x4 image ratio
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
 
@@ -52,11 +50,12 @@ const HorizontalImageInput = ({
     <Card
       sx={[
         {
-          width: width,
-          height: height,
+          width: diameter,
+          height: diameter,
           position: "relative",
           alignItems: "center",
           justifyContent: "center",
+          borderRadius: "50%",
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
@@ -65,6 +64,7 @@ const HorizontalImageInput = ({
         accept="image/*"
         type="file"
         onChange={handleImageChange}
+        sx={{ borderRadius: "50%" }}
         {...props}
       />
       <CardMedia
@@ -76,17 +76,18 @@ const HorizontalImageInput = ({
         }
         alt="Selected Card Photo"
         sx={{
-          width: width,
-          height: height,
+          width: diameter,
+          height: diameter,
+          borderRadius: "50%",
         }}
       />
       <Overlay>
         <IconButton onClick={onClick}>
-          <AddCircleRoundedIcon width={48} height={48} />
+          <AddCircleRoundedIcon width={24} height={24} />
         </IconButton>
       </Overlay>
     </Card>
   );
 };
 
-export default HorizontalImageInput;
+export default CardPhotoInput;
