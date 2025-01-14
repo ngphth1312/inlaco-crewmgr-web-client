@@ -11,7 +11,7 @@ import { useState } from "react";
 
 // Main pages of the web
 const pages = [
-  { label: "Trang chủ", path: "/homePage" },
+  { label: "Trang chủ", path: "/" },
   { label: "Thông tin thuyền viên", path: "/crewInfos" },
   { label: "Lịch điều động", path: "/crewMobilization" },
   { label: "Hợp đồng thuyền viên", path: "/crewContract" },

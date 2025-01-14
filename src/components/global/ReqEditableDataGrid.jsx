@@ -34,7 +34,7 @@ function randomID() {
   return Math.random().toString(36).substring(2, 12);
 }
 
-const EditableDataGrid = ({
+const ReqEditableDataGrid = ({
   name,
   initialIsEditable = true,
   disabled,
@@ -64,11 +64,9 @@ const EditableDataGrid = ({
       ...oldRows,
       {
         id,
-        crewID: "",
-        fullName: "",
-        dob: "",
-        phoneNumber: "",
-        positionName: "",
+        postion: "",
+        numOfCrewMember: "",
+        certificateRequired: "",
         isNew: true,
       },
     ]);
@@ -110,13 +108,6 @@ const EditableDataGrid = ({
   };
 
   const processRowUpdate = (newRow) => {
-    if (newRow.dob) {
-      const date = new Date(newRow.dob);
-      newRow.dob = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-      ).toISOString(); // Convert to ISOString and format as YYYY-MM-DD
-    }
-
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
@@ -134,45 +125,17 @@ const EditableDataGrid = ({
 
   const columns = [
     {
-      field: "crewID",
-      headerName: "Mã TV",
-      flex: 2,
+      field: "position",
+      headerName: "Vị trí chuyên môn",
+      flex: 4,
       editable: isEditable,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "fullName",
-      headerName: "Họ tên",
-      flex: 3,
-      editable: isEditable,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "dob",
-      headerName: "Ngày sinh",
-      type: "date",
-      flex: 2,
-      editable: isEditable,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: (params) => {
-        return params ? new Date(params) : null;
-      },
-      valueFormatter: (params) => {
-        if (!params) return "Invalid date";
-        const date = new Date(params);
-        return `${date.getDate().toString().padStart(2, "0")}/${(
-          date.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, "0")}/${date.getFullYear()}`;
-      },
-    },
-    {
-      field: "phoneNumber",
-      headerName: "SĐT",
+      field: "numOfCrewMember",
+      type: "number",
+      headerName: "Số lượng",
       flex: 2,
       align: "left",
       headerAlign: "left",
@@ -181,9 +144,9 @@ const EditableDataGrid = ({
       headerAlign: "center",
     },
     {
-      field: "positionName",
-      headerName: "Vị trí chuyên môn",
-      flex: 3,
+      field: "certificateRequired",
+      headerName: "Yêu cầu bằng cấp (nếu có)",
+      flex: 4,
       editable: isEditable,
       align: "center",
       headerAlign: "center",
@@ -353,7 +316,7 @@ const EditableDataGrid = ({
         pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
         slots={{ noRowsOverlay: NoValuesOverlay }}
         slotProps={{
-          noRowsOverlay: { text: "CHƯA CÓ THUYỀN VIÊN NÀO ĐƯỢC THÊM" },
+          noRowsOverlay: { text: "CHƯA CÓ SỐ LƯỢNG CẦN CUNG ỨNG NÀO ĐƯỢC THÊM" },
         }}
         initialState={{
           pagination: {
@@ -373,4 +336,4 @@ const EditableDataGrid = ({
   );
 };
 
-export default EditableDataGrid;
+export default ReqEditableDataGrid;

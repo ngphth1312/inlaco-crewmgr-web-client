@@ -10,5 +10,7 @@ export { default as ConfirmActionDialog } from "./ConfirmActionDialog";
 export { default as InfoTextField } from "./InfoTextField";
 export { default as HorizontalImageInput } from "./HorizontalImageInput";
 export { default as EditableDataGrid } from "./EditableDataGrid";
+export { default as ReqEditableDataGrid } from "./ReqEditableDataGrid";
+export { default as StatusLabel } from "./StatusLabel";
 
 export { default as MainLayout } from "./MainLayout";

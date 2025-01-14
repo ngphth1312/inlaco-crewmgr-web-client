@@ -6,13 +6,19 @@ import { mockSupplyRequest } from "../data/mockData";
 import { ScheduleCell, ShipInfoCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-const CrewInfos = () => {
-  // const navigate = useNavigate();
+const SupplyRequest = () => {
+  const navigate = useNavigate();
 
-  const onMemberDetailClick = (id) => {
-    console.log("Navigate to detail page of mobilization with ID: " + id);
+  const isAdmin = true; //Change this to false to see the user view
+
+  const onRequestDetailClick = (id) => {
+    if(isAdmin){
+      navigate(`/adminSupplyRequestDetail/${id}`);
+    } else{
+      // navigate(`/userSupplyRequestDetail/${id}`);
+    }
   };
 
   const columns = [
@@ -124,7 +130,7 @@ const CrewInfos = () => {
             <Button
               variant="contained"
               size="small"
-              onClick={() => onMemberDetailClick(params?.id)}
+              onClick={() => onRequestDetailClick(params?.id)}
               sx={{
                 backgroundColor: COLOR.primary_green,
                 color: COLOR.primary_black,
@@ -194,4 +200,4 @@ const CrewInfos = () => {
   );
 };
 
-export default CrewInfos;
+export default SupplyRequest;
