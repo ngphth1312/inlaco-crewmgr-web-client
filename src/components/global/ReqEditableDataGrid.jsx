@@ -229,7 +229,7 @@ const ReqEditableDataGrid = ({
           <Button
             variant="contained"
             sx={{
-              width: "16%",
+              width: "12%",
               padding: 1,
               color: COLOR.primary_black,
               backgroundColor: COLOR.primary_gold,
@@ -250,7 +250,7 @@ const ReqEditableDataGrid = ({
                 }}
               />
               <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
-                Thêm thuyền viên
+                Thêm
               </Typography>
             </Box>
           </Button>

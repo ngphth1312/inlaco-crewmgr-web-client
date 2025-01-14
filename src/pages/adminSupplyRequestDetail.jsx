@@ -34,7 +34,15 @@ const AdminSupplyRequestDetail = () => {
   // },[]);
 
   const initialValues = {
-    compName: "",
+    compInfo: {
+      compName: "",
+      compAddress: "",
+      compPhoneNumber: "",
+      compEmail: "",
+      representative: "",
+      representativePos: "",
+    },
+
     requestInfo: {
       timeOfDeparture: "",
       departureLocation: "",
@@ -214,14 +222,14 @@ const AdminSupplyRequestDetail = () => {
                   disabled={true}
                   required
                   fullWidth
-                  name="partyB.compName"
-                  value={values.partyB?.compName}
+                  name="compInfo.compName"
+                  value={values.compInfo?.compName}
                   error={
-                    !!touched.partyB?.compName && !!errors.partyB?.compName
+                    !!touched.compInfo?.compName && !!errors.compInfo?.compName
                   }
                   helperText={
-                    touched.partyB?.compName && errors.partyB?.compName
-                      ? errors.partyB?.compName
+                    touched.compInfo?.compName && errors.compInfo?.compName
+                      ? errors.compInfo?.compName
                       : " "
                   }
                   onChange={handleChange}
@@ -236,7 +244,7 @@ const AdminSupplyRequestDetail = () => {
                   }}
                 />
               </Grid>
-              <Grid size={6}>
+              <Grid size={5}>
                 <InfoTextField
                   id="company-address"
                   label="Địa chỉ"
@@ -245,15 +253,15 @@ const AdminSupplyRequestDetail = () => {
                   disabled={true}
                   required
                   fullWidth
-                  name="partyB.compAddress"
-                  value={values.partyB?.compAddress}
+                  name="compInfo.compAddress"
+                  value={values.compInfo?.compAddress}
                   error={
-                    !!touched.partyB?.compAddress &&
-                    !!errors.partyB?.compAddress
+                    !!touched.compInfo?.compAddress &&
+                    !!errors.compInfo?.compAddress
                   }
                   helperText={
-                    touched.partyB?.compAddress && errors.partyB?.compAddress
-                      ? errors.partyB?.compAddress
+                    touched.compInfo?.compAddress && errors.compInfo?.compAddress
+                      ? errors.compInfo?.compAddress
                       : " "
                   }
                   onChange={handleChange}
@@ -268,7 +276,7 @@ const AdminSupplyRequestDetail = () => {
                   }}
                 />
               </Grid>
-              <Grid size={2}>
+              <Grid size={3}>
                 <InfoTextField
                   id="company-phone-number"
                   label="Số điện thoại"
@@ -277,15 +285,15 @@ const AdminSupplyRequestDetail = () => {
                   disabled={true}
                   required
                   fullWidth
-                  name="partyB.compPhoneNumber"
-                  value={values.partyB?.compPhoneNumber}
+                  name="compInfo.compPhoneNumber"
+                  value={values.compInfo?.compPhoneNumber}
                   error={
-                    !!touched.partyB?.compPhoneNumber &&
-                    !!errors.partyB?.compPhoneNumber
+                    !!touched.compInfo?.compPhoneNumber &&
+                    !!errors.compInfo?.compPhoneNumber
                   }
                   helperText={
-                    touched.partyB?.compPhoneNumber &&
-                    errors.partyB?.compPhoneNumber
+                    touched.compInfo?.compPhoneNumber &&
+                    errors.compInfo?.compPhoneNumber
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -301,23 +309,23 @@ const AdminSupplyRequestDetail = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="representative"
+                  id="email"
                   label="Email"
                   size="small"
                   margin="none"
                   disabled={true}
                   required
                   fullWidth
-                  name="partyB.representative"
-                  value={values.partyB?.representative}
+                  name="compInfo.compEmail"
+                  value={values.compInfo?.compEmail}
                   error={
-                    !!touched.partyB?.representative &&
-                    !!errors.partyB?.representative
+                    !!touched.compInfo?.compEmail &&
+                    !!errors.compInfo?.compEmail
                   }
                   helperText={
-                    touched.partyB?.representative &&
-                    errors.partyB?.representative
-                      ? errors.partyB?.representative
+                    touched.compInfo?.compEmail &&
+                    errors.compInfo?.compEmail
+                      ? errors.compInfo?.compEmail
                       : " "
                   }
                   onChange={handleChange}
@@ -341,16 +349,16 @@ const AdminSupplyRequestDetail = () => {
                   disabled={true}
                   required
                   fullWidth
-                  name="partyB.representative"
-                  value={values.partyB?.representative}
+                  name="compInfo.representative"
+                  value={values.compInfo?.representative}
                   error={
-                    !!touched.partyB?.representative &&
-                    !!errors.partyB?.representative
+                    !!touched.compInfo?.representative &&
+                    !!errors.compInfo?.representative
                   }
                   helperText={
-                    touched.partyB?.representative &&
-                    errors.partyB?.representative
-                      ? errors.partyB?.representative
+                    touched.compInfo?.representative &&
+                    errors.compInfo?.representative
+                      ? errors.compInfo?.representative
                       : " "
                   }
                   onChange={handleChange}
@@ -374,16 +382,16 @@ const AdminSupplyRequestDetail = () => {
                   disabled={true}
                   required
                   fullWidth
-                  name="partyB.representativePos"
-                  value={values.partyB?.representativePos}
+                  name="compInfo.representativePos"
+                  value={values.compInfo?.representativePos}
                   error={
-                    !!touched.partyB?.representativePos &&
-                    !!errors.partyB?.representativePos
+                    !!touched.compInfo?.representativePos &&
+                    !!errors.compInfo?.representativePos
                   }
                   helperText={
-                    touched.partyB?.representativePos &&
-                    errors.partyB?.representativePos
-                      ? errors.partyB?.representativePos
+                    touched.compInfo?.representativePos &&
+                    errors.compInfo?.representativePos
+                      ? errors.compInfo?.representativePos
                       : " "
                   }
                   onChange={handleChange}

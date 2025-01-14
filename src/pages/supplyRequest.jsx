@@ -11,13 +11,13 @@ import { useNavigate } from "react-router";
 const SupplyRequest = () => {
   const navigate = useNavigate();
 
-  const isAdmin = true; //Change this to false to see the user view
+  const isAdmin = false; //Change this to false to see the user view
 
   const onRequestDetailClick = (id) => {
     if(isAdmin){
       navigate(`/adminSupplyRequestDetail/${id}`);
     } else{
-      // navigate(`/userSupplyRequestDetail/${id}`);
+      navigate(`/userSupplyRequestDetail/${id}`);
     }
   };
 

@@ -4,41 +4,47 @@ import {
   SectionDivider,
   InfoTextField,
   HorizontalImageInput,
-  EditableDataGrid,
+  ReqEditableDataGrid,
+  StatusLabel,
 } from "../components/global";
 import { NationalityTextField } from "../components/mobilization";
-import { FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
   Typography,
   TextField,
-  MenuItem,
   CircularProgress,
-  InputAdornment,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
 import { COLOR } from "../assets/Color";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
 
-const MobilizationDetail = () => {
+const UserSupplyRequestDetail = () => {
   // const navigate = useNavigate();
   const { id } = useParams();
+  const status = "Đang chờ xác nhận"; //Change this to the status of the request
+  //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
   // useEffect(() => {
-  //   fetchMobilizationInfos(id);
+  //   fetchRequestInfos(id);
   // },[]);
 
   const initialValues = {
-    compName: "",
-    numOfMobilizedCrew: "",
-    mobilizationInfo: {
+    compInfo: {
+      compName: "",
+      compAddress: "",
+      compPhoneNumber: "",
+      compEmail: "",
+      representative: "",
+      representativePos: "",
+    },
+
+    requestInfo: {
       timeOfDeparture: "",
       departureLocation: "",
       UN_LOCODE_DepartureLocation: "",
@@ -54,17 +60,35 @@ const MobilizationDetail = () => {
       shipType: "",
     },
 
-    mobilizedCrewMembers: [],
+    requestList: [],
   };
 
-  const mobilizationSchema = yup.object().shape({
-    compName: yup.string().required("Tên công ty không được để trống"),
-    numOfMobilizedCrew: yup
-      .number()
-      .min(1, "Tổng số nhân lực cần điều động không hợp lệ")
-      .required("Tổng số nhân lực cần điều động không được để trống"),
+  const phoneRegex =
+    "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
 
-    mobilizationInfo: yup.object().shape({
+  const supplyRequestSchema = yup.object().shape({
+    compInfo: yup.object().shape({
+      compName: yup.string().required("Tên công ty không được để trống"),
+      compAddress: yup.string().required("Địa chỉ công ty không được để trống"),
+
+      compPhoneNumber: yup
+        .string()
+        .matches(phoneRegex, "Số điện thoại không hợp lệ")
+        .required("Số điện thoại không được để trống"),
+      compEmail: yup
+        .string()
+        .email("Email không hợp lệ")
+        .required("Email không được để trống"),
+
+      representative: yup
+        .string()
+        .required("Tên người đại diện không được để trống"),
+      representativePos: yup
+        .string()
+        .required("Chức vụ người đại diện không được để trống"),
+    }),
+
+    requestInfo: yup.object().shape({
       timeOfDeparture: yup
         .date()
         .max(new Date(), "Thời gian khởi hành không hợp lệ")
@@ -104,9 +128,6 @@ const MobilizationDetail = () => {
     }),
   });
 
-  //   const [createMobilizationLoading, setCreateMobilizationLoading] =
-  //     useState(false);
-
   const [isEditable, setIsEditable] = useState(false);
 
   const handleEditClick = () => {
@@ -117,8 +138,7 @@ const MobilizationDetail = () => {
     setIsEditable(false);
   };
 
-  const handleSaveMobilizationSubmit = async (values) => {
-    // setCreateMobilizationLoading(true);
+  const handleSaveRequestSubmit = async (values) => {
     try {
       //Calling API to create a new crew member
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
@@ -126,9 +146,7 @@ const MobilizationDetail = () => {
       console.log("Successfully saving update: ", values);
       setIsEditable(false);
     } catch (err) {
-      console.log("Error when saving editing mobilization: ", err);
-    } finally {
-      //   setCreateMobilizationLoading(false);
+      console.log("Error when saving supply request info update: ", err);
     }
   };
 
@@ -137,8 +155,8 @@ const MobilizationDetail = () => {
       <Formik
         validateOnChange={false}
         initialValues={initialValues}
-        validationSchema={mobilizationSchema}
-        onSubmit={handleSaveMobilizationSubmit}
+        validationSchema={supplyRequestSchema}
+        onSubmit={handleSaveRequestSubmit}
       >
         {({
           values,
@@ -160,95 +178,45 @@ const MobilizationDetail = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <PageTitle
-                  title="CHI TIẾT ĐIỀU ĐỘNG"
-                  subtitle={`Mã điều động: ${id}`} //Change this to the actual mobilizationID, this currently display an id, not mobilizationID
-                />
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "start",
-                    marginRight: 2,
-                  }}
-                >
-                  {isEditable ? (
-                    <>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          color: COLOR.primary_orange,
-                          padding: "8px",
-                          marginRight: 2,
-                          borderColor: COLOR.primary_orange,
-                        }}
-                        onClick={handleCancelClick}
-                      >
-                        <Box sx={{ display: "flex", alignItems: "end" }}>
-                          <DeleteForeverRoundedIcon
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              marginRight: "2px",
-                              marginBottom: "2px",
-                            }}
-                          />
-                          <Typography
-                            sx={{
-                              fontWeight: 700,
-                              fontSize: 14,
-                            }}
-                          >
-                            Hủy
-                          </Typography>
-                        </Box>
-                      </Button>
-                      <Button
-                        variant="contained"
-                        type={"submit"}
-                        disabled={!isValid || !dirty}
-                        sx={{
-                          color: COLOR.primary_white,
-                          backgroundColor: COLOR.primary_blue,
-                          padding: "10px",
-                          marginTop: "1px",
-                          marginBottom: "1px",
-                        }}
-                      >
-                        <Box sx={{ display: "flex", alignItems: "end" }}>
-                          <SaveIcon
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              marginRight: "2px",
-                              marginBottom: "2px",
-                            }}
-                          />
-                          <Typography
-                            sx={{
-                              fontWeight: 700,
-                              fontSize: 14,
-                            }}
-                          >
-                            Lưu
-                          </Typography>
-                        </Box>
-                      </Button>
-                    </>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <PageTitle
+                    title="CHI TIẾT YÊU CẦU CUNG ỨNG"
+                    subtitle={`Yêu cầu cung ứng của công ty: ${id}`} //Change this to the companyName of them company that made the request
+                  />
+                  {status === "Chấp thuận" ? (
+                    <StatusLabel
+                      label="Chấp thuận"
+                      color={COLOR.primary_green}
+                    />
+                  ) : status === "Từ chối" ? (
+                    <StatusLabel label="Từ chối" color={COLOR.primary_orange} />
+                  ) : status === "Đang chờ xác nhận" ? (
+                    <StatusLabel
+                      label="Đang chờ xác nhận"
+                      color={COLOR.secondary_gray}
+                    />
                   ) : (
+                    <StatusLabel
+                      label="Đã ký hợp đồng"
+                      color={COLOR.secondary_gold}
+                    />
+                  )}
+                </Box>
+                {status === "Đang chờ xác nhận" && isEditable ? (
+                  <Box sx={{ display: "flex" }}>
                     <Button
-                      variant="contained"
-                      type={"button"}
+                      variant="outlined"
                       sx={{
-                        color: COLOR.primary_black,
-                        backgroundColor: COLOR.primary_gold,
-                        padding: "10px",
-                        marginTop: "1px",
-                        marginBottom: "1px",
+                        color: COLOR.primary_orange,
+                        padding: "8px",
+                        marginRight: 2,
+                        borderColor: COLOR.primary_orange,
+                        width: "10%",
                       }}
-                      onClick={handleEditClick}
+                      onClick={handleCancelClick}
                     >
                       <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <EditIcon
+                        <DeleteForeverRoundedIcon
                           sx={{
                             width: 20,
                             height: 20,
@@ -260,64 +228,168 @@ const MobilizationDetail = () => {
                           sx={{
                             fontWeight: 700,
                             fontSize: 14,
-                            color: COLOR.primary_black,
                           }}
                         >
-                          Chỉnh sửa
+                          Hủy
                         </Typography>
                       </Box>
                     </Button>
-                  )}
-                </Box>
-                {/* <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
+                    <Button
+                      variant="contained"
+                      type={"submit"}
+                      disabled={!isValid || !dirty}
+                      sx={{
+                        color: COLOR.primary_white,
+                        backgroundColor: COLOR.primary_blue,
+                        padding: "10px",
+                        marginTop: "1px",
+                        marginBottom: "1px",
+                        width: "10%",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "end" }}>
+                        <SaveIcon
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            marginRight: "2px",
+                            marginBottom: "2px",
+                          }}
+                        />
+                        <Typography
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: 14,
+                          }}
+                        >
+                          Lưu
+                        </Typography>
+                      </Box>
+                    </Button>
+                  </Box>
+                ) : status === "Đang chờ xác nhận" && !isEditable ? (
                   <Button
                     variant="contained"
-                    type="submit"
-                    disabled={!isValid || !dirty}
+                    type={"button"}
                     sx={{
-                      width: "10%",
-                      padding: 1,
                       color: COLOR.primary_black,
                       backgroundColor: COLOR.primary_gold,
-                      minWidth: 130,
+                      padding: "10px",
+                      marginTop: "1px",
+                      marginBottom: "1px",
+                      width: "10%",
                     }}
+                    onClick={handleEditClick}
                   >
-                    {createMobilizationLoading ? (
-                      <CircularProgress size={24} color={COLOR.primary_black} />
-                    ) : (
-                      <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <PersonAddIcon
-                          sx={{ marginRight: "5px", marginBottom: "1px" }}
-                        />
-                        <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
-                      </Box>
-                    )}
+                    <Box sx={{ display: "flex", alignItems: "end" }}>
+                      <EditIcon
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          marginRight: "2px",
+                          marginBottom: "2px",
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: 14,
+                          color: COLOR.primary_black,
+                        }}
+                      >
+                        Chỉnh sửa
+                      </Typography>
+                    </Box>
                   </Button>
-                </Box> */}
+                ) : (
+                  <></>
+                )}
               </Box>
             </Box>
-            <SectionDivider sectionName="Thông tin chung*: " />
+            <SectionDivider sectionName="Thông tin công ty: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={5}>
+              <Grid size={4}>
                 <InfoTextField
-                  id="comp-name"
-                  label="Điều động đến công ty"
+                  id="company-name"
+                  label="Tên công ty"
                   size="small"
                   margin="none"
                   disabled={!isEditable}
                   required
                   fullWidth
-                  name="compName"
-                  value={values.compName}
-                  error={!!touched.compName && !!errors.compName}
+                  name="compInfo.compName"
+                  value={values.compInfo?.compName}
+                  error={
+                    !!touched.compInfo?.compName && !!errors.compInfo?.compName
+                  }
                   helperText={
-                    touched.compName && errors.compName ? errors.compName : " "
+                    touched.compInfo?.compName && errors.compInfo?.compName
+                      ? errors.compInfo?.compName
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={5}>
+                <InfoTextField
+                  id="company-address"
+                  label="Địa chỉ"
+                  size="small"
+                  margin="none"
+                  disabled={!isEditable}
+                  required
+                  fullWidth
+                  name="compInfo.compAddress"
+                  value={values.compInfo?.compAddress}
+                  error={
+                    !!touched.compInfo?.compAddress &&
+                    !!errors.compInfo?.compAddress
+                  }
+                  helperText={
+                    touched.compInfo?.compAddress &&
+                    errors.compInfo?.compAddress
+                      ? errors.compInfo?.compAddress
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  id="company-phone-number"
+                  label="Số điện thoại"
+                  size="small"
+                  margin="none"
+                  disabled={!isEditable}
+                  required
+                  fullWidth
+                  name="compInfo.compPhoneNumber"
+                  value={values.compInfo?.compPhoneNumber}
+                  error={
+                    !!touched.compInfo?.compPhoneNumber &&
+                    !!errors.compInfo?.compPhoneNumber
+                  }
+                  helperText={
+                    touched.compInfo?.compPhoneNumber &&
+                    errors.compInfo?.compPhoneNumber
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -333,22 +405,22 @@ const MobilizationDetail = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="num-of-crew-member"
-                  type="number"
-                  label="Tổng số nhân lực cần điều động"
+                  id="email"
+                  label="Email"
                   size="small"
                   margin="none"
                   disabled={!isEditable}
                   required
                   fullWidth
-                  name="numOfMobilizedCrew"
-                  value={values.numOfMobilizedCrew}
+                  name="compInfo.compEmail"
+                  value={values.compInfo?.compEmail}
                   error={
-                    !!touched.numOfMobilizedCrew && !!errors.numOfMobilizedCrew
+                    !!touched.compInfo?.compEmail &&
+                    !!errors.compInfo?.compEmail
                   }
                   helperText={
-                    touched.numOfMobilizedCrew && errors.numOfMobilizedCrew
-                      ? errors.numOfMobilizedCrew
+                    touched.compInfo?.compEmail && errors.compInfo?.compEmail
+                      ? errors.compInfo?.compEmail
                       : " "
                   }
                   onChange={handleChange}
@@ -361,17 +433,76 @@ const MobilizationDetail = () => {
                       borderColor: COLOR.primary_black,
                     },
                   }}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">người</InputAdornment>
-                      ),
+                />
+              </Grid>
+              <Grid size={5}>
+                <InfoTextField
+                  id="representative"
+                  label="Người đại diện"
+                  size="small"
+                  margin="none"
+                  disabled={!isEditable}
+                  required
+                  fullWidth
+                  name="compInfo.representative"
+                  value={values.compInfo?.representative}
+                  error={
+                    !!touched.compInfo?.representative &&
+                    !!errors.compInfo?.representative
+                  }
+                  helperText={
+                    touched.compInfo?.representative &&
+                    errors.compInfo?.representative
+                      ? errors.compInfo?.representative
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  id="representative-position"
+                  label="Chức vụ"
+                  size="small"
+                  margin="none"
+                  disabled={!isEditable}
+                  required
+                  fullWidth
+                  name="compInfo.representativePos"
+                  value={values.compInfo?.representativePos}
+                  error={
+                    !!touched.compInfo?.representativePos &&
+                    !!errors.compInfo?.representativePos
+                  }
+                  helperText={
+                    touched.compInfo?.representativePos &&
+                    errors.compInfo?.representativePos
+                      ? errors.compInfo?.representativePos
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
                     },
                   }}
                 />
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Thông tin điều động*: " />
+            <SectionDivider sectionName="Thông tin Tàu và Lịch trình*: " />
             <Typography
               sx={{
                 ml: 2,
@@ -394,16 +525,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.timeOfDeparture"
-                  value={values.mobilizationInfo?.timeOfDeparture}
+                  name="requestInfo.timeOfDeparture"
+                  value={values.requestInfo?.timeOfDeparture}
                   error={
-                    !!touched.mobilizationInfo?.timeOfDeparture &&
-                    !!errors.mobilizationInfo?.timeOfDeparture
+                    !!touched.requestInfo?.timeOfDeparture &&
+                    !!errors.requestInfo?.timeOfDeparture
                   }
                   helperText={
-                    touched.mobilizationInfo?.timeOfDeparture &&
-                    errors.mobilizationInfo?.timeOfDeparture
-                      ? errors.mobilizationInfo?.timeOfDeparture
+                    touched.requestInfo?.timeOfDeparture &&
+                    errors.requestInfo?.timeOfDeparture
+                      ? errors.requestInfo?.timeOfDeparture
                       : " "
                   }
                   onChange={handleChange}
@@ -432,16 +563,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.UN_LOCODE_DepartureLocation"
-                  value={values.mobilizationInfo?.UN_LOCODE_DepartureLocation}
+                  name="requestInfo.UN_LOCODE_DepartureLocation"
+                  value={values.requestInfo?.UN_LOCODE_DepartureLocation}
                   error={
-                    !!touched.mobilizationInfo?.UN_LOCODE_DepartureLocation &&
-                    !!errors.mobilizationInfo?.UN_LOCODE_DepartureLocation
+                    !!touched.requestInfo?.UN_LOCODE_DepartureLocation &&
+                    !!errors.requestInfo?.UN_LOCODE_DepartureLocation
                   }
                   helperText={
-                    touched.mobilizationInfo?.UN_LOCODE_DepartureLocation &&
-                    errors.mobilizationInfo?.UN_LOCODE_DepartureLocation
-                      ? errors.mobilizationInfo?.UN_LOCODE_DepartureLocation
+                    touched.requestInfo?.UN_LOCODE_DepartureLocation &&
+                    errors.requestInfo?.UN_LOCODE_DepartureLocation
+                      ? errors.requestInfo?.UN_LOCODE_DepartureLocation
                       : " "
                   }
                   onChange={handleChange}
@@ -465,16 +596,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.departureLocation"
-                  value={values.mobilizationInfo?.departureLocation}
+                  name="requestInfo.departureLocation"
+                  value={values.requestInfo?.departureLocation}
                   error={
-                    !!touched.mobilizationInfo?.departureLocation &&
-                    !!errors.mobilizationInfo?.departureLocation
+                    !!touched.requestInfo?.departureLocation &&
+                    !!errors.requestInfo?.departureLocation
                   }
                   helperText={
-                    touched.mobilizationInfo?.departureLocation &&
-                    errors.mobilizationInfo?.departureLocation
-                      ? errors.mobilizationInfo?.departureLocation
+                    touched.requestInfo?.departureLocation &&
+                    errors.requestInfo?.departureLocation
+                      ? errors.requestInfo?.departureLocation
                       : " "
                   }
                   onChange={handleChange}
@@ -499,16 +630,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.estimatedTimeOfArrival"
-                  value={values.mobilizationInfo?.estimatedTimeOfArrival}
+                  name="requestInfo.estimatedTimeOfArrival"
+                  value={values.requestInfo?.estimatedTimeOfArrival}
                   error={
-                    !!touched.mobilizationInfo?.estimatedTimeOfArrival &&
-                    !!errors.mobilizationInfo?.estimatedTimeOfArrival
+                    !!touched.requestInfo?.estimatedTimeOfArrival &&
+                    !!errors.requestInfo?.estimatedTimeOfArrival
                   }
                   helperText={
-                    touched.mobilizationInfo?.estimatedTimeOfArrival &&
-                    errors.mobilizationInfo?.estimatedTimeOfArrival
-                      ? errors.mobilizationInfo?.estimatedTimeOfArrival
+                    touched.requestInfo?.estimatedTimeOfArrival &&
+                    errors.requestInfo?.estimatedTimeOfArrival
+                      ? errors.requestInfo?.estimatedTimeOfArrival
                       : " "
                   }
                   onChange={handleChange}
@@ -537,16 +668,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.UN_LOCODE_ArrivalLocation"
-                  value={values.mobilizationInfo?.UN_LOCODE_ArrivalLocation}
+                  name="requestInfo.UN_LOCODE_ArrivalLocation"
+                  value={values.requestInfo?.UN_LOCODE_ArrivalLocation}
                   error={
-                    !!touched.mobilizationInfo?.UN_LOCODE_ArrivalLocation &&
-                    !!errors.mobilizationInfo?.UN_LOCODE_ArrivalLocation
+                    !!touched.requestInfo?.UN_LOCODE_ArrivalLocation &&
+                    !!errors.requestInfo?.UN_LOCODE_ArrivalLocation
                   }
                   helperText={
-                    touched.mobilizationInfo?.UN_LOCODE_ArrivalLocation &&
-                    errors.mobilizationInfo?.UN_LOCODE_ArrivalLocation
-                      ? errors.mobilizationInfo?.UN_LOCODE_ArrivalLocation
+                    touched.requestInfo?.UN_LOCODE_ArrivalLocation &&
+                    errors.requestInfo?.UN_LOCODE_ArrivalLocation
+                      ? errors.requestInfo?.UN_LOCODE_ArrivalLocation
                       : " "
                   }
                   onChange={handleChange}
@@ -570,16 +701,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.arrivalLocation"
-                  value={values.mobilizationInfo?.arrivalLocation}
+                  name="requestInfo.arrivalLocation"
+                  value={values.requestInfo?.arrivalLocation}
                   error={
-                    !!touched.mobilizationInfo?.arrivalLocation &&
-                    !!errors.mobilizationInfo?.arrivalLocation
+                    !!touched.requestInfo?.arrivalLocation &&
+                    !!errors.requestInfo?.arrivalLocation
                   }
                   helperText={
-                    touched.mobilizationInfo?.arrivalLocation &&
-                    errors.mobilizationInfo?.arrivalLocation
-                      ? errors.mobilizationInfo?.arrivalLocation
+                    touched.requestInfo?.arrivalLocation &&
+                    errors.requestInfo?.arrivalLocation
+                      ? errors.requestInfo?.arrivalLocation
                       : " "
                   }
                   onChange={handleChange}
@@ -616,7 +747,7 @@ const MobilizationDetail = () => {
                   disabled={!isEditable}
                   width={300}
                   height={180}
-                  name="mobilizationInfo.shipImage"
+                  name="requestInfo.shipImage"
                   sx={{ marginBottom: 2 }}
                   onClick={() =>
                     document.getElementById("social-ins-image").click()
@@ -631,16 +762,15 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.shipIMO"
-                  value={values.mobilizationInfo?.shipIMO}
+                  name="requestInfo.shipIMO"
+                  value={values.requestInfo?.shipIMO}
                   error={
-                    !!touched.mobilizationInfo?.shipIMO &&
-                    !!errors.mobilizationInfo?.shipIMO
+                    !!touched.requestInfo?.shipIMO &&
+                    !!errors.requestInfo?.shipIMO
                   }
                   helperText={
-                    touched.mobilizationInfo?.shipIMO &&
-                    errors.mobilizationInfo?.shipIMO
-                      ? errors.mobilizationInfo?.shipIMO
+                    touched.requestInfo?.shipIMO && errors.requestInfo?.shipIMO
+                      ? errors.requestInfo?.shipIMO
                       : " "
                   }
                   onChange={handleChange}
@@ -663,16 +793,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.shipName"
-                  value={values.mobilizationInfo?.shipName}
+                  name="requestInfo.shipName"
+                  value={values.requestInfo?.shipName}
                   error={
-                    !!touched.mobilizationInfo?.shipName &&
-                    !!errors.mobilizationInfo?.shipName
+                    !!touched.requestInfo?.shipName &&
+                    !!errors.requestInfo?.shipName
                   }
                   helperText={
-                    touched.mobilizationInfo?.shipName &&
-                    errors.mobilizationInfo?.shipName
-                      ? errors.mobilizationInfo?.shipName
+                    touched.requestInfo?.shipName &&
+                    errors.requestInfo?.shipName
+                      ? errors.requestInfo?.shipName
                       : " "
                   }
                   onChange={handleChange}
@@ -695,16 +825,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.shipNationality"
-                  value={values.mobilizationInfo?.shipNationality}
+                  name="requestInfo.shipNationality"
+                  value={values.requestInfo?.shipNationality}
                   error={
-                    !!touched.mobilizationInfo?.shipNationality &&
-                    !!errors.mobilizationInfo?.shipNationality
+                    !!touched.requestInfo?.shipNationality &&
+                    !!errors.requestInfo?.shipNationality
                   }
                   helperText={
-                    touched.mobilizationInfo?.shipNationality &&
-                    errors.mobilizationInfo?.shipNationality
-                      ? errors.mobilizationInfo?.shipNationality
+                    touched.requestInfo?.shipNationality &&
+                    errors.requestInfo?.shipNationality
+                      ? errors.requestInfo?.shipNationality
                       : " "
                   }
                   onChange={handleChange}
@@ -727,16 +857,16 @@ const MobilizationDetail = () => {
                   margin="none"
                   disabled={!isEditable}
                   fullWidth
-                  name="mobilizationInfo.shipType"
-                  value={values.mobilizationInfo?.shipType}
+                  name="requestInfo.shipType"
+                  value={values.requestInfo?.shipType}
                   error={
-                    !!touched.mobilizationInfo?.shipType &&
-                    !!errors.mobilizationInfo?.shipType
+                    !!touched.requestInfo?.shipType &&
+                    !!errors.requestInfo?.shipType
                   }
                   helperText={
-                    touched.mobilizationInfo?.shipType &&
-                    errors.mobilizationInfo?.shipType
-                      ? errors.mobilizationInfo?.shipType
+                    touched.requestInfo?.shipType &&
+                    errors.requestInfo?.shipType
+                      ? errors.requestInfo?.shipType
                       : " "
                   }
                   onChange={handleChange}
@@ -752,11 +882,11 @@ const MobilizationDetail = () => {
                 />
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
+            <SectionDivider sectionName="Danh sách số lượng cần điều động*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={12}>
-                <EditableDataGrid
-                  name="mobilizedCrewMembers"
+                <ReqEditableDataGrid
+                  name="requestList"
                   initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
                   disabled={!isEditable}
                 />
@@ -769,4 +899,4 @@ const MobilizationDetail = () => {
   );
 };
 
-export default MobilizationDetail;
+export default UserSupplyRequestDetail;
