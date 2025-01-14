@@ -15,12 +15,10 @@ import {
   MenuItem,
   CircularProgress,
   InputAdornment,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import SaveIcon from "@mui/icons-material/Save";
+import ScheduleSendRoundedIcon from "@mui/icons-material/ScheduleSendRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
