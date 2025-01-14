@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { PageTitle, SectionDivider, InfoTextField, SwitchBar, NoValuesOverlay } from "../components/global";
+import {
+  PageTitle,
+  SectionDivider,
+  InfoTextField,
+  SwitchBar,
+  NoValuesOverlay,
+} from "../components/global";
 import {
   Box,
   Button,
@@ -10,7 +16,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { mockCandidates } from "../data/mockData";
 import { COLOR } from "../assets/Color";
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import EventBusyRoundedIcon from "@mui/icons-material/EventBusyRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import Grid from "@mui/material/Grid2";
@@ -20,6 +26,7 @@ import { useNavigate, useParams } from "react-router";
 const RecruitmentDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
 
   // useEffect(() => {
   //   fetchRecruitmentInfo();
@@ -36,18 +43,18 @@ const RecruitmentDetail = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        {params.value}
-      </Box>
-    ),
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       field: "fullName",
@@ -57,18 +64,18 @@ const RecruitmentDetail = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        {params.value}
-      </Box>
-    ),
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       field: "email",
@@ -78,18 +85,18 @@ const RecruitmentDetail = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        {params.value}
-      </Box>
-    ),
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       field: "phoneNumber",
@@ -99,18 +106,18 @@ const RecruitmentDetail = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        {params.value}
-      </Box>
-    ),
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       field: "timeOfApplication",
@@ -121,18 +128,18 @@ const RecruitmentDetail = () => {
       headerAlign: "center",
       valueGetter: (params) => formatDateTime(params),
       renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        {params.value}
-      </Box>
-    ),
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       field: "detail",
@@ -187,14 +194,19 @@ const RecruitmentDetail = () => {
   };
 
   const onMemberDetailClick = (id) => {
-    console.log("Member detail clicked: ", id);
+    if(isAdmin){
+      navigate(`/adminCandidateDetail/${id}`);
+    }else{
+      // navigate(`/UserCandidateDetail/${id}`);
+    }
   };
 
   //   useEffect(() => {
   //     fetchRecruitmentInfo();
   //   }, [])
 
-  const values = { // this will be replaced by the actual data when fetching API
+  const values = {
+    // this will be replaced by the actual data when fetching API
     recruitmentStartDate: "2025-01-13",
     recruitmentEndDate: "2025-07-08",
     title: "Tuyển dụng kỹ sư phần mềm",
@@ -211,7 +223,7 @@ const RecruitmentDetail = () => {
   const handleSwitchingOpenClosedClick = async () => {
     console.log("Switching open closed click");
     setOpenClosedLoading(true);
-    try{
+    try {
       //Call API to update the status of the recruitment
       await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
 
@@ -237,7 +249,7 @@ const RecruitmentDetail = () => {
           >
             <PageTitle
               title="CHI TIẾT BÀI ĐĂNG TUYỂN DỤNG"
-              subtitle="Chi tiết bài đăng tuyển dụng Thuyền viên mới"
+              subtitle={`Chi tiết bài đăng tuyển dụng: ${id}`} //replace this ID with the actual recruitment ID when fetching API
             />
             <Box
               sx={{
@@ -334,58 +346,279 @@ const RecruitmentDetail = () => {
             </Box>
           </Box>
         </Box>
-        <SwitchBar
-          tabLabel1={"Thông tin bài đăng"}
-          tabLabel2={"Danh sách ứng viên"}
-          variant={"fullWidth"}
-          onChange={(newValue) => handleTabChange(newValue)}
-          color={COLOR.secondary_blue}
-          sx={{
-            backgroundColor: COLOR.secondary_white,
-            marginTop: 2,
-          }}
-        />
-        {tabValue === 1 ? (
-          <Box
-            m="20px 0 0 0"
-            height="62vh"
-            maxHeight={550}
-            maxWidth={1600}
-            sx={{
-              "& .MuiDataGrid-columnHeader": {
-                backgroundColor: COLOR.secondary_blue,
-                color: COLOR.primary_white,
-              },
-              "& .MuiTablePagination-root": {
-                backgroundColor: COLOR.secondary_blue,
-                color: COLOR.primary_white,
-              },
-            }}
-          >
-            <DataGrid
-              disableRowSelectionOnClick
-              disableColumnMenu
-              disableColumnResize
-              getRowHeight={() => "auto"}
-              rows={mockCandidates}
-              columns={columns}
-              slots={{ noRowsOverlay: NoValuesOverlay }}
-              pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
-              initialState={{
-                pagination: {
-                  paginationModel: { pageSize: 5, page: 0 },
-                },
-              }}
+        {isAdmin ? (
+          <>
+            <SwitchBar
+              tabLabel1={"Thông tin bài đăng"}
+              tabLabel2={"Danh sách ứng viên"}
+              variant={"fullWidth"}
+              onChange={(newValue) => handleTabChange(newValue)}
+              color={COLOR.secondary_blue}
               sx={{
-                backgroundColor: "#FFF",
-                headerAlign: "center",
-                "& .MuiDataGrid-columnHeaderTitle": {
-                  fontSize: 16,
-                  fontWeight: 700,
-                },
+                backgroundColor: COLOR.secondary_white,
+                marginTop: 2,
               }}
             />
-          </Box>
+            {tabValue === 1 ? (
+              <Box
+                m="20px 0 0 0"
+                height="62vh"
+                maxHeight={550}
+                maxWidth={1600}
+                sx={{
+                  "& .MuiDataGrid-columnHeader": {
+                    backgroundColor: COLOR.secondary_blue,
+                    color: COLOR.primary_white,
+                  },
+                  "& .MuiTablePagination-root": {
+                    backgroundColor: COLOR.secondary_blue,
+                    color: COLOR.primary_white,
+                  },
+                }}
+              >
+                <DataGrid
+                  disableRowSelectionOnClick
+                  disableColumnMenu
+                  disableColumnResize
+                  getRowHeight={() => "auto"}
+                  rows={mockCandidates}
+                  columns={columns}
+                  slots={{ noRowsOverlay: NoValuesOverlay }}
+                  pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { pageSize: 5, page: 0 },
+                    },
+                  }}
+                  sx={{
+                    backgroundColor: "#FFF",
+                    headerAlign: "center",
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontSize: 16,
+                      fontWeight: 700,
+                    },
+                  }}
+                />
+              </Box>
+            ) : (
+              <>
+                <Box
+                  px={2}
+                  mt={4}
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <InfoTextField
+                    id="recruitment-start-date"
+                    type="date"
+                    label="Ngày mở đăng ký"
+                    size="small"
+                    margin="none"
+                    disabled={true}
+                    required
+                    fullWidth
+                    name="recruitmentStartDate"
+                    value={values.recruitmentStartDate}
+                    mx={2}
+                    sx={{
+                      width: "40%",
+                      marginBottom: 0,
+                      "& .MuiInputBase-input.Mui-disabled": {
+                        color: COLOR.primary_black,
+                        WebkitTextFillColor: COLOR.primary_black, // Ensure text color is black
+                      },
+                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                        borderColor: COLOR.primary_black, // Ensure border color is black
+                      },
+                      // "& .MuiInputLabel-root.Mui-disabled": {
+                      //   color: COLOR.primary_black, // Ensure label color is black
+                      // },
+                    }}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true,
+                      },
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "30%",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        borderBottom: `2px solid ${COLOR.primary_black}`,
+                        width: "40%",
+                      }}
+                    />
+                  </Box>
+                  <InfoTextField
+                    id="recruitment-end-date"
+                    label="Ngày đóng đăng ký"
+                    size="small"
+                    margin="none"
+                    disabled={true}
+                    type="date"
+                    required
+                    fullWidth
+                    name="recruitmentEndDate"
+                    value={values.recruitmentEndDate}
+                    mx={2}
+                    sx={{
+                      width: "40%",
+                      marginBottom: 0,
+                      "& .MuiInputBase-input.Mui-disabled": {
+                        color: COLOR.primary_black,
+                      },
+                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                        borderColor: COLOR.primary_black,
+                      },
+                    }}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true,
+                      },
+                    }}
+                  />
+                </Box>
+                <SectionDivider
+                  sx={{ marginTop: 2 }}
+                  sectionName="Thông tin bài đăng*: "
+                />
+                <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+                  <Grid size={4}>
+                    <InfoTextField
+                      id="title"
+                      label="Tiêu đề bài đăng"
+                      size="small"
+                      margin="none"
+                      disabled={true}
+                      required
+                      fullWidth
+                      name="title"
+                      value={values.title}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          color: COLOR.primary_black,
+                        },
+                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                          borderColor: COLOR.primary_black,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={3}>
+                    <InfoTextField
+                      id="position"
+                      label="Vị trí tuyển dụng"
+                      size="small"
+                      margin="none"
+                      disabled={true}
+                      required
+                      fullWidth
+                      name="position"
+                      value={values.position}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          color: COLOR.primary_black,
+                        },
+                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                          borderColor: COLOR.primary_black,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={2.5}>
+                    <InfoTextField
+                      id="work-location"
+                      label="Địa điểm"
+                      size="small"
+                      margin="none"
+                      disabled={true}
+                      required
+                      fullWidth
+                      name="workLocation"
+                      value={values.workLocation}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          color: COLOR.primary_black,
+                        },
+                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                          borderColor: COLOR.primary_black,
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={2.5}>
+                    <InfoTextField
+                      id="salary"
+                      label="Mức lương"
+                      size="small"
+                      type="number"
+                      margin="none"
+                      disabled={true}
+                      required
+                      fullWidth
+                      name="salary"
+                      value={values.salary}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">vnđ</InputAdornment>
+                          ),
+                        },
+                      }}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          color: COLOR.primary_black,
+                        },
+                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                          borderColor: COLOR.primary_black,
+                        },
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                          {
+                            display: "none",
+                          },
+                        "& input[type=number]": {
+                          MozAppearance: "textfield",
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={12}>
+                    <InfoTextField
+                      id="content"
+                      label="Mô tả công việc"
+                      rows={8}
+                      multiline
+                      size="small"
+                      margin="none"
+                      disabled={true}
+                      required
+                      fullWidth
+                      name="content"
+                      value={values.content}
+                      sx={{
+                        marginTop: 2,
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          color: COLOR.primary_black,
+                        },
+                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                          borderColor: COLOR.primary_black,
+                        },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            )}
+          </>
         ) : (
           <>
             <Box
