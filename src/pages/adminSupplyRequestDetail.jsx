@@ -8,6 +8,7 @@ import {
   StatusLabel,
 } from "../components/global";
 import { NationalityTextField } from "../components/mobilization";
+import { FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
@@ -26,7 +27,7 @@ import { useNavigate, useParams } from "react-router";
 const AdminSupplyRequestDetail = () => {
   // const navigate = useNavigate();
   const { id } = useParams();
-  const status = "Đã ký hợp đồng"; //Change this to the status of the request
+  const status = "Đang chờ xác nhận"; //Change this to the status of the request
   //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
   // useEffect(() => {
@@ -34,6 +35,7 @@ const AdminSupplyRequestDetail = () => {
   // },[]);
 
   const initialValues = {
+    requestListFileLink: "",
     compInfo: {
       compName: "",
       compAddress: "",
@@ -58,8 +60,6 @@ const AdminSupplyRequestDetail = () => {
       shipNationality: "",
       shipType: "",
     },
-
-    requestList: [],
   };
 
   const [loading, setLoading] = useState(false);
@@ -142,73 +142,81 @@ const AdminSupplyRequestDetail = () => {
                     />
                   )}
                 </Box>
-                {status === "Đang chờ xác nhận" && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "start",
-                      marginRight: 2,
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      onClick={() => handleApproveClick()}
-                      disabled={loading}
+                <Box sx={{ display: "flex", }}>
+                  {status === "Đang chờ xác nhận" && (
+                    <Box
                       sx={{
-                        width: "15%",
-                        padding: 1,
-                        color: COLOR.primary_white,
-                        backgroundColor: COLOR.primary_blue,
-                        minWidth: 130,
+                        display: "flex",
+                        justifyContent: "start",
                         marginRight: 2,
+                        width: "50%",
                       }}
                     >
-                      {loading ? (
-                        <CircularProgress
-                          size={24}
-                          color={COLOR.primary_black}
-                        />
-                      ) : (
-                        <Box sx={{ display: "flex", alignItems: "end" }}>
-                          <CheckCircleRoundedIcon
-                            sx={{ marginRight: "5px", marginBottom: "1px" }}
+                      <Button
+                        variant="contained"
+                        onClick={() => handleApproveClick()}
+                        disabled={loading}
+                        sx={{
+                          width: "30%",
+                          padding: 1,
+                          color: COLOR.primary_white,
+                          backgroundColor: COLOR.primary_blue,
+                          minWidth: 130,
+                          marginRight: 2,
+                          marginTop: 2,
+                          marginBottom: 2,
+                        }}
+                      >
+                        {loading ? (
+                          <CircularProgress
+                            size={24}
+                            color={COLOR.primary_black}
                           />
-                          <Typography sx={{ fontWeight: 700 }}>
-                            Chấp thuận
-                          </Typography>
-                        </Box>
-                      )}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => handleDeclineClick()}
-                      disabled={loading}
-                      sx={{
-                        width: "15%",
-                        padding: 1,
-                        color: COLOR.primary_white,
-                        backgroundColor: COLOR.primary_orange,
-                        minWidth: 130,
-                      }}
-                    >
-                      {loading ? (
-                        <CircularProgress
-                          size={24}
-                          color={COLOR.primary_black}
-                        />
-                      ) : (
-                        <Box sx={{ display: "flex", alignItems: "end" }}>
-                          <CancelRoundedIcon
-                            sx={{ marginRight: "5px", marginBottom: "1px" }}
+                        ) : (
+                          <Box sx={{ display: "flex", alignItems: "end" }}>
+                            <CheckCircleRoundedIcon
+                              sx={{ marginRight: "5px", marginBottom: "1px" }}
+                            />
+                            <Typography sx={{ fontWeight: 700 }}>
+                              Chấp thuận
+                            </Typography>
+                          </Box>
+                        )}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleDeclineClick()}
+                        disabled={loading}
+                        sx={{
+                          width: "30%",
+                          padding: 1,
+                          color: COLOR.primary_white,
+                          backgroundColor: COLOR.primary_orange,
+                          minWidth: 130,
+                          marginTop: 2,
+                          marginBottom: 2,
+                        }}
+                      >
+                        {loading ? (
+                          <CircularProgress
+                            size={24}
+                            color={COLOR.primary_black}
                           />
-                          <Typography sx={{ fontWeight: 700 }}>
-                            Từ chối
-                          </Typography>
-                        </Box>
-                      )}
-                    </Button>
-                  </Box>
-                )}
+                        ) : (
+                          <Box sx={{ display: "flex", alignItems: "end" }}>
+                            <CancelRoundedIcon
+                              sx={{ marginRight: "5px", marginBottom: "1px" }}
+                            />
+                            <Typography sx={{ fontWeight: 700 }}>
+                              Từ chối
+                            </Typography>
+                          </Box>
+                        )}
+                      </Button>
+                    </Box>
+                  )}
+                  <FileUploadField label="Danh sách số lượng cần cung ứng" disabled={true} name="requestListFileLink" />
+                </Box>
               </Box>
             </Box>
             <SectionDivider sectionName="Thông tin công ty: " />
@@ -260,7 +268,8 @@ const AdminSupplyRequestDetail = () => {
                     !!errors.compInfo?.compAddress
                   }
                   helperText={
-                    touched.compInfo?.compAddress && errors.compInfo?.compAddress
+                    touched.compInfo?.compAddress &&
+                    errors.compInfo?.compAddress
                       ? errors.compInfo?.compAddress
                       : " "
                   }
@@ -323,8 +332,7 @@ const AdminSupplyRequestDetail = () => {
                     !!errors.compInfo?.compEmail
                   }
                   helperText={
-                    touched.compInfo?.compEmail &&
-                    errors.compInfo?.compEmail
+                    touched.compInfo?.compEmail && errors.compInfo?.compEmail
                       ? errors.compInfo?.compEmail
                       : " "
                   }
@@ -784,16 +792,6 @@ const AdminSupplyRequestDetail = () => {
                       borderColor: COLOR.primary_black,
                     },
                   }}
-                />
-              </Grid>
-            </Grid>
-            <SectionDivider sectionName="Danh sách số lượng cần điều động*: " />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={12}>
-                <ReqEditableDataGrid
-                  name="requestList"
-                  initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
-                  disabled={true}
                 />
               </Grid>
             </Grid>

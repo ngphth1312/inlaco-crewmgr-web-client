@@ -4,10 +4,10 @@ import {
   SectionDivider,
   InfoTextField,
   HorizontalImageInput,
-  ReqEditableDataGrid,
   StatusLabel,
 } from "../components/global";
 import { NationalityTextField } from "../components/mobilization";
+import { FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
@@ -35,6 +35,7 @@ const UserSupplyRequestDetail = () => {
   // },[]);
 
   const initialValues = {
+    requestListFileLink: "",
     compInfo: {
       compName: "",
       compAddress: "",
@@ -202,108 +203,127 @@ const UserSupplyRequestDetail = () => {
                     />
                   )}
                 </Box>
-                {status === "Đang chờ xác nhận" && isEditable ? (
-                  <Box sx={{ display: "flex" }}>
-                    <Button
-                      variant="outlined"
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: 2,
+                  }}
+                >
+                  {status === "Đang chờ xác nhận" && isEditable ? (
+                    <Box
                       sx={{
-                        color: COLOR.primary_orange,
-                        padding: "8px",
-                        marginRight: 2,
-                        borderColor: COLOR.primary_orange,
-                        width: "10%",
-                      }}
-                      onClick={handleCancelClick}
-                    >
-                      <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <DeleteForeverRoundedIcon
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            marginRight: "2px",
-                            marginBottom: "2px",
-                          }}
-                        />
-                        <Typography
-                          sx={{
-                            fontWeight: 700,
-                            fontSize: 14,
-                          }}
-                        >
-                          Hủy
-                        </Typography>
-                      </Box>
-                    </Button>
-                    <Button
-                      variant="contained"
-                      type={"submit"}
-                      disabled={!isValid || !dirty}
-                      sx={{
-                        color: COLOR.primary_white,
-                        backgroundColor: COLOR.primary_blue,
-                        padding: "10px",
-                        marginTop: "1px",
-                        marginBottom: "1px",
-                        width: "10%",
+                        display: "flex",
+                        width: "50%",
+                        alignItems: "center",
                       }}
                     >
-                      <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <SaveIcon
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            marginRight: "2px",
-                            marginBottom: "2px",
-                          }}
-                        />
-                        <Typography
-                          sx={{
-                            fontWeight: 700,
-                            fontSize: 14,
-                          }}
-                        >
-                          Lưu
-                        </Typography>
-                      </Box>
-                    </Button>
-                  </Box>
-                ) : status === "Đang chờ xác nhận" && !isEditable ? (
-                  <Button
-                    variant="contained"
-                    type={"button"}
-                    sx={{
-                      color: COLOR.primary_black,
-                      backgroundColor: COLOR.primary_gold,
-                      padding: "10px",
-                      marginTop: "1px",
-                      marginBottom: "1px",
-                      width: "10%",
-                    }}
-                    onClick={handleEditClick}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "end" }}>
-                      <EditIcon
+                      <Button
+                        variant="outlined"
                         sx={{
-                          width: 20,
-                          height: 20,
-                          marginRight: "2px",
-                          marginBottom: "2px",
+                          color: COLOR.primary_orange,
+                          padding: "8px",
+                          marginRight: 2,
+                          borderColor: COLOR.primary_orange,
+                          width: "12%",
                         }}
-                      />
-                      <Typography
+                        onClick={handleCancelClick}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "end" }}>
+                          <DeleteForeverRoundedIcon
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              marginRight: "2px",
+                              marginBottom: "2px",
+                            }}
+                          />
+                          <Typography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: 14,
+                            }}
+                          >
+                            Hủy
+                          </Typography>
+                        </Box>
+                      </Button>
+                      <Button
+                        variant="contained"
+                        type={"submit"}
+                        disabled={!isValid || !dirty}
                         sx={{
-                          fontWeight: 700,
-                          fontSize: 14,
-                          color: COLOR.primary_black,
+                          color: COLOR.primary_white,
+                          backgroundColor: COLOR.primary_blue,
+                          padding: "10px",
+                          marginTop: "1px",
+                          marginBottom: "1px",
+                          width: "12%",
                         }}
                       >
-                        Chỉnh sửa
-                      </Typography>
+                        <Box sx={{ display: "flex", alignItems: "end" }}>
+                          <SaveIcon
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              marginRight: "2px",
+                              marginBottom: "2px",
+                            }}
+                          />
+                          <Typography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: 14,
+                            }}
+                          >
+                            Lưu
+                          </Typography>
+                        </Box>
+                      </Button>
                     </Box>
-                  </Button>
-                ) : (
-                  <></>
-                )}
+                  ) : status === "Đang chờ xác nhận" && !isEditable ? (
+                    <Box sx={{ display: "flex", width: "50%", alignItems: "center", }}>
+                      <Button
+                        variant="contained"
+                        type={"button"}
+                        sx={{
+                          color: COLOR.primary_black,
+                          backgroundColor: COLOR.primary_gold,
+                          padding: "10px",
+                          width: "22%",
+                        }}
+                        onClick={handleEditClick}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "end" }}>
+                          <EditIcon
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              marginRight: "2px",
+                              marginBottom: "2px",
+                            }}
+                          />
+                          <Typography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: 14,
+                              color: COLOR.primary_black,
+                            }}
+                          >
+                            Chỉnh sửa
+                          </Typography>
+                        </Box>
+                      </Button>
+                    </Box>
+                  ) : (
+                    <></>
+                  )}
+                  <FileUploadField
+                    label="Danh sách số lượng cần cung ứng"
+                    disabled={!isEditable}
+                    name="requestListFileLink"
+                  />
+                </Box>
               </Box>
             </Box>
             <SectionDivider sectionName="Thông tin công ty: " />
@@ -879,16 +899,6 @@ const UserSupplyRequestDetail = () => {
                       borderColor: COLOR.primary_black,
                     },
                   }}
-                />
-              </Grid>
-            </Grid>
-            <SectionDivider sectionName="Danh sách số lượng cần điều động*: " />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={12}>
-                <ReqEditableDataGrid
-                  name="requestList"
-                  initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
-                  disabled={!isEditable}
                 />
               </Grid>
             </Grid>

@@ -4,9 +4,9 @@ import {
   SectionDivider,
   InfoTextField,
   HorizontalImageInput,
-  ReqEditableDataGrid,
 } from "../components/global";
 import { NationalityTextField } from "../components/mobilization";
+import { FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
@@ -29,6 +29,7 @@ const CreateSupplyRequest = () => {
   // },[]);
 
   const initialValues = {
+    requestListFileLink: "",
     compInfo: {
       compName: "",
       compAddress: "",
@@ -175,29 +176,43 @@ const CreateSupplyRequest = () => {
                 </Box>
               </Box>
             </Box>
-            <Button
-              variant="contained"
-              type="submit"
-              disabled={!isValid || !dirty || isLoading}
+            <Box
               sx={{
-                width: "16%",
-                padding: 1,
-                color: COLOR.primary_black,
-                backgroundColor: COLOR.primary_gold,
-                minWidth: 130,
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              {isLoading ? (
-                <CircularProgress size={24} color={COLOR.primary_black} />
-              ) : (
-                <Box sx={{ display: "flex", alignItems: "end" }}>
-                  <ScheduleSendRoundedIcon
-                    sx={{ marginRight: "5px", marginBottom: "1px" }}
-                  />
-                  <Typography sx={{ fontWeight: 700 }}>Gửi yêu cầu</Typography>
-                </Box>
-              )}
-            </Button>
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={!isValid || !dirty || isLoading}
+                sx={{
+                  width: "16%",
+                  padding: 1,
+                  color: COLOR.primary_black,
+                  backgroundColor: COLOR.primary_gold,
+                  minWidth: 130,
+                }}
+              >
+                {isLoading ? (
+                  <CircularProgress size={24} color={COLOR.primary_black} />
+                ) : (
+                  <Box sx={{ display: "flex", alignItems: "end" }}>
+                    <ScheduleSendRoundedIcon
+                      sx={{ marginRight: "5px", marginBottom: "1px" }}
+                    />
+                    <Typography sx={{ fontWeight: 700 }}>
+                      Gửi yêu cầu
+                    </Typography>
+                  </Box>
+                )}
+              </Button>
+              <FileUploadField
+                label="Danh sách số lượng cần cung ứng"
+                name="requestListFileLink"
+              />
+            </Box>
             <SectionDivider sectionName="Thông tin công ty: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
@@ -754,15 +769,6 @@ const CreateSupplyRequest = () => {
                       borderColor: COLOR.primary_black,
                     },
                   }}
-                />
-              </Grid>
-            </Grid>
-            <SectionDivider sectionName="Danh sách số lượng cần điều động*: " />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={12}>
-                <ReqEditableDataGrid
-                  name="requestList"
-                  initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
                 />
               </Grid>
             </Grid>

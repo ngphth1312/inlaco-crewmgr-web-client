@@ -4,7 +4,7 @@ import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { COLOR } from "../../assets/Color";
 import { useField, useFormikContext } from "formik";
 
-const FileUploadField = ({ name, disabled, sx = [], ...props }) => {
+const FileUploadField = ({ name, label = "File hợp đồng", disabled, sx = [], ...props }) => {
   
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
@@ -37,7 +37,7 @@ const FileUploadField = ({ name, disabled, sx = [], ...props }) => {
           color: COLOR.primary_black_placeholder,
         }}
       >
-        File hợp đồng:{" "}
+        {label}:{" "}
       </p>
       {!field.value ? (
         <label>
@@ -45,7 +45,7 @@ const FileUploadField = ({ name, disabled, sx = [], ...props }) => {
             id="file-upload"
             disabled={disabled}
             type="file"
-            accept=".doc,.docx"
+            accept=".doc,.docx,.pdf,.xlsx"
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
@@ -58,15 +58,28 @@ const FileUploadField = ({ name, disabled, sx = [], ...props }) => {
           </Button>
         </label>
       ) : (
-        <Box>
-          <a href={URL.createObjectURL(field.value)} download={field.value.name}>
+        <Box sx={{ display: "flex", alignItems: "center"}}>
+          <a
+            href={URL.createObjectURL(field.value)}
+            download={field.value.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "300px", // Adjust the max-width as needed
+              display: "inline-block",
+              marginLeft: 2,
+            }}
+          >
             {field.value.name}
           </a>
           <IconButton
             onClick={handleDelete}
-            sx={{ color: COLOR.primary_orange }}
+            sx={{ color: COLOR.primary_orange,}}
           >
-            {!disabled && (<DeleteForeverRoundedIcon sx={{ width: 24, height: 24 }} />)}
+            {!disabled && (
+              <DeleteForeverRoundedIcon sx={{ width: 24, height: 24 }} />
+            )}
           </IconButton>
         </Box>
       )}
