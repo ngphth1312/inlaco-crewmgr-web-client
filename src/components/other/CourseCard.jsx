@@ -17,12 +17,17 @@ const CourseCard = ({
   color = COLOR.primary_black,
   sx = [],
   isCertificateCourse,
+  onClick,
 }) => {
   const [courseImageError, setCourseImageError] = useState(false);
   const [logoImageError, setLogoImageError] = useState(false);
 
   return (
-    <Grid size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid
+      onClick={onClick}
+      size={gridSize}
+      sx={[...(Array.isArray(sx) ? sx : [sx])]}
+    >
       <Card
         sx={{
           position: "relative",

@@ -29,6 +29,7 @@ import CreateRecruitment from "./pages/createRecruitment";
 import RecruitmentDetail from "./pages/recruitmentDetail";
 import CrewCourse from "./pages/crewCourse";
 import CreateCourse from "./pages/createCourse";
+import CourseDetail from "./pages/courseDetail";
 
 
 import { MainLayout } from "./components/global";
@@ -124,6 +125,7 @@ function App() {
             <Route path="/supplyContractDetail/:id" element={<SupplyContractDetail />} />
             <Route path="/createRecruitment" element={<CreateRecruitment />} />
             <Route path="/recruitmentDetail/:id" element={<RecruitmentDetail />} />
+            <Route path="/CourseDetail/:id" element={<CourseDetail />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */

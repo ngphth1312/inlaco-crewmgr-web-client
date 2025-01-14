@@ -62,6 +62,7 @@ const CrewCourse = () => {
                 trainingPartnerLogo={item?.trainingPartnerLogo}
                 limitStudent={item?.limitStudent}
                 isCertificateCourse={item?.isCertificateCourse}
+                onClick={() => navigate(`/courseDetail/${item?.id}`)}
               />
             );
           })}

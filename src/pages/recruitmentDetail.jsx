@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import SaveIcon from "@mui/icons-material/Save";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import EventBusyRoundedIcon from "@mui/icons-material/EventBusyRounded";
 import Grid from "@mui/material/Grid2";
 import { useNavigate, useParams } from "react-router";
 
@@ -97,7 +97,7 @@ const RecruitmentDetail = () => {
                 ) : (
                   <Box sx={{ display: "flex", alignItems: "end" }}>
                     {isActive ? (
-                      <VisibilityOffIcon
+                      <CheckCircleRoundedIcon
                         sx={{
                           marginRight: "5px",
                           marginBottom: "3px",
@@ -106,7 +106,7 @@ const RecruitmentDetail = () => {
                         }}
                       />
                     ) : (
-                      <VisibilityIcon
+                      <EventBusyRoundedIcon
                         sx={{
                           marginRight: "5px",
                           marginBottom: "3px",
@@ -129,7 +129,9 @@ const RecruitmentDetail = () => {
                   width: "15%",
                   padding: 1,
                   color: COLOR.primary_white,
-                  backgroundColor: isClosed ? COLOR.primary_blue : COLOR.primary_orange,
+                  backgroundColor: isClosed
+                    ? COLOR.primary_blue
+                    : COLOR.primary_orange,
                   minWidth: 110,
                 }}
               >
@@ -138,7 +140,7 @@ const RecruitmentDetail = () => {
                 ) : (
                   <Box sx={{ display: "flex", alignItems: "end" }}>
                     {isClosed ? (
-                      <VisibilityOffIcon
+                      <CheckCircleRoundedIcon
                         sx={{
                           marginRight: "5px",
                           marginBottom: "3px",
@@ -147,7 +149,7 @@ const RecruitmentDetail = () => {
                         }}
                       />
                     ) : (
-                      <VisibilityIcon
+                      <EventBusyRoundedIcon
                         sx={{
                           marginRight: "5px",
                           marginBottom: "3px",
@@ -156,7 +158,7 @@ const RecruitmentDetail = () => {
                         }}
                       />
                     )}
-                    <Typography sx={{ fontWeight: 700, }}>
+                    <Typography sx={{ fontWeight: 700, marginLeft: "2px", }}>
                       {isClosed ? "Mở đăng ký" : "Đóng đăng ký"}
                     </Typography>
                   </Box>
