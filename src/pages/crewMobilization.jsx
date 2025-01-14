@@ -122,11 +122,11 @@ const CrewMobilization = () => {
     },
   ];
 
-  const [tabValue, setTabValue] = useState(0);
+  // const [tabValue, setTabValue] = useState(0);
 
-  const handleTabChange = (newValue) => {
-    setTabValue(newValue);
-  };
+  // const handleTabChange = (newValue) => {
+  //   setTabValue(newValue);
+  // };
 
   return (
     <div>

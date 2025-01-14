@@ -98,7 +98,7 @@ const CrewRecruitment = () => {
                 textTransform: "capitalize",
               }}
             >
-              Thêm Bài tuyển dụng
+              Đăng Bài tuyển dụng
             </Typography>
           </Button>
         </Box>

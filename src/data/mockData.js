@@ -662,3 +662,76 @@ export const mockCourses = [
     limitStudent: 150,
   },
 ];
+
+export const mockCandidates = [
+  {
+    id: 1,
+    fullName: "Nguyễn Văn A",
+    email: "nguyenvana@example.com",
+    phoneNumber: "0901234567",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    fullName: "Trần Thị B",
+    email: "tranthib@example.com",
+    phoneNumber: "0902345678",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    fullName: "Lê Văn C",
+    email: "levanc@example.com",
+    phoneNumber: "0903456789",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 4,
+    fullName: "Phạm Thị D",
+    email: "phamthid@example.com",
+    phoneNumber: "0904567890",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 5,
+    fullName: "Hoàng Văn E",
+    email: "hoangvane@example.com",
+    phoneNumber: "0905678901",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 6,
+    fullName: "Đỗ Thị F",
+    email: "dothif@example.com",
+    phoneNumber: "0906789012",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 7,
+    fullName: "Ngô Văn G",
+    email: "ngovang@example.com",
+    phoneNumber: "0907890123",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 8,
+    fullName: "Vũ Thị H",
+    email: "vuthih@example.com",
+    phoneNumber: "0908901234",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 9,
+    fullName: "Bùi Văn I",
+    email: "buivani@example.com",
+    phoneNumber: "0909012345",
+    timeOfApplication: new Date().toISOString(),
+  },
+  {
+    id: 10,
+    fullName: "Đặng Thị K",
+    email: "dangthik@example.com",
+    phoneNumber: "0910123456",
+    timeOfApplication: new Date().toISOString(),
+  },
+];

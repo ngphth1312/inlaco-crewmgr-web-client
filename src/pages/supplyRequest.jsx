@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 const SupplyRequest = () => {
   const navigate = useNavigate();
 
-  const isAdmin = false; //Change this to false to see the user view
+  const isAdmin = true; //Change this to false to see the user view
 
   const onRequestDetailClick = (id) => {
     if (isAdmin) {
@@ -161,33 +161,35 @@ const SupplyRequest = () => {
           title="YÊU CẦU CUNG ỨNG"
           subtitle="Danh sách các yêu cầu cung ứng thuyền viên"
         />
-        <Box sx={{ display: "flex", justify: "end" }}>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: COLOR.primary_gold,
-              color: COLOR.primary_black,
-              borderRadius: 2,
-              margin: 0,
-              marginLeft: "auto",
-            }}
-            onClick={() => navigate("/createSupplyRequest")}
-          >
-            <AddCircleRoundedIcon />
-            <Typography
+        {!isAdmin && (
+          <Box sx={{ display: "flex", justify: "end" }}>
+            <Button
+              variant="contained"
               sx={{
-                fontWeight: 700,
-                marginLeft: "4px",
-                textTransform: "capitalize",
+                backgroundColor: COLOR.primary_gold,
+                color: COLOR.primary_black,
+                borderRadius: 2,
+                margin: 0,
+                marginLeft: "auto",
               }}
+              onClick={() => navigate("/createSupplyRequest")}
             >
-              Gửi yêu cầu cung ứng
-            </Typography>
-          </Button>
-        </Box>
+              <AddCircleRoundedIcon />
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  marginLeft: "4px",
+                  textTransform: "capitalize",
+                }}
+              >
+                Gửi yêu cầu cung ứng
+              </Typography>
+            </Button>
+          </Box>
+        )}
         <Box
           m="20px 0 0 0"
-          height="65vh"
+          height={isAdmin ? "72vh" : "65vh"}
           maxHeight={550}
           maxWidth={1600}
           sx={{

@@ -139,7 +139,7 @@ const CreateRecruitment = () => {
                         <SaveIcon
                           sx={{ marginRight: "5px", marginBottom: "1px" }}
                         />
-                        <Typography sx={{ fontWeight: 700 }}>Tạo</Typography>
+                        <Typography sx={{ fontWeight: 700 }}>Đăng</Typography>
                       </Box>
                     )}
                   </Button>
