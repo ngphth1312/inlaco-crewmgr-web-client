@@ -16,6 +16,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { mockCandidates } from "../data/mockData";
 import { COLOR } from "../assets/Color";
+import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import EventBusyRoundedIcon from "@mui/icons-material/EventBusyRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
@@ -27,6 +28,7 @@ const RecruitmentDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
+  const isAlreadyApplied = false; //this later will be replaced by the actual applied status of the user when fetching API
 
   // useEffect(() => {
   //   fetchRecruitmentInfo();
@@ -258,91 +260,77 @@ const RecruitmentDetail = () => {
                 alignItems: "center",
               }}
             >
-              {/* <Button
-                variant="contained"
-                onClick={() => handleSwitchingIsActiveClick()}
-                disabled={!isClosed}
-                sx={{
-                  width: "8%",
-                  padding: 1,
-                  color: COLOR.primary_black,
-                  backgroundColor: COLOR.primary_gold,
-                  minWidth: 110,
-                  marginRight: 2,
-                }}
-              >
-                {hideUnhideLoading ? (
-                  <CircularProgress size={24} color={COLOR.primary_black} />
-                ) : (
-                  <Box sx={{ display: "flex", alignItems: "end" }}>
-                    {isActive ? (
-                      <CheckCircleRoundedIcon
-                        sx={{
-                          marginRight: "5px",
-                          marginBottom: "3px",
-                          width: 20,
-                          height: 20,
-                        }}
-                      />
-                    ) : (
-                      <EventBusyRoundedIcon
-                        sx={{
-                          marginRight: "5px",
-                          marginBottom: "3px",
-                          width: 20,
-                          height: 20,
-                        }}
-                      />
-                    )}
-                    <Typography sx={{ fontWeight: 700 }}>
-                      {isActive ? "Ẩn" : "Hiện"}
-                    </Typography>
-                  </Box>
-                )}
-              </Button> */}
-              <Button
-                variant="contained"
-                onClick={() => handleSwitchingOpenClosedClick()}
-                disabled={openClosedLoading}
-                sx={{
-                  width: "15%",
-                  padding: 1,
-                  color: COLOR.primary_white,
-                  backgroundColor: isClosed
-                    ? COLOR.primary_blue
-                    : COLOR.primary_orange,
-                  minWidth: 110,
-                }}
-              >
-                {openClosedLoading ? (
-                  <CircularProgress size={24} color={COLOR.primary_black} />
-                ) : (
-                  <Box sx={{ display: "flex", alignItems: "end" }}>
-                    {isClosed ? (
-                      <CheckCircleRoundedIcon
-                        sx={{
-                          marginRight: "5px",
-                          marginBottom: "3px",
-                          width: 20,
-                          height: 20,
-                        }}
-                      />
-                    ) : (
-                      <EventBusyRoundedIcon
-                        sx={{
-                          marginRight: "5px",
-                          marginBottom: "3px",
-                          width: 20,
-                          height: 20,
-                        }}
-                      />
-                    )}
-                    <Typography sx={{ fontWeight: 700, marginLeft: "2px" }}>
-                      {isClosed ? "Mở đăng ký" : "Đóng đăng ký"}
-                    </Typography>
-                  </Box>
-                )}
-              </Button>
+              {isAdmin ? (
+                <Button
+                  variant="contained"
+                  onClick={() => handleSwitchingOpenClosedClick()}
+                  disabled={openClosedLoading}
+                  sx={{
+                    width: "15%",
+                    padding: 1,
+                    color: COLOR.primary_white,
+                    backgroundColor: isClosed
+                      ? COLOR.primary_blue
+                      : COLOR.primary_orange,
+                    minWidth: 110,
+                  }}
+                >
+                  {openClosedLoading ? (
+                    <CircularProgress size={24} color={COLOR.primary_black} />
+                  ) : (
+                    <Box sx={{ display: "flex", alignItems: "end" }}>
+                      {isClosed ? (
+                        <CheckCircleRoundedIcon
+                          sx={{
+                            marginRight: "5px",
+                            marginBottom: "3px",
+                            width: 20,
+                            height: 20,
+                          }}
+                        />
+                      ) : (
+                        <EventBusyRoundedIcon
+                          sx={{
+                            marginRight: "5px",
+                            marginBottom: "3px",
+                            width: 20,
+                            height: 20,
+                          }}
+                        />
+                      )}
+                      <Typography sx={{ fontWeight: 700, marginLeft: "2px" }}>
+                        {isClosed ? "Mở đăng ký" : "Đóng đăng ký"}
+                      </Typography>
+                    </Box>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    if(isAlreadyApplied){
+                      // navigate("/recruitmentApplicationDetail");
+                    } else{
+                      navigate("/createRecruitmentApplication");
+                    }
+                  }}
+                  sx={{
+                    backgroundColor: COLOR.primary_gold,
+                    color: COLOR.primary_black,
+                    borderRadius: 2,
+                  }}
+                >
+                  <AppRegistrationRoundedIcon />
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      marginLeft: "4px",
+                    }}
+                  >
+                    {isAlreadyApplied ? "XEM HỒ SƠ ỨNG TUYỂN" : "ỨNG TUYỂN"}
+                  </Typography>
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
