@@ -91,6 +91,19 @@ export function formatDateTime(value) {
   }
 }
 
+export function formatDateString(value) {
+  try {
+    // Split the input date string by the hyphen
+    const [year, month, day] = value.split("-");
+
+    // Return the formatted date string in "dd/mm/yyyy" format
+    return `${day}/${month}/${year}`;
+  } catch (error) {
+    console.error("Error formatting date string:", error);
+    return null; // Return null on formatting errors
+  }
+}
+
 export function getTime(value) {
   try {
     // Parse the ISOString date time into a Date object

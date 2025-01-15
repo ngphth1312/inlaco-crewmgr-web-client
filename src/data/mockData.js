@@ -545,38 +545,26 @@ export const mockSupplyRequest = [
 export const mockTemplateContracts = [
   {
     id: "TCT-001",
-    title: "Mẫu hợp đồng Cung ứng thuyền viên 1",
-    description: "Hợp đồng Cung ứng",
-    image: "",
+    title: "Mẫu Hợp đồng lao động",
+    type: "Hợp đồng lao động",
+    image: require("../assets/images/preview-template-hop-dong-thuyen-vien.png"),
   },
   {
     id: "TCT-002",
-    title: "Mẫu hợp đồng Lao động thuyền viên 2",
-    description: "Hợp đồng Lao động",
-    image: "",
+    title: "Mẫu Hợp đồng cung ứng",
+    type: "Hợp đồng cung ứng",
+    image: require("../assets/images/preview-template-hop-dong-cung-ung-thuyen-vien.png"),
   },
   {
     id: "TCT-003",
-    title: "Mẫu hợp đồng Lao động thuyền viên 3",
-    description: "Hợp đồng Lao động",
+    title: "Mẫu Phụ lục Hợp đồng lao động",
+    type: "Phụ lục hợp đồng",
     image: "",
   },
   {
     id: "TCT-004",
-    title: "Mẫu hợp đồng Cung ứng thuyền viên 4",
-    description: "Hợp đồng Cung ứng",
-    image: "",
-  },
-  {
-    id: "TCT-005",
-    title: "Mẫu hợp đồng Lao động thuyền viên 5",
-    description: "Hợp đồng Lao động",
-    image: "",
-  },
-  {
-    id: "TCT-006",
-    title: "Mẫu hợp đồng Cung ứng thuyền viên 6",
-    description: "Hợp đồng Cung ứng",
+    title: "Mẫu Phụ lục Hợp đồng cung ứng lao động",
+    type: "Phụ lục hợp đồng",
     image: "",
   },
 ];

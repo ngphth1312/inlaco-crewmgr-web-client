@@ -14,8 +14,8 @@ import Grid from "@mui/material/Grid2";
 const TemplateContractCard = ({
   image,
   title,
-  description,
-  gridSize = 3,
+  type,
+  gridSize = 4,
   color = COLOR.primary_black,
   sx = [],
 }) => {
@@ -78,7 +78,7 @@ const TemplateContractCard = ({
               variant="body1"
               sx={{ margin: 0, color: COLOR.secondary_black }}
             >
-              <strong>Loại:</strong> {description}
+              <strong>Loại:</strong> {type}
             </Typography>
           </CardContent>
         </Box>

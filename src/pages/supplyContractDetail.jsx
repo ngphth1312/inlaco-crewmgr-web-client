@@ -1,28 +1,25 @@
 import React, { useState } from "react";
 import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
 import { FileUploadField } from "../components/contract";
-import {
-  Box,
-  Button,
-  Typography,
-  TextField,
-  MenuItem,
-  CircularProgress,
-  InputAdornment,
-} from "@mui/material";
+import { Box, Button, Typography, InputAdornment } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
 import DifferenceRoundedIcon from "@mui/icons-material/DifferenceRounded";
+import GetAppRoundedIcon from "@mui/icons-material/GetAppRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+import { saveAs } from "file-saver";
+import JSZipUtils from "jszip-utils";
 
 const SupplyContractDetail = () => {
   const navigate = useNavigate();
-
+  
   const { id } = useParams();
   const isOfficialContract = false; //edit this later
 
@@ -167,6 +164,62 @@ const SupplyContractDetail = () => {
     setIsEditable(false);
   };
 
+  const handleDownloadPaperContractClick = (values) => {
+    const loadFile = (url, callback) => {
+      JSZipUtils.getBinaryContent(url, callback);
+    };
+
+    loadFile(
+      require("../assets/templates/template-hop-dong-cung-ung-thuyen-vien.docx"),
+      (error, content) => {
+        if (error) {
+          throw error;
+        }
+
+        // Initialize PizZip with the .docx content
+        const zip = new PizZip(content);
+
+        // Initialize docxtemplater
+        const doc = new Docxtemplater(zip, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+
+        // Set dynamic values for placeholders
+        doc.setData({
+          partyA_representative: values.partyA.representative,
+          partyA_representativePos: values.partyA.representativePos,
+          partyA_compAddress: values.partyA.compAddress,
+          partyA_phoneNumber: values.partyA.compPhoneNumber,
+          partyB_compName: values.partyB.compName,
+          partyB_representative: values.partyB.representative,
+          partyB_representativePos: values.partyB.representativePos,
+          partyB_compAddress: values.partyB.compAddress,
+          partyB_phoneNumber: values.partyB.compPhoneNumber,
+          startDate: values.contractInfo.startDate,
+          endDate: values.contractInfo.endDate,
+        });
+
+        try {
+          // Render the document with dynamic data
+          doc.render();
+
+          // Generate the final document
+          const out = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+
+          // Save the file locally
+          saveAs(out, "hop-dong-cung-ung-thuyen-vien.docx");
+        } catch (error) {
+          console.error("Error generating document:", error);
+        }
+      }
+    );
+  };
+
   const handleCreateSupplyContractSubmit = async (values) => {
     // setCreateContractLoading(true);
     try {
@@ -221,35 +274,13 @@ const SupplyContractDetail = () => {
                     alignItems: "center",
                   }}
                 >
-                  {/* <Button
-                    variant="contained"
-                    type="submit"
-                    disabled={!isValid || !dirty}
-                    sx={{
-                      width: "10%",
-                      padding: 1,
-                      color: COLOR.primary_black,
-                      backgroundColor: COLOR.primary_gold,
-                      minWidth: 130,
-                    }}
-                  >
-                    {createContractLoading ? (
-                      <CircularProgress size={24} color={COLOR.primary_black} />
-                    ) : (
-                      <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <PersonAddIcon
-                          sx={{ marginRight: "5px", marginBottom: "1px" }}
-                        />
-                        <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
-                      </Box>
-                    )}
-                  </Button> */}
                   {!isOfficialContract ? (
                     <Box
                       sx={{
                         display: "flex",
                         justifyContent: "start",
                         marginRight: 2,
+                        width: "50%",
                       }}
                     >
                       {isEditable ? (
@@ -316,38 +347,69 @@ const SupplyContractDetail = () => {
                           </Button>
                         </>
                       ) : (
-                        <Button
-                          variant="contained"
-                          type={"button"}
-                          sx={{
-                            color: COLOR.primary_black,
-                            backgroundColor: COLOR.primary_gold,
-                            padding: "10px",
-                            marginTop: "1px",
-                            marginBottom: "1px",
-                          }}
-                          onClick={handleEditClick}
-                        >
-                          <Box sx={{ display: "flex", alignItems: "end" }}>
-                            <EditIcon
-                              sx={{
-                                width: 20,
-                                height: 20,
-                                marginRight: "2px",
-                                marginBottom: "2px",
-                              }}
-                            />
-                            <Typography
-                              sx={{
-                                fontWeight: 700,
-                                fontSize: 14,
-                                color: COLOR.primary_black,
-                              }}
-                            >
-                              Chỉnh sửa
-                            </Typography>
-                          </Box>
-                        </Button>
+                        <>
+                          <Button
+                            variant="contained"
+                            type={"button"}
+                            sx={{
+                              color: COLOR.primary_black,
+                              backgroundColor: COLOR.primary_gold,
+                              padding: "10px",
+                              marginTop: "1px",
+                              marginBottom: "1px",
+                              marginRight: 2,
+                            }}
+                            onClick={handleEditClick}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <EditIcon
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  marginRight: "2px",
+                                  marginBottom: "2px",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 14,
+                                  color: COLOR.primary_black,
+                                }}
+                              >
+                                Chỉnh sửa
+                              </Typography>
+                            </Box>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              width: "35%",
+                              padding: 1,
+                              color: COLOR.primary_white,
+                              backgroundColor: COLOR.primary_blue,
+                              minWidth: 130,
+                            }}
+                            onClick={() =>
+                              handleDownloadPaperContractClick(values)
+                            }
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <GetAppRoundedIcon
+                                sx={{
+                                  marginRight: "5px",
+                                  width: 22,
+                                  height: 22,
+                                }}
+                              />
+                              <Typography
+                                sx={{ fontWeight: 700, fontSize: 14 }}
+                              >
+                                Tải xuống Template
+                              </Typography>
+                            </Box>
+                          </Button>
+                        </>
                       )}
                     </Box>
                   ) : (

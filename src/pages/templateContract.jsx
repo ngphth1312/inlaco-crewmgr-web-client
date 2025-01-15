@@ -131,7 +131,7 @@ const TemplateContract = () => {
               width: "40%",
             }}
           />
-          <Button
+          {/* <Button
             variant="contained"
             sx={{
               backgroundColor: COLOR.primary_gold,
@@ -150,7 +150,7 @@ const TemplateContract = () => {
             >
               Tải lên template
             </Typography>
-          </Button>
+          </Button> */}
         </Box>
         <Grid container spacing={4}>
           {mockTemplateContracts.map((item) => {
@@ -159,7 +159,7 @@ const TemplateContract = () => {
                 key={item?.id}
                 image={item?.image}
                 title={item?.title}
-                description={item?.description}
+                type={item?.type}
               />
             );
           })}

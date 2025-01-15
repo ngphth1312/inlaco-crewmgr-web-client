@@ -15,10 +15,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
 import DifferenceRoundedIcon from "@mui/icons-material/DifferenceRounded";
+import GetAppRoundedIcon from "@mui/icons-material/GetAppRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+import { saveAs } from "file-saver";
+import JSZipUtils from "jszip-utils";
+import { formatDateString } from "../utils/ValueConverter";
 
 const CrewContractDetail = () => {
   const navigate = useNavigate();
@@ -201,6 +207,78 @@ const CrewContractDetail = () => {
     }
   };
 
+  const handleDownloadPaperContractClick = (values) => {
+      const loadFile = (url, callback) => {
+        JSZipUtils.getBinaryContent(url, callback);
+      };
+  
+      loadFile(
+        require("../assets/templates/template-hop-dong-thuyen-vien.docx"),
+        (error, content) => {
+          if (error) {
+            throw error;
+          }
+  
+          // Initialize PizZip with the .docx content
+          const zip = new PizZip(content);
+  
+          // Initialize docxtemplater
+          const doc = new Docxtemplater(zip, {
+            paragraphLoop: true,
+            linebreaks: true,
+          });
+  
+          // Set dynamic values for placeholders
+          doc.setData({
+            compName: values.partyA.compName,
+            compAddress: values.partyA.compAddress,
+            compPhoneNumber: values.partyA.compPhoneNumber,
+            representative: values.partyA.representative,
+            representativePos: values.partyA.representativePos,
+
+            fullName: values.partyB.fullName,
+            dob: formatDateString(values.partyB.dob),
+            birthplace: values.partyB.birthplace,
+            nationality: values.partyB.nationality,
+            permanentAddr: values.partyB.permanentAddr,
+            temporaryAddr: values.partyB.temporaryAddr,
+            ciNumber: values.partyB.ciNumber,
+            ciIssueDate: formatDateString(values.partyB.ciIssueDate),
+            ciIssuePlace: values.partyB.ciIssuePlace,
+
+            startDate: formatDateString(values.jobInfo.startDate),
+            endDate: formatDateString(values.jobInfo.endDate),
+            workingLocation: values.jobInfo.workingLocation,
+            position: values.jobInfo.position,
+            jobDescription: values.jobInfo.jobDescription,
+
+            basicSalary: values.salaryInfo.basicSalary,
+            allowance: values.salaryInfo.allowance,
+            receiveMethod: values.salaryInfo.receiveMethod,
+            payday: values.salaryInfo.payday,
+            salaryReviewPeriod: values.salaryInfo.salaryReviewPeriod,
+          });
+  
+          try {
+            // Render the document with dynamic data
+            doc.render();
+  
+            // Generate the final document
+            const out = doc.getZip().generate({
+              type: "blob",
+              mimeType:
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+  
+            // Save the file locally
+            saveAs(out, "hop-dong-thuyen-vien.docx");
+          } catch (error) {
+            console.error("Error generating document:", error);
+          }
+        }
+      );
+    };
+
   return (
     <div>
       <Formik
@@ -269,6 +347,7 @@ const CrewContractDetail = () => {
                         display: "flex",
                         justifyContent: "start",
                         marginRight: 2,
+                        width: "50%",
                       }}
                     >
                       {isEditable ? (
@@ -335,38 +414,65 @@ const CrewContractDetail = () => {
                           </Button>
                         </>
                       ) : (
-                        <Button
-                          variant="contained"
-                          type={"button"}
-                          sx={{
-                            color: COLOR.primary_black,
-                            backgroundColor: COLOR.primary_gold,
-                            padding: "10px",
-                            marginTop: "1px",
-                            marginBottom: "1px",
-                          }}
-                          onClick={handleEditClick}
-                        >
-                          <Box sx={{ display: "flex", alignItems: "end" }}>
-                            <EditIcon
-                              sx={{
-                                width: 20,
-                                height: 20,
-                                marginRight: "2px",
-                                marginBottom: "2px",
-                              }}
-                            />
-                            <Typography
-                              sx={{
-                                fontWeight: 700,
-                                fontSize: 14,
-                                color: COLOR.primary_black,
-                              }}
-                            >
-                              Chỉnh sửa
-                            </Typography>
-                          </Box>
-                        </Button>
+                        <>
+                          <Button
+                            variant="contained"
+                            type={"button"}
+                            sx={{
+                              color: COLOR.primary_black,
+                              backgroundColor: COLOR.primary_gold,
+                              padding: "10px",
+                              marginTop: "1px",
+                              marginBottom: "1px",
+                              marginRight: 2,
+                            }}
+                            onClick={handleEditClick}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <EditIcon
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  marginRight: "2px",
+                                  marginBottom: "2px",
+                                }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 14,
+                                  color: COLOR.primary_black,
+                                }}
+                              >
+                                Chỉnh sửa
+                              </Typography>
+                            </Box>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              width: "35%",
+                              padding: 1,
+                              color: COLOR.primary_white,
+                              backgroundColor: COLOR.primary_blue,
+                              minWidth: 130,
+                            }}
+                            onClick={() =>
+                              handleDownloadPaperContractClick(values)
+                            }
+                          >
+                            <Box sx={{ display: "flex", alignItems: "end" }}>
+                              <GetAppRoundedIcon
+                                sx={{ marginRight: "5px", width: 22, height: 22, }}
+                              />
+                              <Typography
+                                sx={{ fontWeight: 700, fontSize: 14 }}
+                              >
+                                Tải xuống Template
+                              </Typography>
+                            </Box>
+                          </Button>
+                        </>
                       )}
                     </Box>
                   ) : (
