@@ -12,7 +12,7 @@ const CrewContract = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    navigate(`/crewContractDetail/${id}`);
+    navigate(`/crew-contracts/${id}`);
   };
 
   const columns = [
@@ -137,7 +137,7 @@ const CrewContract = () => {
             />
             <Button
               variant="contained"
-              onClick={() => navigate("/createCrewContract")}
+              onClick={() => navigate("/crew-contracts/create")}
               sx={{
                 backgroundColor: COLOR.primary_gold,
                 color: COLOR.primary_black,

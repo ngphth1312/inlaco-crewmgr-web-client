@@ -13,7 +13,7 @@ const CrewMobilization = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    navigate(`/mobilizationDetail/${id}`);
+    navigate(`/mobilizations/${id}`);
   };
 
   const columns = [
@@ -256,7 +256,7 @@ const CrewMobilization = () => {
                 color: COLOR.primary_black,
                 borderRadius: 2,
               }}
-              onClick={() => navigate("/createMobilization")}
+              onClick={() => navigate("/mobilizations/create")}
             >
               <AddCircleRoundedIcon />
               <Typography

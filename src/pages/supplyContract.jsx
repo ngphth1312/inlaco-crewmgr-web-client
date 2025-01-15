@@ -12,7 +12,7 @@ const SupplyContract = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    navigate(`/supplyContractDetail/${id}`);
+    navigate(`/supply-contracts/${id}`);
   };
 
   const columns = [
@@ -142,7 +142,7 @@ const SupplyContract = () => {
                 color: COLOR.primary_black,
                 borderRadius: 2,
               }}
-              onClick={() => navigate("/createSupplyContract")}
+              onClick={() => navigate("/supply-contracts/create")}
             >
               <AddCircleRoundedIcon />
               <Typography

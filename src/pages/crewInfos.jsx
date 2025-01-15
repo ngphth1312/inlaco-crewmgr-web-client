@@ -12,7 +12,7 @@ const CrewInfos = () => {
   const navigate = useNavigate();
 
   const onMemberDetailClick = (id) => {
-    navigate(`/crewMemberDetail/${id}`);
+    navigate(`/crews/${id}`);
   };
 
   const columns = [
@@ -150,7 +150,7 @@ const CrewInfos = () => {
                 color: COLOR.primary_black,
                 borderRadius: 2,
               }}
-              onClick={() => navigate("/addCrewMember")}
+              onClick={() => navigate("/crews/add")}
             >
               <AddCircleRoundedIcon />
               <Typography

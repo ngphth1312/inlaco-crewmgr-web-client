@@ -36,7 +36,7 @@ const CrewCourse = () => {
               color: COLOR.primary_black,
               borderRadius: 2,
             }}
-            onClick={() => navigate("/createCourse")}
+            onClick={() => navigate("/courses/create")}
           >
             <AddCircleRoundedIcon />
             <Typography
@@ -62,7 +62,7 @@ const CrewCourse = () => {
                 trainingPartnerLogo={item?.trainingPartnerLogo}
                 limitStudent={item?.limitStudent}
                 isCertificateCourse={item?.isCertificateCourse}
-                onClick={() => navigate(`/courseDetail/${item?.id}`)}
+                onClick={() => navigate(`/courses/${item?.id}`)}
               />
             );
           })}

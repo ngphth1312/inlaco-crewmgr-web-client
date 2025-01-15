@@ -26,7 +26,7 @@ import { useNavigate, useParams } from "react-router";
 
 const RecruitmentDetail = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, candidateID } = useParams();
   const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
   const isAlreadyApplied = false; //this later will be replaced by the actual applied status of the user when fetching API
 
@@ -164,7 +164,7 @@ const RecruitmentDetail = () => {
             <Button
               variant="contained"
               size="small"
-              onClick={() => onMemberDetailClick(params?.id)}
+              onClick={() => onMemberDetailClick(id, params?.id)}
               sx={{
                 backgroundColor: COLOR.primary_green,
                 color: COLOR.primary_black,
@@ -195,12 +195,8 @@ const RecruitmentDetail = () => {
     setTabValue(newValue);
   };
 
-  const onMemberDetailClick = (id) => {
-    if(isAdmin){
-      navigate(`/adminCandidateDetail/${id}`);
-    }else{
-      // navigate(`/UserCandidateDetail/${id}`);
-    }
+  const onMemberDetailClick = (id, candidateID) => {
+    navigate(`/recruitment/${id}/candidates/${candidateID}/admin`);
   };
 
   //   useEffect(() => {

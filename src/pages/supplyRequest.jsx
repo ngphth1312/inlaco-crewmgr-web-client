@@ -16,9 +16,9 @@ const SupplyRequest = () => {
 
   const onRequestDetailClick = (id) => {
     if (isAdmin) {
-      navigate(`/adminSupplyRequestDetail/${id}`);
+      navigate(`/supply-requests/${id}/admin`);
     } else {
-      navigate(`/userSupplyRequestDetail/${id}`);
+      navigate(`/supply-requests/${id}/user`);
     }
   };
 
@@ -172,7 +172,7 @@ const SupplyRequest = () => {
                 margin: 0,
                 marginLeft: "auto",
               }}
-              onClick={() => navigate("/createSupplyRequest")}
+              onClick={() => navigate("/supply-requests/user/create")}
             >
               <AddCircleRoundedIcon />
               <Typography

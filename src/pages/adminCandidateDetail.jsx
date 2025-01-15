@@ -26,7 +26,7 @@ import { useNavigate, useParams } from "react-router";
 const AdminCandidateDetail = () => {
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  const { id, candidateID } = useParams();
   const status = "Đang chờ xác nhận"; //Change this to the status of the candidate
   //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
@@ -51,8 +51,6 @@ const AdminCandidateDetail = () => {
   };
 
   const [loading, setLoading] = useState(false);
-
-
 
     const handleApproveClick = async () => {
       setLoading(true);

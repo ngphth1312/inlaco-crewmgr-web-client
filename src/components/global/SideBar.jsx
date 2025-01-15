@@ -144,14 +144,14 @@ const SideBar = () => {
             </Typography>
             <Item
               title="Thông tin Thuyền viên"
-              to="/crewInfos"
+              to="/crews"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Lịch điều động"
-              to="/crewMobilization"
+              to="/mobilizations"
               icon={<DirectionsBoatOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -169,21 +169,21 @@ const SideBar = () => {
             </Typography>
             <Item
               title="Hợp đồng Thuyền viên"
-              to="/crewContract"
+              to="/crew-contracts"
               icon={<AssignmentIndOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Hợp đồng Cung ứng"
-              to="/supplyContract"
+              to="/supply-contracts"
               icon={<RequestQuoteOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Mẫu Hợp đồng"
-              to="/templateContract"
+              to="/template-contracts"
               icon={<DescriptionOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -201,21 +201,21 @@ const SideBar = () => {
             </Typography>
             <Item
               title="Yêu cầu Cung ứng"
-              to="/supplyRequest"
+              to="/supply-requests"
               icon={<MarkEmailUnreadOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Tuyển dụng"
-              to="/crewRecruitment"
+              to="/recruitment"
               icon={<HowToRegOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Đào tạo"
-              to="/crewCourse"
+              to="/courses"
               icon={<WorkspacePremiumOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

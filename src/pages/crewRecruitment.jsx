@@ -9,12 +9,16 @@ import { useNavigate } from "react-router";
 
 const CrewRecruitment = () => {
   const navigate = useNavigate();
+  const isAdmin = false; //this later will be replaced by the actual role of the user when fetching API
 
   const handleCreateRecruitmentClick = () => {
-    navigate("/createRecruitment");
+    navigate("/recruitment/create");
   }
 
-  const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
+  const handleRecruitmentClick = (id) => {
+    navigate(`/recruitment/${id}`);
+  };
+
 
   // Mock recruitment data
   const recruitmentPosts = Array.from({ length: 20 }, (_, i) => ({
@@ -81,26 +85,28 @@ const CrewRecruitment = () => {
               kết quả
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            onClick={handleCreateRecruitmentClick}
-            sx={{
-              backgroundColor: COLOR.primary_gold,
-              color: COLOR.primary_black,
-              borderRadius: 2,
-            }}
-          >
-            <AddCircleRoundedIcon />
-            <Typography
+          {isAdmin && (
+            <Button
+              variant="contained"
+              onClick={handleCreateRecruitmentClick}
               sx={{
-                fontWeight: 700,
-                marginLeft: "4px",
-                textTransform: "capitalize",
+                backgroundColor: COLOR.primary_gold,
+                color: COLOR.primary_black,
+                borderRadius: 2,
               }}
             >
-              Đăng Bài tuyển dụng
-            </Typography>
-          </Button>
+              <AddCircleRoundedIcon />
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  marginLeft: "4px",
+                  textTransform: "capitalize",
+                }}
+              >
+                Đăng Bài tuyển dụng
+              </Typography>
+            </Button>
+          )}
         </Box>
         <Box sx={{}}>
           <Grid container spacing={4}>
@@ -111,7 +117,7 @@ const CrewRecruitment = () => {
                 description={post?.description}
                 location={post?.location}
                 isAdmin={isAdmin}
-                onClick={() => navigate(`/recruitmentDetail/${post?.id}`)}
+                onClick={() => handleRecruitmentClick(post?.id)}
               />
             ))}
           </Grid>

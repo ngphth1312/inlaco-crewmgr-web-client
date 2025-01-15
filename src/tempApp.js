@@ -137,27 +137,27 @@ function App() {
 
             <Route path="/template-contracts" element={<TemplateContract />} />
             
-            <Route path="/supply-requests">
+            <Route path="/supply-request">
                 <Route index element={<SupplyRequest />} />
-                <Route path=":id/admin" element={<AdminSupplyRequestDetail />} />
-                <Route path=":id/user" element={<UserSupplyRequestDetail />} /> 
-                <Route path="user/create" element={<CreateSupplyRequest />} />   
+                <Route path=":id" element={<AdminSupplyRequestDetail />} />
             </Route>
             
             <Route path="/recruitment">
                 <Route index element={<CrewRecruitment />} />
                 <Route path="create" element={<CreateRecruitment />} />
                 <Route path=":id" element={<RecruitmentDetail />} />
-                <Route path=":id/candidates/:candidateID/admin" element={<AdminCandidateDetail />} />
             </Route>
 
             <Route path="/courses">
                 <Route index element={<CrewCourse />} />
                 <Route path=":id" element={<CourseDetail />} />
                 <Route path="create" element={<CreateCourse />} />
+                <Route path="/candidates/:id" element={<AdminCandidateDetail />} />
             </Route>
             
             {/* These routes will be moved to user Routes later */}
+            <Route path="user-create-supply" element={<CreateSupplyRequest />} /> 
+            <Route path="user-supply/:id" element={<UserSupplyRequestDetail />} />
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */
