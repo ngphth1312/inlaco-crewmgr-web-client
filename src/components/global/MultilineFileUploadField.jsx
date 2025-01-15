@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid2";
 
 const MultilineFileUploadField = ({
   name,
-  label = "File hợp đồng",
+  label = "Tải lên các tệp đính kèm",
   disabled,
   isUploadButtonVisible = true,
   sx = [],
@@ -26,8 +26,6 @@ const MultilineFileUploadField = ({
     const newFiles = field.value.filter((_, i) => i !== index);
     setFieldValue(name, newFiles);
   };
-
-  console.log("Field: ", field);
 
   return (
     <Box
@@ -57,7 +55,7 @@ const MultilineFileUploadField = ({
             onClick={() => document.getElementById("file-upload").click()}
             variant="contained"
           >
-            Tải lên các tệp đính kèm
+            {label}
           </Button>
         </label>
       ) : (

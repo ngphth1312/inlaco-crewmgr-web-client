@@ -18,6 +18,7 @@ import MobilizationDetail from "./pages/mobilizationDetail";
 import CrewContract from "./pages/crewContract";
 import CreateCrewContract from "./pages/createCrewContract";
 import CrewContractDetail from "./pages/crewContractDetail";
+import CrewContractAddendum from "./pages/crewContractAddendum";
 
 import SupplyContract from "./pages/supplyContract";
 import CreateSupplyContract from "./pages/createSupplyContract";
@@ -130,6 +131,7 @@ function App() {
                 <Route index element={<CrewContract />} />
                 <Route path="create" element={<CreateCrewContract />} />
                 <Route path=":id" element={<CrewContractDetail />} />
+                <Route path=":id/create-addendum" element={<CrewContractAddendum />} />
             </Route>
             <Route path="/supply-contracts">
                 <Route index element={<SupplyContract />} />
@@ -151,7 +153,7 @@ function App() {
                 <Route path="create" element={<CreateRecruitment />} />
                 <Route path=":id" element={<RecruitmentDetail />} />
                 <Route path=":id/candidates/:candidateID/admin" element={<AdminCandidateDetail />} />
-                
+
                 {/* User */}
                 <Route path=":id/application" element={<UserCandidateDetail />} />
                 <Route path=":id/apply" element={<ApplyRecruitment />} />

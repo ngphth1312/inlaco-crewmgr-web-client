@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
+import { PageTitle, SectionDivider, InfoTextField, MultilineFileUploadField } from "../components/global";
 import { FileUploadField } from "../components/contract";
 import {
   Box,
@@ -30,7 +30,7 @@ const CrewContractDetail = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const isOfficialContract = false; //temp variable, this must be fetched from the API
+  const isOfficialContract = true; //temp variable, this must be fetched from the API
 
   // useEffect(() => {
   //   fetchCrewContractInfos(id);
@@ -39,9 +39,8 @@ const CrewContractDetail = () => {
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 
   const initialValues = {
-    contractFile: null,
+    contractFileLink: "",
     partyA: {
-      cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",
       compAddress: "",
       compPhoneNumber: "",
@@ -73,6 +72,7 @@ const CrewContractDetail = () => {
       payday: "Ngày 5 hàng tháng",
       salaryReviewPeriod: "Mỗi 3 tháng",
     },
+    addendum: [],
   };
 
   const phoneRegex =
@@ -180,8 +180,8 @@ const CrewContractDetail = () => {
   //   const [createContractLoading, setCreateContractLoading] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
 
-  const handleAddContractAddendum = () => {
-    console.log("Navigate to addendum page");
+  const handleAddContractAddendum = (id) => {
+    navigate(`/crew-contracts/${id}/create-addendum`);
   };
 
   const handleEditClick = () => {
@@ -463,7 +463,11 @@ const CrewContractDetail = () => {
                           >
                             <Box sx={{ display: "flex", alignItems: "end" }}>
                               <GetAppRoundedIcon
-                                sx={{ marginRight: "5px", width: 22, height: 22, }}
+                                sx={{
+                                  marginRight: "5px",
+                                  width: 22,
+                                  height: 22,
+                                }}
                               />
                               <Typography
                                 sx={{ fontWeight: 700, fontSize: 14 }}
@@ -478,7 +482,7 @@ const CrewContractDetail = () => {
                   ) : (
                     <Button
                       variant="contained"
-                      onClick={() => handleAddContractAddendum()}
+                      onClick={() => handleAddContractAddendum(id)}
                       sx={{
                         width: "15%",
                         padding: 1,
@@ -1210,7 +1214,6 @@ const CrewContractDetail = () => {
                   size="small"
                   margin="none"
                   disabled={!isEditable || isOfficialContract}
-                  required
                   fullWidth
                   name="salaryInfo.allowance"
                   value={values.salaryInfo?.allowance}
@@ -1355,6 +1358,12 @@ const CrewContractDetail = () => {
                 />
               </Grid>
             </Grid>
+            {isOfficialContract && (
+              <>
+                <SectionDivider sectionName="Phụ lục đính kèm (nếu có): " />
+                <MultilineFileUploadField label="Tải lên phụ lục đính kèm" name="addendum" disabled={true} />
+              </>
+            )}
           </Box>
         )}
       </Formik>
