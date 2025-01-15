@@ -23,6 +23,7 @@ import CrewContractAddendum from "./pages/crewContractAddendum";
 import SupplyContract from "./pages/supplyContract";
 import CreateSupplyContract from "./pages/createSupplyContract";
 import SupplyContractDetail from "./pages/supplyContractDetail";
+import SupplyContractAddendum from "./pages/supplyContractAddendum";
 
 import TemplateContract from "./pages/templateContract";
 
@@ -137,6 +138,7 @@ function App() {
                 <Route index element={<SupplyContract />} />
                 <Route path="create" element={<CreateSupplyContract />} />
                 <Route path=":id" element={<SupplyContractDetail />} />
+                <Route path=":id/create-addendum" element={<SupplyContractAddendum />} />
             </Route>
 
             <Route path="/template-contracts" element={<TemplateContract />} />

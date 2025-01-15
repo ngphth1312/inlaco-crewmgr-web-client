@@ -21,7 +21,7 @@ const SupplyContractDetail = () => {
   const navigate = useNavigate();
   
   const { id } = useParams();
-  const isOfficialContract = false; //edit this later
+  const isOfficialContract = true; //edit this later
 
   const initialValues = {
     contractFileLink: "",
@@ -152,8 +152,8 @@ const SupplyContractDetail = () => {
   //   const [createContractLoading, setCreateContractLoading] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
 
-  const handleAddContractAddendum = () => {
-    console.log("Navigate to addendum page");
+  const handleAddContractAddendum = (id) => {
+    navigate(`/supply-contracts/${id}/create-addendum`);
   };
 
   const handleEditClick = () => {
@@ -415,7 +415,7 @@ const SupplyContractDetail = () => {
                   ) : (
                     <Button
                       variant="contained"
-                      onClick={() => handleAddContractAddendum()}
+                      onClick={() => handleAddContractAddendum(id)}
                       sx={{
                         width: "15%",
                         padding: 1,
