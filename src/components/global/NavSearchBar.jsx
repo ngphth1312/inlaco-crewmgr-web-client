@@ -12,15 +12,14 @@ import { useState } from "react";
 // Main pages of the web
 const pages = [
   { label: "Trang chủ", path: "/" },
-  { label: "Thông tin thuyền viên", path: "/crewInfos" },
-  { label: "Lịch điều động", path: "/crewMobilization" },
-  { label: "Hợp đồng thuyền viên", path: "/crewContract" },
-  { label: "Hợp đồng cung ứng", path: "/supplyContract" },
-  { label: "Mẫu hợp đồng", path: "/templateContract" },
-  { label: "Yêu cầu cung ứng", path: "/supplyRequest" },
-  { label: "Tuyển dụng", path: "/crewRecruitment" },
-  { label: "Đào tạo", path: "/crewCourse" },
-  { label: "Thêm thuyền viên", path: "/addCrewMember" },
+  { label: "Thông tin thuyền viên", path: "/crews" },
+  { label: "Lịch điều động", path: "/mobilizations" },
+  { label: "Hợp đồng thuyền viên", path: "/crew-contracts" },
+  { label: "Hợp đồng cung ứng", path: "/supply-contracts" },
+  { label: "Mẫu hợp đồng", path: "/template-contracts" },
+  { label: "Yêu cầu cung ứng", path: "/supply-requests" },
+  { label: "Tuyển dụng", path: "/recruitment" },
+  { label: "Đào tạo", path: "/courses" },
 ];
 
 const NavSearchBar = ({

@@ -12,5 +12,6 @@ export { default as HorizontalImageInput } from "./HorizontalImageInput";
 export { default as EditableDataGrid } from "./EditableDataGrid";
 export { default as ReqEditableDataGrid } from "./ReqEditableDataGrid";
 export { default as StatusLabel } from "./StatusLabel";
+export { default as MultilineFileUploadField } from "./MultilineFileUploadField";
 
 export { default as MainLayout } from "./MainLayout";

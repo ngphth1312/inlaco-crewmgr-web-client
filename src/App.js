@@ -34,6 +34,7 @@ import CrewRecruitment from "./pages/crewRecruitment";
 import CreateRecruitment from "./pages/createRecruitment";
 import RecruitmentDetail from "./pages/recruitmentDetail";
 import AdminCandidateDetail from "./pages/adminCandidateDetail";
+import UserCandidateDetail from "./pages/userCandidateDetail";
 
 import CrewCourse from "./pages/crewCourse";
 import CreateCourse from "./pages/createCourse";
@@ -149,6 +150,7 @@ function App() {
                 <Route path="create" element={<CreateRecruitment />} />
                 <Route path=":id" element={<RecruitmentDetail />} />
                 <Route path=":id/candidates/:candidateID/admin" element={<AdminCandidateDetail />} />
+                <Route path=":id/application" element={<UserCandidateDetail />} />
             </Route>
 
             <Route path="/courses">

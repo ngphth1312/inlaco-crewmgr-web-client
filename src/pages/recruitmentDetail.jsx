@@ -22,13 +22,16 @@ import EventBusyRoundedIcon from "@mui/icons-material/EventBusyRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import Grid from "@mui/material/Grid2";
 import { formatDateTime } from "../utils/ValueConverter";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation } from "react-router";
 
 const RecruitmentDetail = () => {
   const navigate = useNavigate();
-  const { id, candidateID } = useParams();
-  const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
-  const isAlreadyApplied = false; //this later will be replaced by the actual applied status of the user when fetching API
+  const location = useLocation();
+
+  const { id } = useParams();
+  const isAdmin = location.state?.isAdmin;
+
+  const isAlreadyApplied = true; //this later will be replaced by the actual applied status of the user when fetching API
 
   // useEffect(() => {
   //   fetchRecruitmentInfo();
@@ -164,7 +167,7 @@ const RecruitmentDetail = () => {
             <Button
               variant="contained"
               size="small"
-              onClick={() => onMemberDetailClick(id, params?.id)}
+              onClick={() => onAdminMemberDetailClick(id, params?.id)}
               sx={{
                 backgroundColor: COLOR.primary_green,
                 color: COLOR.primary_black,
@@ -195,7 +198,15 @@ const RecruitmentDetail = () => {
     setTabValue(newValue);
   };
 
-  const onMemberDetailClick = (id, candidateID) => {
+  const handleUserApplicationClick = (id) => {
+    if(isAlreadyApplied) {
+      navigate(`/recruitment/${id}/application`);
+    } else{
+      //
+    }
+  };
+
+  const onAdminMemberDetailClick = (id, candidateID) => {
     navigate(`/recruitment/${id}/candidates/${candidateID}/admin`);
   };
 
@@ -303,13 +314,7 @@ const RecruitmentDetail = () => {
               ) : (
                 <Button
                   variant="contained"
-                  onClick={() => {
-                    if(isAlreadyApplied){
-                      // navigate("/recruitmentApplicationDetail");
-                    } else{
-                      navigate("/createRecruitmentApplication");
-                    }
-                  }}
+                  onClick={() => handleUserApplicationClick(id)}
                   sx={{
                     backgroundColor: COLOR.primary_gold,
                     color: COLOR.primary_black,

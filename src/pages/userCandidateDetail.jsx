@@ -7,7 +7,7 @@ import {
   HorizontalImageInput,
   MultilineFileUploadField,
 } from "../components/global";
-import { CardPhotoInput, FileUploadField, } from "../components/contract";
+import { CardPhotoInput, FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
@@ -24,11 +24,11 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import { useNavigate, useParams } from "react-router";
 
-const AdminCandidateDetail = () => {
+const UserCandidateDetail = () => {
   const navigate = useNavigate();
 
-  const { id, candidateID } = useParams();
-  const status = "Đang chờ xác nhận"; //Change this to the status of the candidate
+  const { id, } = useParams();
+  const status = "Chấp thuận"; //Change this to the status of the candidate
   //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
   // useEffect(() => {
@@ -50,36 +50,6 @@ const AdminCandidateDetail = () => {
     ciImageBack: "",
     attachedFiles: [],
   };
-
-  const [loading, setLoading] = useState(false);
-
-    const handleApproveClick = async () => {
-      setLoading(true);
-      try {
-        //Calling API to create a new crew member
-        await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
-
-        console.log("Successfully approved request");
-      } catch (err) {
-        console.log("Error when approving request: ", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const handleDeclineClick = async () => {
-      setLoading(true);
-      try {
-        //Calling API to create a new crew member
-        await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
-
-        console.log("Successfully declined request");
-      } catch (err) {
-        console.log("Error when declining request: ", err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
   return (
     <div>
@@ -110,7 +80,7 @@ const AdminCandidateDetail = () => {
               >
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <PageTitle
-                    title="THÔNG TIN CHI TIẾT ỨNG VIÊN"
+                    title="THÔNG TIN HỒ SƠ ĐÃ NỘP"
                     subtitle={`Ứng viên: ${id}`} //Change this to the actual candidateID
                   />
                   {status === "Chấp thuận" ? (
@@ -136,10 +106,7 @@ const AdminCandidateDetail = () => {
                   sx={{
                     display: "flex",
                     alignItems: "end",
-                    justifyContent:
-                      status === "Đang chờ xác nhận"
-                        ? "space-between"
-                        : "start",
+                    justifyContent: "start",
                     marginTop: 2,
                   }}
                 >
@@ -166,87 +133,10 @@ const AdminCandidateDetail = () => {
                       </Box>
                     )}
                   </Button> */}
-                  {status === "Đang chờ xác nhận" && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "start",
-                        marginRight: 2,
-                        width: "50%",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        onClick={() => handleApproveClick()}
-                        disabled={loading}
-                        sx={{
-                          width: "30%",
-                          padding: 1,
-                          color: COLOR.primary_white,
-                          backgroundColor: COLOR.primary_blue,
-                          minWidth: 130,
-                          marginRight: 2,
-                        }}
-                      >
-                        {loading ? (
-                          <CircularProgress
-                            size={24}
-                            color={COLOR.primary_black}
-                          />
-                        ) : (
-                          <Box sx={{ display: "flex", alignItems: "end" }}>
-                            <CheckCircleRoundedIcon
-                              sx={{ marginRight: "5px", marginBottom: "1px" }}
-                            />
-                            <Typography sx={{ fontWeight: 700 }}>
-                              Chấp thuận
-                            </Typography>
-                          </Box>
-                        )}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => handleDeclineClick()}
-                        disabled={loading}
-                        sx={{
-                          width: "30%",
-                          padding: 1,
-                          color: COLOR.primary_white,
-                          backgroundColor: COLOR.primary_orange,
-                          minWidth: 130,
-                        }}
-                      >
-                        {loading ? (
-                          <CircularProgress
-                            size={24}
-                            color={COLOR.primary_black}
-                          />
-                        ) : (
-                          <Box sx={{ display: "flex", alignItems: "end" }}>
-                            <CancelRoundedIcon
-                              sx={{ marginRight: "5px", marginBottom: "1px" }}
-                            />
-                            <Typography sx={{ fontWeight: 700 }}>
-                              Từ chối
-                            </Typography>
-                          </Box>
-                        )}
-                      </Button>
-                    </Box>
-                  )}
                   <CardPhotoInput
                     id="card-photo"
                     name="cardPhoto"
-                    sx={{
-                      marginRight:
-                        status === "Đang chờ xác nhận"
-                          ? 2
-                          : 0,
-                      marginLeft:
-                        status === "Đang chờ xác nhận"
-                          ? 0
-                          : 2,
-                    }}
+                    sx={{ marginLeft: 2, }}
                     onClick={() =>
                       document.getElementById("card-photo").click()
                     }
@@ -595,4 +485,4 @@ const AdminCandidateDetail = () => {
   );
 };
 
-export default AdminCandidateDetail;
+export default UserCandidateDetail;

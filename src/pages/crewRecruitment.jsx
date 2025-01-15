@@ -9,14 +9,14 @@ import { useNavigate } from "react-router";
 
 const CrewRecruitment = () => {
   const navigate = useNavigate();
-  const isAdmin = false; //this later will be replaced by the actual role of the user when fetching API
+  const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
 
   const handleCreateRecruitmentClick = () => {
     navigate("/recruitment/create");
   }
 
   const handleRecruitmentClick = (id) => {
-    navigate(`/recruitment/${id}`);
+    navigate(`/recruitment/${id}`, { state: { isAdmin: isAdmin } });
   };
 
 

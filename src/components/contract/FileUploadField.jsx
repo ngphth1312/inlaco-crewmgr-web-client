@@ -17,6 +17,8 @@ const FileUploadField = ({ name, label = "File hợp đồng", disabled, sx = []
     setFieldValue(name, null);
   };
 
+  console.log("1 file only field:  ", field);
+
   return (
     <Box
       {...props}
