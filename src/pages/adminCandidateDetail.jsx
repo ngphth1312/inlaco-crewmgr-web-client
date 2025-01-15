@@ -41,6 +41,8 @@ const AdminCandidateDetail = () => {
     dob: "",
     birthplace: "",
     nationality: "",
+    phoneNumber: "",
+    email: "",
     permanentAddr: "",
     temporaryAddr: "",
     ciNumber: "",
@@ -238,14 +240,8 @@ const AdminCandidateDetail = () => {
                     id="card-photo"
                     name="cardPhoto"
                     sx={{
-                      marginRight:
-                        status === "Đang chờ xác nhận"
-                          ? 2
-                          : 0,
-                      marginLeft:
-                        status === "Đang chờ xác nhận"
-                          ? 0
-                          : 2,
+                      marginRight: status === "Đang chờ xác nhận" ? 2 : 0,
+                      marginLeft: status === "Đang chờ xác nhận" ? 0 : 2,
                     }}
                     onClick={() =>
                       document.getElementById("card-photo").click()
@@ -256,7 +252,7 @@ const AdminCandidateDetail = () => {
             </Box>
             <SectionDivider sectionName="Thông tin ứng viên: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={3}>
+              <Grid size={5}>
                 <InfoTextField
                   id="full-name"
                   label="Họ và tên"
@@ -317,7 +313,7 @@ const AdminCandidateDetail = () => {
                   }}
                 />
               </Grid>
-              <Grid size={3}>
+              <Grid size={4}>
                 <InfoTextField
                   id="birthplace"
                   label="Nơi sinh"
@@ -332,6 +328,60 @@ const AdminCandidateDetail = () => {
                   helperText={
                     touched.birthplace && errors.birthplace
                       ? errors.birthplace
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={5}>
+                <InfoTextField
+                  id="email"
+                  label="Email"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="email"
+                  value={values.email}
+                  error={!!touched.email && !!errors.email}
+                  helperText={
+                    touched.email && errors.email ? errors.email : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={4}>
+                <InfoTextField
+                  id="phoneNumber"
+                  label="Số điện thoại"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  value={values.phoneNumber}
+                  error={!!touched.phoneNumber && !!errors.phoneNumber}
+                  helperText={
+                    touched.phoneNumber && errors.phoneNumber
+                      ? errors.phoneNumber
                       : " "
                   }
                   onChange={handleChange}

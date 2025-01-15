@@ -3,7 +3,6 @@ import {
   PageTitle,
   SectionDivider,
   InfoTextField,
-  StatusLabel,
   HorizontalImageInput,
   MultilineFileUploadField,
 } from "../components/global";
@@ -17,18 +16,18 @@ import {
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { COLOR } from "../assets/Color";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
+import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
 
-const UserCandidateDetail = () => {
+const ApplyRecruitment = () => {
   const navigate = useNavigate();
 
-  const { id, } = useParams();
-  const status = "Chấp thuận"; //Change this to the status of the candidate
+  const { id } = useParams();
+  const status = "Đang chờ xác nhận"; //Change this to the status of the candidate
   //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
   // useEffect(() => {
@@ -53,13 +52,66 @@ const UserCandidateDetail = () => {
     attachedFiles: [],
   };
 
+  const phoneRegex =
+    "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
+  const ciNumberRegex = "^\\d{12}$";
+
+  const applicationSchema = yup.object().shape({
+    fullName: yup.string().required("Họ và tên không được để trống"),
+
+    dob: yup
+      .date()
+      .max(new Date(), "Ngày sinh không hợp lệ")
+      .required("Ngày sinh không được để trống"),
+
+    birthplace: yup.string().required("Nơi sinh không được để trống"),
+    nationality: yup.string().required("Quốc tịch không được để trống"),
+    phoneNumber: yup
+      .string()
+      .matches(phoneRegex, "Số điện thoại không hợp lệ")
+      .required("Số điện thoại không được để trống"),
+    email: yup.string().email("Email không hợp lệ").required("Email không được để trống"),
+
+    permanentAddr: yup
+      .string()
+      .required("Địa chỉ thường trú không được để trống"),
+    temporaryAddr: yup.string().required("Địa chỉ tạm trú không được để trống"),
+
+    ciNumber: yup
+      .string()
+      .matches(ciNumberRegex, "Số CCCD không hợp lệ")
+      .required("Số căn cước công dân không được để trống"),
+    ciIssueDate: yup
+      .date()
+      .max(new Date(), "Ngày cấp không hợp lệ")
+      .required("Ngày cấp không được để trống"),
+    ciIssuePlace: yup.string().required("Nơi cấp không được để trống"),
+  });
+
+  const [loading, isLoading] = useState(false);
+
+  const handleApplySubmit = async (values, { resetForm }) => {
+    isLoading(true);
+    try {
+      //Calling API to create a new crew member
+      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+
+      console.log("Successfully submitted: ", values);
+      resetForm();
+    } catch (err) {
+      console.log("Error when submitting application for a recruitment: ", err);
+    } finally {
+      isLoading(false);
+    }
+  };
+
   return (
     <div>
       <Formik
         validateOnChange={false}
         initialValues={initialValues}
-        // validationSchema={crewContractSchema}
-        // onSubmit={handleApproveDeclineClick}
+        validationSchema={applicationSchema}
+        onSubmit={handleApplySubmit}
       >
         {({
           values,
@@ -82,63 +134,46 @@ const UserCandidateDetail = () => {
               >
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <PageTitle
-                    title="THÔNG TIN HỒ SƠ ĐÃ NỘP"
-                    subtitle={`Ứng viên: ${id}`} //Change this to the actual candidateID
+                    title="NỘP HỒ SƠ ỨNG TUYỂN"
+                    subtitle={`Bài đăng tuyển dụng: ${id}`} //Change this to the actual recruitmentID
                   />
-                  {status === "Chấp thuận" ? (
-                    <StatusLabel
-                      label="Chấp thuận"
-                      color={COLOR.primary_green}
-                    />
-                  ) : status === "Từ chối" ? (
-                    <StatusLabel label="Từ chối" color={COLOR.primary_orange} />
-                  ) : status === "Đang chờ xác nhận" ? (
-                    <StatusLabel
-                      label="Đang chờ xác nhận"
-                      color={COLOR.primary_black_placeholder}
-                    />
-                  ) : (
-                    <StatusLabel
-                      label="Đã ký hợp đồng"
-                      color={COLOR.secondary_gold}
-                    />
-                  )}
                 </Box>
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "end",
-                    justifyContent: "start",
-                    marginTop: 2,
+                    justifyContent: "space-between",
                   }}
                 >
-                  {/* <Button
+                  <Button
                     variant="contained"
                     type="submit"
                     disabled={!isValid || !dirty}
                     sx={{
-                      width: "10%",
+                      width: "12%",
                       padding: 1,
                       color: COLOR.primary_black,
                       backgroundColor: COLOR.primary_gold,
                       minWidth: 130,
                     }}
                   >
-                    {createContractLoading ? (
+                    {loading ? (
                       <CircularProgress size={24} color={COLOR.primary_black} />
                     ) : (
                       <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <PersonAddIcon
+                        <SendRoundedIcon
                           sx={{ marginRight: "5px", marginBottom: "1px" }}
                         />
-                        <Typography sx={{ fontWeight: 700 }}>Thêm</Typography>
+                        <Typography sx={{ fontWeight: 700 }}>
+                          Nộp đơn
+                        </Typography>
                       </Box>
                     )}
-                  </Button> */}
+                  </Button>
                   <CardPhotoInput
                     id="card-photo"
                     name="cardPhoto"
-                    sx={{ marginLeft: 2 }}
+                    sx={{ marginLeft: 2, marginRight: 2, }}
                     onClick={() =>
                       document.getElementById("card-photo").click()
                     }
@@ -154,7 +189,6 @@ const UserCandidateDetail = () => {
                   label="Họ và tên"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="fullName"
@@ -182,7 +216,6 @@ const UserCandidateDetail = () => {
                   label="Ngày sinh"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="dob"
@@ -215,7 +248,6 @@ const UserCandidateDetail = () => {
                   label="Nơi sinh"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="birthplace"
@@ -298,7 +330,6 @@ const UserCandidateDetail = () => {
                   label="Quốc tịch"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="nationality"
@@ -327,7 +358,6 @@ const UserCandidateDetail = () => {
                   label="Địa chỉ thường trú"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="permanentAddr"
@@ -356,7 +386,6 @@ const UserCandidateDetail = () => {
                   label="Địa chỉ tạm trú"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="temporaryAddr"
@@ -385,7 +414,6 @@ const UserCandidateDetail = () => {
                   label="Số Căn cước công dân"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="ciNumber"
@@ -413,7 +441,6 @@ const UserCandidateDetail = () => {
                   label="Ngày cấp"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="ciIssueDate"
@@ -450,7 +477,6 @@ const UserCandidateDetail = () => {
                   label="Nơi cấp"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="ciIssuePlace"
@@ -482,7 +508,6 @@ const UserCandidateDetail = () => {
                   }}
                 >
                   <HorizontalImageInput
-                    disabled={true}
                     width={250}
                     height={150}
                     id="ci-image-front"
@@ -511,7 +536,6 @@ const UserCandidateDetail = () => {
                   }}
                 >
                   <HorizontalImageInput
-                    disabled={true}
                     width={250}
                     height={150}
                     id="ci-image-back"
@@ -532,8 +556,8 @@ const UserCandidateDetail = () => {
                 </Box>
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Tài liệu đính kèm: " />
-            <MultilineFileUploadField name="attachedFiles" disabled={true} />
+            <SectionDivider sectionName="Tài liệu đính kèm (nếu có): " />
+            <MultilineFileUploadField name="attachedFiles" />
           </Box>
         )}
       </Formik>
@@ -541,4 +565,4 @@ const UserCandidateDetail = () => {
   );
 };
 
-export default UserCandidateDetail;
+export default ApplyRecruitment;

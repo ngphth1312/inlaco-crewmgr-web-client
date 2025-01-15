@@ -16,8 +16,6 @@ const MultilineFileUploadField = ({
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
 
-  console.log("Field: ", field);
-
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     // const fileUrls = files.map((file) => URL.createObjectURL(file));

@@ -202,7 +202,7 @@ const RecruitmentDetail = () => {
     if(isAlreadyApplied) {
       navigate(`/recruitment/${id}/application`);
     } else{
-      //
+      navigate(`/recruitment/${id}/apply`);
     }
   };
 

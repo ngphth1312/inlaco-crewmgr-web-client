@@ -35,6 +35,7 @@ import CreateRecruitment from "./pages/createRecruitment";
 import RecruitmentDetail from "./pages/recruitmentDetail";
 import AdminCandidateDetail from "./pages/adminCandidateDetail";
 import UserCandidateDetail from "./pages/userCandidateDetail";
+import ApplyRecruitment from "./pages/applyRecruitment";
 
 import CrewCourse from "./pages/crewCourse";
 import CreateCourse from "./pages/createCourse";
@@ -150,7 +151,10 @@ function App() {
                 <Route path="create" element={<CreateRecruitment />} />
                 <Route path=":id" element={<RecruitmentDetail />} />
                 <Route path=":id/candidates/:candidateID/admin" element={<AdminCandidateDetail />} />
+                
+                {/* User */}
                 <Route path=":id/application" element={<UserCandidateDetail />} />
+                <Route path=":id/apply" element={<ApplyRecruitment />} />
             </Route>
 
             <Route path="/courses">
