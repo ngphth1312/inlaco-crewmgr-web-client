@@ -91,6 +91,25 @@ export function formatDateTime(value) {
   }
 }
 
+export function formatDate(value) {
+  try {
+    // Parse the ISOString date time into a Date object
+    const date = new Date(value);
+
+    // Extract and format date components according to your custom format
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const result = `${day}/${month}/${year}`;
+    return result;
+  } catch (error) {
+    console.error("Error parsing ISOString date:", error);
+    return null; // Return None on parsing errors
+  }
+}
+
+
 export function formatDateString(value) {
   try {
     // Split the input date string by the hyphen

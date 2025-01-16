@@ -13,23 +13,24 @@ import {
   Button,
   Typography,
   TextField,
-  MenuItem,
-  CircularProgress,
   InputAdornment,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
+import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
 import { COLOR } from "../assets/Color";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
+import * as XLSX from "xlsx";
+import { formatDate } from "../utils/ValueConverter";
 
 const MobilizationDetail = () => {
-  // const navigate = useNavigate();
   const { id } = useParams();
+  const location = useLocation();
+  const isAdmin = location.state.isAdmin;
 
   // useEffect(() => {
   //   fetchMobilizationInfos(id);
@@ -132,6 +133,44 @@ const MobilizationDetail = () => {
     }
   };
 
+  const handleDownloadExcel = (values) => {
+    // Define the headers in Vietnamese
+    const columnHeaders = [
+      { header: "Mã thuyền viên", key: "crewID" },
+      { header: "Họ và tên", key: "fullName" },
+      { header: "Ngày sinh", key: "dob" },
+      { header: "Số điện thoại", key: "phoneNumber" },
+      { header: "Chức vụ", key: "positionName" },
+    ];
+
+    // Map the data to include only the keys defined in headers
+    const crewMembers = values.mobilizedCrewMembers.map((member) => ({
+      crewID: member.crewID,
+      fullName: member.fullName,
+      dob: formatDate(member.dob),
+      phoneNumber: member.phoneNumber,
+      positionName: member.positionName,
+    }));
+
+    // Create an array with the headers and data
+    const data = [
+      columnHeaders.map((columnHeader) => columnHeader.header), // Add headers as the first row
+      ...crewMembers.map((member) =>
+        columnHeaders.map((columnHeader) => member[columnHeader.key])
+      ), // Add data rows
+    ];
+
+    // Convert the array to a worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Danh sách thuyền viên");
+
+    // Write the workbook to a file
+    XLSX.writeFile(workbook, "danh-sach-thuyen-vien-duoc-dieu-dong.xlsx");
+    console.log("Download excel file successfully");
+  };
+
+
   return (
     <div>
       <Formik
@@ -164,58 +203,92 @@ const MobilizationDetail = () => {
                   title="CHI TIẾT ĐIỀU ĐỘNG"
                   subtitle={`Mã điều động: ${id}`} //Change this to the actual mobilizationID, this currently display an id, not mobilizationID
                 />
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "start",
-                    marginRight: 2,
-                  }}
-                >
-                  {isEditable ? (
-                    <>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          color: COLOR.primary_orange,
-                          padding: "8px",
-                          marginRight: 2,
-                          borderColor: COLOR.primary_orange,
-                        }}
-                        onClick={handleCancelClick}
-                      >
-                        <Box sx={{ display: "flex", alignItems: "end" }}>
-                          <DeleteForeverRoundedIcon
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              marginRight: "2px",
-                              marginBottom: "2px",
-                            }}
-                          />
-                          <Typography
-                            sx={{
-                              fontWeight: 700,
-                              fontSize: 14,
-                            }}
-                          >
-                            Hủy
-                          </Typography>
-                        </Box>
-                      </Button>
+                {isAdmin && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "start",
+                      marginRight: 2,
+                    }}
+                  >
+                    {isEditable ? (
+                      <>
+                        <Button
+                          variant="outlined"
+                          sx={{
+                            color: COLOR.primary_orange,
+                            padding: "8px",
+                            marginRight: 2,
+                            borderColor: COLOR.primary_orange,
+                          }}
+                          onClick={handleCancelClick}
+                        >
+                          <Box sx={{ display: "flex", alignItems: "end" }}>
+                            <DeleteForeverRoundedIcon
+                              sx={{
+                                width: 20,
+                                height: 20,
+                                marginRight: "2px",
+                                marginBottom: "2px",
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontSize: 14,
+                              }}
+                            >
+                              Hủy
+                            </Typography>
+                          </Box>
+                        </Button>
+                        <Button
+                          variant="contained"
+                          type={"submit"}
+                          disabled={!isValid || !dirty}
+                          sx={{
+                            color: COLOR.primary_white,
+                            backgroundColor: COLOR.primary_blue,
+                            padding: "10px",
+                            marginTop: "1px",
+                            marginBottom: "1px",
+                          }}
+                        >
+                          <Box sx={{ display: "flex", alignItems: "end" }}>
+                            <SaveIcon
+                              sx={{
+                                width: 20,
+                                height: 20,
+                                marginRight: "2px",
+                                marginBottom: "2px",
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontSize: 14,
+                              }}
+                            >
+                              Lưu
+                            </Typography>
+                          </Box>
+                        </Button>
+                      </>
+                    ) : (
                       <Button
                         variant="contained"
-                        type={"submit"}
-                        disabled={!isValid || !dirty}
+                        type={"button"}
                         sx={{
-                          color: COLOR.primary_white,
-                          backgroundColor: COLOR.primary_blue,
+                          color: COLOR.primary_black,
+                          backgroundColor: COLOR.primary_gold,
                           padding: "10px",
                           marginTop: "1px",
                           marginBottom: "1px",
                         }}
+                        onClick={handleEditClick}
                       >
                         <Box sx={{ display: "flex", alignItems: "end" }}>
-                          <SaveIcon
+                          <EditIcon
                             sx={{
                               width: 20,
                               height: 20,
@@ -227,48 +300,16 @@ const MobilizationDetail = () => {
                             sx={{
                               fontWeight: 700,
                               fontSize: 14,
+                              color: COLOR.primary_black,
                             }}
                           >
-                            Lưu
+                            Chỉnh sửa
                           </Typography>
                         </Box>
                       </Button>
-                    </>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      type={"button"}
-                      sx={{
-                        color: COLOR.primary_black,
-                        backgroundColor: COLOR.primary_gold,
-                        padding: "10px",
-                        marginTop: "1px",
-                        marginBottom: "1px",
-                      }}
-                      onClick={handleEditClick}
-                    >
-                      <Box sx={{ display: "flex", alignItems: "end" }}>
-                        <EditIcon
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            marginRight: "2px",
-                            marginBottom: "2px",
-                          }}
-                        />
-                        <Typography
-                          sx={{
-                            fontWeight: 700,
-                            fontSize: 14,
-                            color: COLOR.primary_black,
-                          }}
-                        >
-                          Chỉnh sửa
-                        </Typography>
-                      </Box>
-                    </Button>
-                  )}
-                </Box>
+                    )}
+                  </Box>
+                )}
                 {/* <Box
                   sx={{
                     display: "flex",
@@ -753,6 +794,41 @@ const MobilizationDetail = () => {
               </Grid>
             </Grid>
             <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
+            {!isEditable && isAdmin && (
+              <Box sx={{ display: "flex", justifyContent: "end" }} px={2}>
+                <Button
+                  variant="contained"
+                  type="button"
+                  sx={{
+                    color: COLOR.primary_black,
+                    backgroundColor: COLOR.primary_gold,
+                    padding: "10px",
+                    marginTop: "1px",
+                    marginBottom: "1px",
+                  }}
+                  onClick={() => handleDownloadExcel(values)}
+                >
+                  <Box sx={{ display: "flex", alignItems: "end" }}>
+                    <FileDownloadRoundedIcon
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        marginRight: "4px",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: 14,
+                      }}
+                    >
+                      Tải xuống File Excel
+                    </Typography>
+                  </Box>
+                </Button>
+              </Box>
+            )}
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={12}>
                 <EditableDataGrid

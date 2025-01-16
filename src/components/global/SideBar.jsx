@@ -182,7 +182,7 @@ const SideBar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Mẫu Hợp đồng"
+              title="Templates"
               to="/template-contracts"
               icon={<DescriptionOutlinedIcon />}
               selected={selected}

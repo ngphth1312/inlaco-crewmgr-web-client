@@ -12,8 +12,10 @@ import { useNavigate } from "react-router";
 const CrewMobilization = () => {
   const navigate = useNavigate();
 
+  const isAdmin = true; //this must be replace by the actual role of the account by fetching the API
+
   const onMemberDetailClick = (id) => {
-    navigate(`/mobilizations/${id}`);
+    navigate(`/mobilizations/${id}`, { state: { isAdmin: isAdmin } });
   };
 
   const columns = [
@@ -134,7 +136,7 @@ const CrewMobilization = () => {
         <Box>
           <PageTitle
             title="LỊCH ĐIỀU ĐỘNG"
-            subtitle="Thông tin các điều động đã tạo"
+            subtitle={isAdmin ? "Thông tin các điều động đã tạo" : "Thông tin các điều động của cá nhân"}
           />
         </Box>
         {/* Switch bar component only for Crew Member role */}
@@ -226,7 +228,7 @@ const CrewMobilization = () => {
         )} */}
         <Box
           m="40px 0 0 0"
-          height="62vh"
+          height={isAdmin ? "62vh" : "72vh"}
           maxHeight={550}
           maxWidth={1600}
           sx={{
@@ -240,36 +242,38 @@ const CrewMobilization = () => {
             },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              paddingBottom: 2,
-              justifyContent: "end",
-            }}
-          >
-            <Button
-              variant="contained"
+          {isAdmin && (
+            <Box
               sx={{
-                backgroundColor: COLOR.primary_gold,
-                color: COLOR.primary_black,
-                borderRadius: 2,
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                paddingBottom: 2,
+                justifyContent: "end",
               }}
-              onClick={() => navigate("/mobilizations/create")}
             >
-              <AddCircleRoundedIcon />
-              <Typography
+              <Button
+                variant="contained"
                 sx={{
-                  fontWeight: 700,
-                  marginLeft: "4px",
-                  textTransform: "capitalize",
+                  backgroundColor: COLOR.primary_gold,
+                  color: COLOR.primary_black,
+                  borderRadius: 2,
                 }}
+                onClick={() => navigate("/mobilizations/create")}
               >
-                Tạo điều động
-              </Typography>
-            </Button>
-          </Box>
+                <AddCircleRoundedIcon />
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    marginLeft: "4px",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Tạo điều động
+                </Typography>
+              </Button>
+            </Box>
+          )}
           <DataGrid
             disableRowSelectionOnClick
             disableColumnMenu
