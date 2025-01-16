@@ -171,15 +171,14 @@ function App() {
                 <Route path=":id" element={<CourseDetail />} />
                 <Route path="create" element={<CreateCourse />} />
             </Route>
-            
             {/* These routes will be moved to user Routes later */}
           </Route>
         ) : (
           /* Login Route without Sidebar + TopBar */
           <>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/signUp" element={<SignUpPage />} />
-            <Route path="/verifyEmailConfirmation" element={<VerifyEmailConfirmation />} />
+            <Route path="/sign-Up" element={<SignUpPage />} />
+            <Route path="/verify-email-confirmation" element={<VerifyEmailConfirmation />} />
           </>
         )}
       </Routes>

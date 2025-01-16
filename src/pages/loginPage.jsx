@@ -94,7 +94,10 @@ const LoginPage = () => {
           email: "Email chưa được xác thực, vui lòng kiểm tra email của bạn",
         });
       } else {
-        console.log("Unexpected error when login");
+        setErrors({
+          email: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+          password: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+        });
       }
       // const mockAccessToken = "ashdajsikdnasd"; //Mock access token
       // localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
@@ -123,8 +126,8 @@ const LoginPage = () => {
           flexDirection: "column",
           alignItems: "center",
           backgroundColor: COLOR.primary_white,
-          width: 400,
-          height: 600,
+          width: 500,
+          height: 650,
           borderRadius: 4,
         }}
       >
@@ -356,7 +359,7 @@ const LoginPage = () => {
                       ? COLOR.secondary_gold
                       : COLOR.secondary_gold, //adjust this if needed
                   })}
-                  to="/signUp"
+                  to="/sign-up"
                 >
                   Tạo ở đây
                 </NavLink>
@@ -366,7 +369,7 @@ const LoginPage = () => {
         </Formik>
         <Box
           backgroundColor={COLOR.primary_gray}
-          height="16%"
+          height="12%"
           width="100%"
           sx={{
             borderBottomRightRadius: 15,

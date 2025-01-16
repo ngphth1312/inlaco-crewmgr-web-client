@@ -15,9 +15,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useAppContext } from "../contexts/AppContext";
 import { Formik } from "formik";
 import * as yup from "yup";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { signUpAPI } from "../services/authServices";
+
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -26,6 +28,7 @@ const SignUpPage = () => {
   const [signUpLoading, setSignUpLoading] = useState(false);
 
   const initialValues = {
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -34,10 +37,11 @@ const SignUpPage = () => {
   const passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])[A-Za-z\\d@$!%*?&]{8,}$";
 
   const signUpSchema = yup.object().shape({
+    fullName: yup.string().required("Họ tên không được để trống"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
     email: yup
       .string()
-      .email("Email không hợp lệ\n\n")
-      .required("Vui lòng nhập email\n\n"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
+      .email("Email không hợp lệ")
+      .required("Vui lòng nhập email"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
 
     password: yup
       .string()
@@ -45,7 +49,7 @@ const SignUpPage = () => {
         passwordRegex,
         "Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ hoa và 1 chữ thường" //no need to add \n cuz this one already takes 2 lines
       )
-      .required("Vui lòng nhập mật khẩu\n\n"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
+      .required("Vui lòng nhập mật khẩu"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
 
     confirmPassword: yup
       .string()
@@ -53,14 +57,26 @@ const SignUpPage = () => {
       .required("Vui lòng nhập lại mật khẩu"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
   });
 
-  const handleSignUpClick = async (values) => {
+  const handleSignUpClick = async (values, { setErrors }) => {
     setSignUpLoading(true);
     try {
       //Calling API to sign up
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await signUpAPI(values.fullName, values.email, values.password, values.confirmPassword);
 
-      console.log("Sign up successfully: ", values);
-      navigate("/verifyEmailConfirmation");
+      if (response.status === HttpStatusCodes.ACCEPTED) {
+        navigate("/verify-email-confirmation");
+
+
+      } else if(response.status === HttpStatusCodes.CONFLICT) {
+        setErrors({ email: "Email này đã được sử dụng để tạo tài khoản" });
+      } else{
+        setErrors({
+          fullName: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+          email: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+          password: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+          confirmPassword: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+        });
+      }
     } catch (err) {
       console.log("Error when sign up: ", err);
     } finally {
@@ -76,8 +92,8 @@ const SignUpPage = () => {
           flexDirection: "column",
           alignItems: "center",
           backgroundColor: COLOR.primary_white,
-          width: 400,
-          height: 600,
+          width: 500,
+          height: 650,
           borderRadius: 4,
         }}
       >
@@ -144,15 +160,15 @@ const SignUpPage = () => {
                 size="small"
                 margin="none"
                 required
-                fullWidth
-                label="Email"
-                id="email"
                 autoFocus
-                name="email"
-                value={values.email}
-                error={!!touched.email && !!errors.email}
+                fullWidth
+                label="Họ tên"
+                id="fullName"
+                name="fullName"
+                value={values.fullName}
+                error={!!touched.fullName && !!errors.fullName}
                 helperText={
-                  touched.email && errors.email ? errors.email : " \n\n"
+                  touched.fullName && errors.fullName ? errors.fullName : " "
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -179,7 +195,46 @@ const SignUpPage = () => {
                 }}
                 sx={{
                   backgroundColor: COLOR.secondary_white,
-                  marginBottom: 2,
+                  marginBottom: 3,
+                }}
+              />
+              <TextField
+                size="small"
+                margin="none"
+                required
+                fullWidth
+                label="Email"
+                id="email"
+                name="email"
+                value={values.email}
+                error={!!touched.email && !!errors.email}
+                helperText={touched.email && errors.email ? errors.email : " "}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircleIcon />
+                      </InputAdornment>
+                    ),
+                  },
+                  formHelperText: {
+                    sx: {
+                      backgroundColor: COLOR.primary_white,
+                      margin: 0,
+                      paddingRight: 1,
+                      paddingLeft: 1,
+                      letterSpacing: 0.3,
+                      lineHeight: 1.4,
+                      fontSize: 11,
+                      whiteSpace: "pre-line",
+                    },
+                  },
+                }}
+                sx={{
+                  backgroundColor: COLOR.secondary_white,
+                  marginBottom: 3,
                 }}
               />
               <TextField
@@ -194,9 +249,7 @@ const SignUpPage = () => {
                 value={values.password}
                 error={!!touched.password && !!errors.password}
                 helperText={
-                  touched.password && errors.password
-                    ? errors.password
-                    : " \n\n"
+                  touched.password && errors.password ? errors.password : " "
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -238,7 +291,7 @@ const SignUpPage = () => {
                 }}
                 sx={{
                   backgroundColor: COLOR.secondary_white,
-                  marginBottom: 2,
+                  marginBottom: 3,
                 }}
               />
               <TextField
@@ -299,16 +352,6 @@ const SignUpPage = () => {
                   backgroundColor: COLOR.secondary_white,
                 }}
               />
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  marginTop: "2px",
-                  marginBottom: 1,
-                }}
-              ></Box>
               <Button
                 type="submit"
                 variant="contained"
@@ -321,7 +364,6 @@ const SignUpPage = () => {
                   minWidth: 120,
                   marginTop: 1,
                 }}
-                onClick={() => handleSignUpClick()}
                 // disabled={loading}
               >
                 {signUpLoading ? (
@@ -363,7 +405,7 @@ const SignUpPage = () => {
         </Formik>
         <Box
           backgroundColor={COLOR.primary_gray}
-          height="16%"
+          height="12%"
           width="100%"
           sx={{
             borderBottomRightRadius: 15,
