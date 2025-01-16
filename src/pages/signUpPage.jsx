@@ -77,7 +77,7 @@ const SignUpPage = () => {
           alignItems: "center",
           backgroundColor: COLOR.primary_white,
           width: 400,
-          height: 550,
+          height: 600,
           borderRadius: 4,
         }}
       >
@@ -179,7 +179,7 @@ const SignUpPage = () => {
                 }}
                 sx={{
                   backgroundColor: COLOR.secondary_white,
-                  marginBottom: 1,
+                  marginBottom: 2,
                 }}
               />
               <TextField
@@ -238,7 +238,7 @@ const SignUpPage = () => {
                 }}
                 sx={{
                   backgroundColor: COLOR.secondary_white,
-                  marginBottom: 1,
+                  marginBottom: 2,
                 }}
               />
               <TextField
@@ -319,6 +319,7 @@ const SignUpPage = () => {
                   backgroundColor: COLOR.primary_blue,
                   color: COLOR.primary_white,
                   minWidth: 120,
+                  marginTop: 1,
                 }}
                 onClick={() => handleSignUpClick()}
                 // disabled={loading}

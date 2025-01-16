@@ -24,6 +24,8 @@ import {
 } from "../utils/storageUtils";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { loginAPI } from "../services/authServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 
 const LoginPage = () => {
   const { setAccessToken } = useAppContext();
@@ -52,12 +54,33 @@ const LoginPage = () => {
       .required("Vui lòng nhập mật khẩu\n\n"),//"\n" is to make sure the error message will be displayed in 2 lines for fixed height
   });
 
-  const handleLoginClick = async (values) => {
-    console.log("Start Login");
+  const handleLoginClick = async (values, { setErrors }) => {
     setLoginLoading(true);
     try{
       //validate login inputs and calling API to login
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      // const response = await loginAPI(values.email, values.password);
+      // if(response.status === HttpStatusCodes.OK){
+      //   const mockAccessToken = "ashdajsikdnasd"; //Mock access token
+      //   localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
+
+      //   if (rememberMe) {
+      //     localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+      //   } else {
+      //     sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+      //   }
+
+      //   console.log("Login successfully: ", values);
+      //   setAccessToken(mockAccessToken);
+      //   navigate("/", { replace: true });
+      // } else if (response.status === HttpStatusCodes.NOT_FOUND){
+      //   console.log("Account not found: ", response);
+      //   setErrors({
+      //     email: "Tên đăng nhập hoặc mật khẩu không chính xác",
+      //     password: "Tên đăng nhập hoặc mật khẩu không chính xác",
+      //   });
+      // } else{
+      //   console.log("Login failed: ", response);
+      // }
 
       const mockAccessToken = "ashdajsikdnasd"; //Mock access token
       localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
@@ -87,7 +110,7 @@ const LoginPage = () => {
           alignItems: "center",
           backgroundColor: COLOR.primary_white,
           width: 400,
-          height: 550,
+          height: 600,
           borderRadius: 4,
         }}
       >
@@ -152,7 +175,7 @@ const LoginPage = () => {
               </Typography>
               <TextField
                 size="small"
-                margin="none"
+                margin="normal"
                 required
                 fullWidth
                 label="Email"
@@ -287,6 +310,7 @@ const LoginPage = () => {
                   position: "relative",
                   pt: 1,
                   pb: 1,
+                  mt: 3,
                   backgroundColor: COLOR.primary_blue,
                   color: COLOR.primary_white,
                   minWidth: 120,
@@ -301,7 +325,7 @@ const LoginPage = () => {
                   borderColor: COLOR.primary_gray,
                   width: "100%",
                   marginTop: 2,
-                  marginBottom: 2,
+                  marginBottom: 1,
                 }}
               />
               <Box
