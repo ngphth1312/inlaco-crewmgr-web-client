@@ -52,7 +52,7 @@ import { localStorage, sessionStorage, StorageKey } from "./utils/storageUtils";
 function App() {
 
   let navigate = useNavigate();
-  const { accessToken, setAccessToken } = useAppContext();
+  const { accessToken, setAccessToken, setRefreshToken, setAccountName, setRoles } = useAppContext();
 
   useEffect(() => {
     const fetchUserInfos = async () => {
@@ -60,46 +60,51 @@ function App() {
         const rememberMe = await localStorage.getItem(StorageKey.REMEMBER_ME);
 
         if (rememberMe) {
-          const tempAccessToken = await localStorage.getItem(
+          const accessToken = await localStorage.getItem(
             StorageKey.ACCESS_TOKEN
           );
-          // const tempRefreshToken = await localStorage.getItem(
-          //   StorageKey.REFRESH_TOKEN
-          // );
-          // const tempUserInfos = await localStorage.getItem(
-          //   StorageKey.USER_INFOS
-          // );
-
-          // console.log(tempAccessToken, tempRefreshToken, tempUserInfos);
-          if(tempAccessToken){
-            setAccessToken(tempAccessToken);
-            navigate("/");
-          } else{
-            navigate("/login");
-          }
-          // setRefreshToken(tempRefreshToken);
-          // setUserInfos(tempUserInfos);
-        } else {
-          const tempAccessToken = await sessionStorage.getItem(
-            StorageKey.ACCESS_TOKEN
+          const refreshToken = await localStorage.getItem(
+            StorageKey.REFRESH_TOKEN
           );
-          // const tempRefreshToken = await sessionStorage.getItem(
-          //   StorageKey.REFRESH_TOKEN
-          // );
-          // const tempUserInfos = await sessionStorage.getItem(
-          //   StorageKey.USER_INFOS
-          // );
+          const accountName = await localStorage.getItem(
+            StorageKey.ACCOUNT_NAME
+          );
+          const roles = await localStorage.getItem(
+            StorageKey.ROLES
+          );
 
-          // console.log(tempAccessToken, tempRefreshToken, tempUserInfos);
-
-          if (tempAccessToken) {
-            setAccessToken(tempAccessToken);
+          if (accessToken && refreshToken && accountName && roles) {
+            setAccessToken(accessToken);
+            setRefreshToken(refreshToken);
+            setAccountName(accountName);
+            setRoles(roles);
             navigate("/");
           } else {
             navigate("/login");
           }
-          // setRefreshToken(tempRefreshToken);
-          // setUserInfos(tempUserInfos);
+        } else {
+          const accessToken = await sessionStorage.getItem(
+            StorageKey.ACCESS_TOKEN
+          );
+          const refreshToken = await sessionStorage.getItem(
+            StorageKey.REFRESH_TOKEN
+          );
+          const accountName = await sessionStorage.getItem(
+            StorageKey.ACCOUNT_NAME
+          );
+          const roles = await sessionStorage.getItem(StorageKey.ROLES);
+
+          // console.log(tempAccessToken, tempRefreshToken, tempUserInfos);
+
+          if (accessToken) {
+            setAccessToken(accessToken);
+            setRefreshToken(refreshToken);
+            setAccountName(accountName);
+            setRoles(roles);
+            navigate("/");
+          } else {
+            navigate("/login");
+          }
         }
       } catch (err) {
         console.log(err);

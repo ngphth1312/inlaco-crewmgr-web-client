@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 
 const CrewCourse = () => {
   const navigate = useNavigate();
+  const isAdmin = true; //this should be replace by account actual role
 
   return (
     <div>
@@ -20,36 +21,38 @@ const CrewCourse = () => {
             subtitle="Danh sách các Khóa học hiện có"
           />
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            paddingBottom: 4,
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            variant="contained"
+        {isAdmin && (
+          <Box
             sx={{
-              backgroundColor: COLOR.primary_gold,
-              color: COLOR.primary_black,
-              borderRadius: 2,
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              paddingBottom: 4,
+              justifyContent: "flex-end",
             }}
-            onClick={() => navigate("/courses/create")}
           >
-            <AddCircleRoundedIcon />
-            <Typography
+            <Button
+              variant="contained"
               sx={{
-                fontWeight: 700,
-                marginLeft: "4px",
-                textTransform: "capitalize",
+                backgroundColor: COLOR.primary_gold,
+                color: COLOR.primary_black,
+                borderRadius: 2,
               }}
+              onClick={() => navigate("/courses/create")}
             >
-              Tạo khóa học
-            </Typography>
-          </Button>
-        </Box>
+              <AddCircleRoundedIcon />
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  marginLeft: "4px",
+                  textTransform: "capitalize",
+                }}
+              >
+                Tạo khóa học
+              </Typography>
+            </Button>
+          </Box>
+        )}
         <Grid container spacing={4}>
           {mockCourses.map((item) => {
             return (
@@ -62,7 +65,11 @@ const CrewCourse = () => {
                 trainingPartnerLogo={item?.trainingPartnerLogo}
                 limitStudent={item?.limitStudent}
                 isCertificateCourse={item?.isCertificateCourse}
-                onClick={() => navigate(`/courses/${item?.id}`)}
+                onClick={() =>
+                  navigate(`/courses/${item?.id}`, {
+                    state: { isAdmin: isAdmin },
+                  })
+                }
               />
             );
           })}

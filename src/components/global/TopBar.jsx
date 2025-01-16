@@ -13,19 +13,28 @@ import { useState } from "react";
 const TopBar = () => {
 
   const navigate = useNavigate();
-  const{ setAccessToken } = useAppContext();
+  const{ setAccessToken, setRefreshToken, setAccountName, setRoles } = useAppContext();
 
   const handleLogoutClick = async () => {
     //Perform something and calling logout API to invalid the refresh token
     const rememberMe = await localStorage.getItem(StorageKey.REMEMBER_ME)
     if(rememberMe){
       localStorage.removeItem(StorageKey.ACCESS_TOKEN);
+      localStorage.removeItem(StorageKey.REFRESH_TOKEN);
+      localStorage.removeItem(StorageKey.ACCOUNT_NAME);
+      localStorage.removeItem(StorageKey.ROLES);
     } else{
       sessionStorage.removeItem(StorageKey.ACCESS_TOKEN);
+      sessionStorage.removeItem(StorageKey.REFRESH_TOKEN);
+      sessionStorage.removeItem(StorageKey.ACCOUNT_NAME);
+      sessionStorage.removeItem(StorageKey.ROLES);
     }
 
     localStorage.removeItem(StorageKey.REMEMBER_ME);
     setAccessToken("");
+    setRefreshToken("");
+    setAccountName("");
+    setRoles([]);
     navigate("/login");
   };
 

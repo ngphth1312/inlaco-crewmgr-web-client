@@ -28,7 +28,7 @@ import { loginAPI } from "../services/authServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 
 const LoginPage = () => {
-  const { setAccessToken } = useAppContext();
+  const { setAccessToken, setRefreshToken, setAccountName, setRoles } = useAppContext();
   const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -57,43 +57,57 @@ const LoginPage = () => {
   const handleLoginClick = async (values, { setErrors }) => {
     setLoginLoading(true);
     try{
-      //validate login inputs and calling API to login
-      // const response = await loginAPI(values.email, values.password);
-      // if(response.status === HttpStatusCodes.OK){
-      //   const mockAccessToken = "ashdajsikdnasd"; //Mock access token
-      //   localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
+      // validate login inputs and calling API to login
+      const response = await loginAPI(values.email, values.password);
+      if(response.status === HttpStatusCodes.OK){
+        localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
+        const { jwt, name, roles } = response.data;
 
-      //   if (rememberMe) {
-      //     localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-      //   } else {
-      //     sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-      //   }
+        const accessToken = jwt.accessToken;
+        const refreshToken = jwt.refreshToken;
 
-      //   console.log("Login successfully: ", values);
-      //   setAccessToken(mockAccessToken);
-      //   navigate("/", { replace: true });
-      // } else if (response.status === HttpStatusCodes.NOT_FOUND){
-      //   console.log("Account not found: ", response);
-      //   setErrors({
-      //     email: "Tên đăng nhập hoặc mật khẩu không chính xác",
-      //     password: "Tên đăng nhập hoặc mật khẩu không chính xác",
-      //   });
-      // } else{
-      //   console.log("Login failed: ", response);
+        if (rememberMe) {
+          localStorage.setItem(StorageKey.ACCESS_TOKEN, accessToken);
+          localStorage.setItem(StorageKey.REFRESH_TOKEN, refreshToken);
+          localStorage.setItem(StorageKey.ACCOUNT_NAME, name);
+          localStorage.setItem(StorageKey.ROLES, roles);
+        } else {
+          sessionStorage.setItem(StorageKey.ACCESS_TOKEN, accessToken);
+          sessionStorage.setItem(StorageKey.REFRESH_TOKEN, refreshToken);
+          sessionStorage.setItem(StorageKey.ACCOUNT_NAME, name);
+          sessionStorage.setItem(StorageKey.ROLES, roles);;
+        }
+
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setAccountName(name);
+        setRoles(roles);
+
+        navigate("/", { replace: true });
+      } else if (response.status === HttpStatusCodes.NOT_FOUND){
+        setErrors({
+          email: "Tên đăng nhập hoặc mật khẩu không chính xác",
+          password: "Tên đăng nhập hoặc mật khẩu không chính xác",
+        });
+      } else if (response.status === HttpStatusCodes.FORBIDDEN) {
+        setErrors({
+          email: "Email chưa được xác thực, vui lòng kiểm tra email của bạn",
+        });
+      } else {
+        console.log("Unexpected error when login");
+      }
+      // const mockAccessToken = "ashdajsikdnasd"; //Mock access token
+      // localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
+
+      // if (rememberMe) {
+      //   localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
+      // } else {
+      //   sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
       // }
 
-      const mockAccessToken = "ashdajsikdnasd"; //Mock access token
-      localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
-
-      if (rememberMe) {
-        localStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-      } else {
-        sessionStorage.setItem(StorageKey.ACCESS_TOKEN, mockAccessToken);
-      }
-
-      console.log("Login successfully: ", values);
-      setAccessToken(mockAccessToken);
-      navigate("/", { replace: true });
+      // console.log("Login successfully: ", values);
+      // setAccessToken(mockAccessToken);
+      // navigate("/", { replace: true });
     } catch(err){
       console.log("Error when login: ", err);
     } finally {

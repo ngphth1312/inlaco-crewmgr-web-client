@@ -5,10 +5,19 @@ export const AppContext = createContext({});
 export const AppProvider = ({ children }) => {
 
   const [accessToken, setAccessToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
+  const [roles, setRoles] = useState([]);
+  const [accountName, setAccountName] = useState("");
 
   const value = {
     accessToken,
     setAccessToken,
+    refreshToken,
+    setRefreshToken,
+    roles,
+    setRoles,
+    accountName,
+    setAccountName,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

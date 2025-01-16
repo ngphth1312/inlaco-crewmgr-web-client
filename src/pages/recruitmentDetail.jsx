@@ -335,8 +335,8 @@ const RecruitmentDetail = () => {
             </Box>
           </Box>
         </Box>
-        {isAdmin ? (
-          <>
+        <>
+          {isAdmin && (
             <SwitchBar
               tabLabel1={"Thông tin bài đăng"}
               tabLabel2={"Danh sách ứng viên"}
@@ -348,120 +348,152 @@ const RecruitmentDetail = () => {
                 marginTop: 2,
               }}
             />
-            {tabValue === 1 ? (
-              <Box
-                m="20px 0 0 0"
-                height="62vh"
-                maxHeight={550}
-                maxWidth={1600}
-                sx={{
-                  "& .MuiDataGrid-columnHeader": {
-                    backgroundColor: COLOR.secondary_blue,
-                    color: COLOR.primary_white,
-                  },
-                  "& .MuiTablePagination-root": {
-                    backgroundColor: COLOR.secondary_blue,
-                    color: COLOR.primary_white,
+          )}
+          {tabValue === 1 ? (
+            <Box
+              m="20px 0 0 0"
+              height="62vh"
+              maxHeight={550}
+              maxWidth={1600}
+              sx={{
+                "& .MuiDataGrid-columnHeader": {
+                  backgroundColor: COLOR.secondary_blue,
+                  color: COLOR.primary_white,
+                },
+                "& .MuiTablePagination-root": {
+                  backgroundColor: COLOR.secondary_blue,
+                  color: COLOR.primary_white,
+                },
+              }}
+            >
+              <DataGrid
+                disableRowSelectionOnClick
+                disableColumnMenu
+                disableColumnResize
+                getRowHeight={() => "auto"}
+                rows={mockCandidates}
+                columns={columns}
+                slots={{ noRowsOverlay: NoValuesOverlay }}
+                pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+                initialState={{
+                  pagination: {
+                    paginationModel: { pageSize: 5, page: 0 },
                   },
                 }}
+                sx={{
+                  backgroundColor: "#FFF",
+                  headerAlign: "center",
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    fontSize: 16,
+                    fontWeight: 700,
+                  },
+                }}
+              />
+            </Box>
+          ) : (
+            <>
+              <Box
+                px={2}
+                mt={4}
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
               >
-                <DataGrid
-                  disableRowSelectionOnClick
-                  disableColumnMenu
-                  disableColumnResize
-                  getRowHeight={() => "auto"}
-                  rows={mockCandidates}
-                  columns={columns}
-                  slots={{ noRowsOverlay: NoValuesOverlay }}
-                  pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { pageSize: 5, page: 0 },
+                <InfoTextField
+                  id="recruitment-start-date"
+                  type="date"
+                  label="Ngày mở đăng ký"
+                  size="small"
+                  margin="none"
+                  disabled={true}
+                  required
+                  fullWidth
+                  name="recruitmentStartDate"
+                  value={values.recruitmentStartDate}
+                  mx={2}
+                  sx={{
+                    width: "40%",
+                    marginBottom: 0,
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                      WebkitTextFillColor: COLOR.primary_black, // Ensure text color is black
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black, // Ensure border color is black
+                    },
+                    // "& .MuiInputLabel-root.Mui-disabled": {
+                    //   color: COLOR.primary_black, // Ensure label color is black
+                    // },
+                  }}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
                     },
                   }}
+                />
+                <Box
                   sx={{
-                    backgroundColor: "#FFF",
-                    headerAlign: "center",
-                    "& .MuiDataGrid-columnHeaderTitle": {
-                      fontSize: 16,
-                      fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "30%",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      borderBottom: `2px solid ${COLOR.primary_black}`,
+                      width: "40%",
+                    }}
+                  />
+                </Box>
+                <InfoTextField
+                  id="recruitment-end-date"
+                  label="Ngày đóng đăng ký"
+                  size="small"
+                  margin="none"
+                  disabled={true}
+                  type="date"
+                  required
+                  fullWidth
+                  name="recruitmentEndDate"
+                  value={values.recruitmentEndDate}
+                  mx={2}
+                  sx={{
+                    width: "40%",
+                    marginBottom: 0,
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
                     },
                   }}
                 />
               </Box>
-            ) : (
-              <>
-                <Box
-                  px={2}
-                  mt={4}
-                  sx={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                >
+              <SectionDivider
+                sx={{ marginTop: 2 }}
+                sectionName="Thông tin bài đăng*: "
+              />
+              <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+                <Grid size={4}>
                   <InfoTextField
-                    id="recruitment-start-date"
-                    type="date"
-                    label="Ngày mở đăng ký"
+                    id="title"
+                    label="Tiêu đề bài đăng"
                     size="small"
                     margin="none"
                     disabled={true}
                     required
                     fullWidth
-                    name="recruitmentStartDate"
-                    value={values.recruitmentStartDate}
-                    mx={2}
+                    name="title"
+                    value={values.title}
                     sx={{
-                      width: "40%",
-                      marginBottom: 0,
-                      "& .MuiInputBase-input.Mui-disabled": {
-                        color: COLOR.primary_black,
-                        WebkitTextFillColor: COLOR.primary_black, // Ensure text color is black
-                      },
-                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                        borderColor: COLOR.primary_black, // Ensure border color is black
-                      },
-                      // "& .MuiInputLabel-root.Mui-disabled": {
-                      //   color: COLOR.primary_black, // Ensure label color is black
-                      // },
-                    }}
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
-                      },
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "30%",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        borderBottom: `2px solid ${COLOR.primary_black}`,
-                        width: "40%",
-                      }}
-                    />
-                  </Box>
-                  <InfoTextField
-                    id="recruitment-end-date"
-                    label="Ngày đóng đăng ký"
-                    size="small"
-                    margin="none"
-                    disabled={true}
-                    type="date"
-                    required
-                    fullWidth
-                    name="recruitmentEndDate"
-                    value={values.recruitmentEndDate}
-                    mx={2}
-                    sx={{
-                      width: "40%",
-                      marginBottom: 0,
                       "& .MuiInputBase-input.Mui-disabled": {
                         color: COLOR.primary_black,
                       },
@@ -469,363 +501,114 @@ const RecruitmentDetail = () => {
                         borderColor: COLOR.primary_black,
                       },
                     }}
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
+                  />
+                </Grid>
+                <Grid size={3}>
+                  <InfoTextField
+                    id="position"
+                    label="Vị trí tuyển dụng"
+                    size="small"
+                    margin="none"
+                    disabled={true}
+                    required
+                    fullWidth
+                    name="position"
+                    value={values.position}
+                    sx={{
+                      "& .MuiInputBase-input.Mui-disabled": {
+                        color: COLOR.primary_black,
+                      },
+                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                        borderColor: COLOR.primary_black,
                       },
                     }}
                   />
-                </Box>
-                <SectionDivider
-                  sx={{ marginTop: 2 }}
-                  sectionName="Thông tin bài đăng*: "
-                />
-                <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-                  <Grid size={4}>
-                    <InfoTextField
-                      id="title"
-                      label="Tiêu đề bài đăng"
-                      size="small"
-                      margin="none"
-                      disabled={true}
-                      required
-                      fullWidth
-                      name="title"
-                      value={values.title}
-                      sx={{
-                        "& .MuiInputBase-input.Mui-disabled": {
-                          color: COLOR.primary_black,
-                        },
-                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                          borderColor: COLOR.primary_black,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid size={3}>
-                    <InfoTextField
-                      id="position"
-                      label="Vị trí tuyển dụng"
-                      size="small"
-                      margin="none"
-                      disabled={true}
-                      required
-                      fullWidth
-                      name="position"
-                      value={values.position}
-                      sx={{
-                        "& .MuiInputBase-input.Mui-disabled": {
-                          color: COLOR.primary_black,
-                        },
-                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                          borderColor: COLOR.primary_black,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid size={2.5}>
-                    <InfoTextField
-                      id="work-location"
-                      label="Địa điểm"
-                      size="small"
-                      margin="none"
-                      disabled={true}
-                      required
-                      fullWidth
-                      name="workLocation"
-                      value={values.workLocation}
-                      sx={{
-                        "& .MuiInputBase-input.Mui-disabled": {
-                          color: COLOR.primary_black,
-                        },
-                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                          borderColor: COLOR.primary_black,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid size={2.5}>
-                    <InfoTextField
-                      id="salary"
-                      label="Mức lương"
-                      size="small"
-                      type="number"
-                      margin="none"
-                      disabled={true}
-                      required
-                      fullWidth
-                      name="salary"
-                      value={values.salary}
-                      slotProps={{
-                        input: {
-                          endAdornment: (
-                            <InputAdornment position="end">vnđ</InputAdornment>
-                          ),
-                        },
-                      }}
-                      sx={{
-                        "& .MuiInputBase-input.Mui-disabled": {
-                          color: COLOR.primary_black,
-                        },
-                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                          borderColor: COLOR.primary_black,
-                        },
-                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                          {
-                            display: "none",
-                          },
-                        "& input[type=number]": {
-                          MozAppearance: "textfield",
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid size={12}>
-                    <InfoTextField
-                      id="content"
-                      label="Mô tả công việc"
-                      rows={8}
-                      multiline
-                      size="small"
-                      margin="none"
-                      disabled={true}
-                      required
-                      fullWidth
-                      name="content"
-                      value={values.content}
-                      sx={{
-                        marginTop: 2,
-                        "& .MuiInputBase-input.Mui-disabled": {
-                          color: COLOR.primary_black,
-                        },
-                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                          borderColor: COLOR.primary_black,
-                        },
-                      }}
-                    />
-                  </Grid>
                 </Grid>
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            <Box
-              px={2}
-              mt={4}
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <InfoTextField
-                id="recruitment-start-date"
-                type="date"
-                label="Ngày mở đăng ký"
-                size="small"
-                margin="none"
-                disabled={true}
-                required
-                fullWidth
-                name="recruitmentStartDate"
-                value={values.recruitmentStartDate}
-                mx={2}
-                sx={{
-                  width: "40%",
-                  marginBottom: 0,
-                  "& .MuiInputBase-input.Mui-disabled": {
-                    color: COLOR.primary_black,
-                    WebkitTextFillColor: COLOR.primary_black, // Ensure text color is black
-                  },
-                  "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                    borderColor: COLOR.primary_black, // Ensure border color is black
-                  },
-                  // "& .MuiInputLabel-root.Mui-disabled": {
-                  //   color: COLOR.primary_black, // Ensure label color is black
-                  // },
-                }}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-              />
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "30%",
-                }}
-              >
-                <Box
-                  sx={{
-                    borderBottom: `2px solid ${COLOR.primary_black}`,
-                    width: "40%",
-                  }}
-                />
-              </Box>
-              <InfoTextField
-                id="recruitment-end-date"
-                label="Ngày đóng đăng ký"
-                size="small"
-                margin="none"
-                disabled={true}
-                type="date"
-                required
-                fullWidth
-                name="recruitmentEndDate"
-                value={values.recruitmentEndDate}
-                mx={2}
-                sx={{
-                  width: "40%",
-                  marginBottom: 0,
-                  "& .MuiInputBase-input.Mui-disabled": {
-                    color: COLOR.primary_black,
-                  },
-                  "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                    borderColor: COLOR.primary_black,
-                  },
-                }}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-              />
-            </Box>
-            <SectionDivider
-              sx={{ marginTop: 2 }}
-              sectionName="Thông tin bài đăng*: "
-            />
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={4}>
-                <InfoTextField
-                  id="title"
-                  label="Tiêu đề bài đăng"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="title"
-                  value={values.title}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  id="position"
-                  label="Vị trí tuyển dụng"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="position"
-                  value={values.position}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={2.5}>
-                <InfoTextField
-                  id="work-location"
-                  label="Địa điểm"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="workLocation"
-                  value={values.workLocation}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={2.5}>
-                <InfoTextField
-                  id="salary"
-                  label="Mức lương"
-                  size="small"
-                  type="number"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="salary"
-                  value={values.salary}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">vnđ</InputAdornment>
-                      ),
-                    },
-                  }}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                      {
-                        display: "none",
+                <Grid size={2.5}>
+                  <InfoTextField
+                    id="work-location"
+                    label="Địa điểm"
+                    size="small"
+                    margin="none"
+                    disabled={true}
+                    required
+                    fullWidth
+                    name="workLocation"
+                    value={values.workLocation}
+                    sx={{
+                      "& .MuiInputBase-input.Mui-disabled": {
+                        color: COLOR.primary_black,
                       },
-                    "& input[type=number]": {
-                      MozAppearance: "textfield",
-                    },
-                  }}
-                />
+                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                        borderColor: COLOR.primary_black,
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={2.5}>
+                  <InfoTextField
+                    id="salary"
+                    label="Mức lương"
+                    size="small"
+                    type="number"
+                    margin="none"
+                    disabled={true}
+                    required
+                    fullWidth
+                    name="salary"
+                    value={values.salary}
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">vnđ</InputAdornment>
+                        ),
+                      },
+                    }}
+                    sx={{
+                      "& .MuiInputBase-input.Mui-disabled": {
+                        color: COLOR.primary_black,
+                      },
+                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                        borderColor: COLOR.primary_black,
+                      },
+                      "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                        {
+                          display: "none",
+                        },
+                      "& input[type=number]": {
+                        MozAppearance: "textfield",
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <InfoTextField
+                    id="content"
+                    label="Mô tả công việc"
+                    rows={8}
+                    multiline
+                    size="small"
+                    margin="none"
+                    disabled={true}
+                    required
+                    fullWidth
+                    name="content"
+                    value={values.content}
+                    sx={{
+                      marginTop: 2,
+                      "& .MuiInputBase-input.Mui-disabled": {
+                        color: COLOR.primary_black,
+                      },
+                      "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                        borderColor: COLOR.primary_black,
+                      },
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid size={12}>
-                <InfoTextField
-                  id="content"
-                  label="Mô tả công việc"
-                  rows={8}
-                  multiline
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="content"
-                  value={values.content}
-                  sx={{
-                    marginTop: 2,
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </>
-        )}
+            </>
+          )}
+        </>
       </Box>
     </div>
   );

@@ -13,10 +13,11 @@ import MarkEmailUnreadOutlinedIcon from "@mui/icons-material/MarkEmailUnreadOutl
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOutlined";
 import { COLOR } from "../../assets/Color";
+import { useAppContext } from "../../contexts/AppContext";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const navigate = useNavigate();
-  
+
   return (
     <MenuItem
       active={selected === title}
@@ -44,6 +45,8 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const SideBar = () => {
+  const { accountName } = useAppContext();
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Trang chủ");
 
@@ -114,7 +117,7 @@ const SideBar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Trần Võ Sơn Tùng
+                  {accountName}
                 </Typography>
                 <Typography variant="h6" color={COLOR.primary_gold}>
                   Admin
