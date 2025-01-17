@@ -15,7 +15,7 @@ import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOu
 import { COLOR } from "../../assets/Color";
 import { useAppContext } from "../../contexts/AppContext";
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
+const Item = ({ title, to, navigateState, icon, selected, setSelected, }) => {
   const navigate = useNavigate();
 
   return (
@@ -26,7 +26,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
       }}
       onClick={() => {
         setSelected(title);
-        navigate(to);
+        navigate(to, { state: navigateState });
       }}
       icon={icon}
     >
@@ -45,17 +45,23 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const SideBar = () => {
-  const { accountName } = useAppContext();
+  const { accountName, roles } = useAppContext();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Trang chủ");
+
+  const testRoles = ["ADMIN" ,"USER"];
+
+  const isAdmin = testRoles.includes("ADMIN");
+  const isCrewMember = testRoles.includes("SAILOR");
+  const isGeneralUser = testRoles.includes("USER");
 
   return (
     <Box>
       <Sidebar
         collapsed={isCollapsed}
         backgroundColor={COLOR.primary_blue}
-        style={{ height: "100%", }}
+        style={{ height: "100%" }}
       >
         <Menu
           iconShape="square"
@@ -120,7 +126,7 @@ const SideBar = () => {
                   {accountName}
                 </Typography>
                 <Typography variant="h6" color={COLOR.primary_gold}>
-                  Admin
+                  {isAdmin ? "Admin" : isCrewMember ? "Crew Member" : "User"}
                 </Typography>
               </Box>
             </Box>
@@ -134,95 +140,189 @@ const SideBar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            {(isAdmin || isCrewMember) && ( //only show these items if user is admin or crew member
+              <>
+                <Typography
+                  variant="h6"
+                  color={COLOR.primary_gold}
+                  sx={{
+                    m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                    textAlign: isCollapsed ? "center" : "left",
+                  }}
+                >
+                  {isCollapsed ? "TV" : "Thuyền Viên"}
+                </Typography>
+                {isAdmin ? (
+                  <>
+                    <Item
+                      title="Thông tin Thuyền viên"
+                      to="/crews"
+                      navigateState={{ isAdmin: true}}
+                      icon={<PeopleOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Lịch điều động"
+                      to="/mobilizations"
+                      navigateState={{ isAdmin: true}}
+                      icon={<DirectionsBoatOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
 
-            <Typography
-              variant="h6"
-              color={COLOR.primary_gold}
-              sx={{
-                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
-                textAlign: isCollapsed ? "center" : "left",
-              }}
-            >
-              {isCollapsed ? "TV" : "Thuyền Viên"}
-            </Typography>
-            <Item
-              title="Thông tin Thuyền viên"
-              to="/crews"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Lịch điều động"
-              to="/mobilizations"
-              icon={<DirectionsBoatOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+                    <Typography
+                      variant="h6"
+                      color={COLOR.primary_gold}
+                      sx={{
+                        m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                        textAlign: isCollapsed ? "center" : "left",
+                      }}
+                    >
+                      {isCollapsed ? "HĐ" : "Hợp Đồng"}
+                    </Typography>
+                    <Item
+                      title="Hợp đồng Thuyền viên"
+                      to="/crew-contracts"
+                      navigateState={{ isAdmin: true}}
+                      icon={<AssignmentIndOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Hợp đồng Cung ứng"
+                      to="/supply-contracts"
+                      navigateState={{ isAdmin: true}}
+                      icon={<RequestQuoteOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Templates"
+                      to="/template-contracts"
+                      navigateState={{ isAdmin: true}}
+                      icon={<DescriptionOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Item
+                      title="Thông tin Thuyền viên"
+                      to="/crews"
+                      navigateState={{ isAdmin: false }}
+                      icon={<PeopleOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Lịch điều động"
+                      to="/mobilizations"
+                      navigateState={{ isAdmin: false }}
+                      icon={<DirectionsBoatOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
 
-            <Typography
-              variant="h6"
-              color={COLOR.primary_gold}
-              sx={{
-                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
-                textAlign: isCollapsed ? "center" : "left",
-              }}
-            >
-              {isCollapsed ? "HĐ" : "Hợp Đồng"}
-            </Typography>
-            <Item
-              title="Hợp đồng Thuyền viên"
-              to="/crew-contracts"
-              icon={<AssignmentIndOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Hợp đồng Cung ứng"
-              to="/supply-contracts"
-              icon={<RequestQuoteOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Templates"
-              to="/template-contracts"
-              icon={<DescriptionOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={COLOR.primary_gold}
-              sx={{
-                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
-                textAlign: isCollapsed ? "center" : "left",
-              }}
-            >
-              Khác
-            </Typography>
-            <Item
-              title="Yêu cầu Cung ứng"
-              to="/supply-requests"
-              icon={<MarkEmailUnreadOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Tuyển dụng"
-              to="/recruitment"
-              icon={<HowToRegOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Đào tạo"
-              to="/courses"
-              icon={<WorkspacePremiumOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+                    <Typography
+                      variant="h6"
+                      color={COLOR.primary_gold}
+                      sx={{
+                        m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                        textAlign: isCollapsed ? "center" : "left",
+                      }}
+                    >
+                      {isCollapsed ? "HĐ" : "Hợp Đồng"}
+                    </Typography>
+                    <Item
+                      title="Hợp đồng Thuyền viên"
+                      to="/crew-contracts"
+                      navigateState={{ isAdmin: false }}
+                      icon={<AssignmentIndOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </>
+                )}
+              </>
+            )}
+            {(isAdmin || (isGeneralUser && !isCrewMember)) && ( //only show these items if user is admin or general user
+              <>
+                {isAdmin ? (
+                  <>
+                    <Typography
+                      variant="h6"
+                      color={COLOR.primary_gold}
+                      sx={{
+                        m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                        textAlign: isCollapsed ? "center" : "left",
+                      }}
+                    >
+                      Khác
+                    </Typography>
+                    <Item
+                      title="Yêu cầu Cung ứng"
+                      to="/supply-requests"
+                      navigateState={{ isAdmin: true }}
+                      icon={<MarkEmailUnreadOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Tuyển dụng"
+                      to="/recruitment"
+                      navigateState={{ isAdmin: true }}
+                      icon={<HowToRegOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Item
+                      title="Yêu cầu Cung ứng"
+                      to="/supply-requests"
+                      navigateState={{ isAdmin: false }}
+                      icon={<MarkEmailUnreadOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Tuyển dụng"
+                      to="/recruitment"
+                      navigateState={{ isAdmin: false }}
+                      icon={<HowToRegOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </>
+                )}
+              </>
+            )}
+            {(isAdmin || isCrewMember) && ( //only show this item if user is admin or crew member
+              <>
+                {isAdmin ? (
+                  <Item
+                    title="Đào tạo"
+                    to="/courses"
+                    navigateState={{ isAdmin: true }}
+                    icon={<WorkspacePremiumOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                ) : (
+                  <Item
+                    title="Đào tạo"
+                    to="/courses"
+                    navigateState={{ isAdmin: false }}
+                    icon={<WorkspacePremiumOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                )}
+              </>
+            )}
           </Box>
         </Menu>
       </Sidebar>

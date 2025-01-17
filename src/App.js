@@ -6,6 +6,7 @@ import SignUpPage from "./pages/signUpPage";
 import VerifyEmailConfirmation from "./pages/verifyEmailConfirmation";
 
 import HomePage from "./pages/homePage";
+import BlankPage from "./pages/blankPage";
 
 import CrewInfos from "./pages/crewInfos";
 import AddCrewMember from "./pages/addCrewMember";
@@ -52,10 +53,17 @@ import { localStorage, sessionStorage, StorageKey } from "./utils/storageUtils";
 function App() {
 
   let navigate = useNavigate();
-  const { accessToken, setAccessToken, setRefreshToken, setAccountName, setRoles } = useAppContext();
+  const { accessToken, roles, setAccessToken, setRefreshToken, setAccountName, setRoles } = useAppContext();
+
+    const testRoles = ["ADMIN", "USER"];
+
+    const isAdmin = testRoles.includes("ADMIN");
+    const isCrewMember = testRoles.includes("SAILOR");
+    const isGeneralUser = testRoles.includes("USER");
 
   useEffect(() => {
     const fetchUserInfos = async () => {
+      console.log("Fetching user info");
       try {
         const rememberMe = await localStorage.getItem(StorageKey.REMEMBER_ME);
 
@@ -78,8 +86,10 @@ function App() {
             setRefreshToken(refreshToken);
             setAccountName(accountName);
             setRoles(roles);
-            navigate("/");
+            navigate("/crews"); //adjust this to keep the page stay at the same location when re-loading
+            console.log("Navigate to crews")
           } else {
+            console.log("Navigate to login");
             navigate("/login");
           }
         } else {
@@ -94,14 +104,12 @@ function App() {
           );
           const roles = await sessionStorage.getItem(StorageKey.ROLES);
 
-          // console.log(tempAccessToken, tempRefreshToken, tempUserInfos);
-
           if (accessToken) {
             setAccessToken(accessToken);
             setRefreshToken(refreshToken);
             setAccountName(accountName);
             setRoles(roles);
-            navigate("/");
+            navigate("/"); //adjust this to keep the page stay at the same location when re-loading
           } else {
             navigate("/login");
           }
@@ -119,58 +127,90 @@ function App() {
       {/* Reset CSS to default */}
       <CssBaseline />
       <Routes>
+        <Route path="*" element={<BlankPage />} />
         {/* Routes that require authentication and display Sidebar + TopBar */}
         {accessToken ? (
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/crews">
-                <Route index element={<CrewInfos />} />
-                <Route path="add" element={<AddCrewMember />} />
-                <Route path=":id" element={<CrewMemberDetail />} />
-            </Route>
-            <Route path="/mobilizations">
-                <Route index element={<CrewMobilization />} />
-                <Route path="create" element={<CreateMobilization />} />
-                <Route path=":id" element={<MobilizationDetail />} />
-            </Route>
-            <Route path="/crew-contracts">
-                <Route index element={<CrewContract />} />
-                <Route path="create" element={<CreateCrewContract />} />
-                <Route path=":id" element={<CrewContractDetail />} />
-                <Route path=":id/create-addendum" element={<CrewContractAddendum />} />
-            </Route>
-            <Route path="/supply-contracts">
-                <Route index element={<SupplyContract />} />
-                <Route path="create" element={<CreateSupplyContract />} />
-                <Route path=":id" element={<SupplyContractDetail />} />
-                <Route path=":id/create-addendum" element={<SupplyContractAddendum />} />
-            </Route>
+            {(isAdmin || isCrewMember) && (
+              <>
+                <Route path="/crews">
+                  <Route index element={<CrewInfos />} />
+                  <Route path="add" element={<AddCrewMember />} />
+                  <Route path=":id" element={<CrewMemberDetail />} />
+                </Route>
+                <Route path="/mobilizations">
+                  <Route index element={<CrewMobilization />} />
+                  <Route path="create" element={<CreateMobilization />} />
+                  <Route path=":id" element={<MobilizationDetail />} />
+                </Route>
 
-            <Route path="/template-contracts" element={<TemplateContract />} />
-            
-            <Route path="/supply-requests">
-                <Route index element={<SupplyRequest />} />
-                <Route path=":id/admin" element={<AdminSupplyRequestDetail />} />
-                <Route path=":id/user" element={<UserSupplyRequestDetail />} /> 
-                <Route path="user/create" element={<CreateSupplyRequest />} />   
-            </Route>
-            
-            <Route path="/recruitment">
-                <Route index element={<CrewRecruitment />} />
-                <Route path="create" element={<CreateRecruitment />} />
-                <Route path=":id" element={<RecruitmentDetail />} />
-                <Route path=":id/candidates/:candidateID/admin" element={<AdminCandidateDetail />} />
+                <Route path="/crew-contracts">
+                  <Route index element={<CrewContract />} />
+                  <Route path="create" element={<CreateCrewContract />} />
+                  <Route path=":id" element={<CrewContractDetail />} />
+                  <Route
+                    path=":id/create-addendum"
+                    element={<CrewContractAddendum />}
+                  />
+                </Route>
+                <Route path="/supply-contracts">
+                  <Route index element={<SupplyContract />} />
+                  <Route path="create" element={<CreateSupplyContract />} />
+                  <Route path=":id" element={<SupplyContractDetail />} />
+                  <Route
+                    path=":id/create-addendum"
+                    element={<SupplyContractAddendum />}
+                  />
+                </Route>
+                <Route
+                  path="/template-contracts"
+                  element={<TemplateContract />}
+                />
+              </>
+            )}
 
-                {/* User */}
-                <Route path=":id/application" element={<UserCandidateDetail />} />
-                <Route path=":id/apply" element={<ApplyRecruitment />} />
-            </Route>
+            {(isAdmin || (isGeneralUser && !isCrewMember)) && (
+              <>
+                <Route path="/supply-requests">
+                  <Route index element={<SupplyRequest />} />
+                  <Route
+                    path=":id/admin"
+                    element={<AdminSupplyRequestDetail />}
+                  />
+                  <Route
+                    path=":id/user"
+                    element={<UserSupplyRequestDetail />}
+                  />
+                  <Route path="user/create" element={<CreateSupplyRequest />} />
+                </Route>
 
-            <Route path="/courses">
+                <Route path="/recruitment">
+                  <Route index element={<CrewRecruitment />} />
+                  <Route path="create" element={<CreateRecruitment />} />
+                  <Route path=":id" element={<RecruitmentDetail />} />
+                  <Route
+                    path=":id/candidates/:candidateID/admin"
+                    element={<AdminCandidateDetail />}
+                  />
+
+                  {/* User */}
+                  <Route
+                    path=":id/application"
+                    element={<UserCandidateDetail />}
+                  />
+                  <Route path=":id/apply" element={<ApplyRecruitment />} />
+                </Route>
+              </>
+            )}
+
+            {(isAdmin || isCrewMember) && (
+              <Route path="/courses">
                 <Route index element={<CrewCourse />} />
                 <Route path=":id" element={<CourseDetail />} />
                 <Route path="create" element={<CreateCourse />} />
-            </Route>
+              </Route>
+            )}
             {/* These routes will be moved to user Routes later */}
           </Route>
         ) : (
@@ -178,7 +218,10 @@ function App() {
           <>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/sign-Up" element={<SignUpPage />} />
-            <Route path="/verify-email-confirmation" element={<VerifyEmailConfirmation />} />
+            <Route
+              path="/verify-email-confirmation"
+              element={<VerifyEmailConfirmation />}
+            />
           </>
         )}
       </Routes>

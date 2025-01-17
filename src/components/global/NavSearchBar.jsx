@@ -8,6 +8,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { COLOR } from "../../assets/Color";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { useAppContext } from "../../contexts/AppContext";
 
 // Main pages of the web
 const pages = [
@@ -33,6 +34,10 @@ const NavSearchBar = ({
 }) => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
+  const { roles } = useAppContext();
+
+  const testRoles = ["ADMIN", "USER"];
+  const isAdmin = testRoles.includes("ADMIN");
 
   const handleInputChange = (event, value) => {
     setInputValue(value);
@@ -40,7 +45,7 @@ const NavSearchBar = ({
 
   const handleNavigate = (event, value) => {
     if (value) {
-      navigate(value.path); // Navigate to the selected page
+      navigate(value.path, isAdmin); // Navigate to the selected page
     }
   };
 

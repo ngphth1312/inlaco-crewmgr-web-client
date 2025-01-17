@@ -3,7 +3,6 @@ import AppProperty from "../assets/constants/appProperty";
 export const localStorage = {
   setItem: (key, value) => {
     try {
-      console.log("LocalStorage setItem", key, value);
       return window.localStorage.setItem(
         `${AppProperty.APP_NAME}_${key}`,
         JSON.stringify(value)
@@ -34,7 +33,6 @@ export const localStorage = {
 export const sessionStorage = {
   setItem: (key, value) => {
     try {
-      console.log("SessionStorage setItem", key, value);
       return window.sessionStorage.setItem(
         `${AppProperty.APP_NAME}_${key}`,
         JSON.stringify(value)
