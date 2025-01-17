@@ -31,7 +31,7 @@ const RecruitmentDetail = () => {
   const { id } = useParams();
   const isAdmin = location.state?.isAdmin;
 
-  const isAlreadyApplied = true; //this later will be replaced by the actual applied status of the user when fetching API
+  const isAlreadyApplied = false; //this later will be replaced by the actual applied status of the user when fetching API
 
   // useEffect(() => {
   //   fetchRecruitmentInfo();

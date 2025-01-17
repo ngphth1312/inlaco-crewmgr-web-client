@@ -23,16 +23,12 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
 
+
 const ApplyRecruitment = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const status = "Đang chờ xác nhận"; //Change this to the status of the candidate
-  //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
-  // useEffect(() => {
-  //   fetchCandidateProfile(id);
-  // },[]);
 
   const initialValues = {
     cardPhoto: "",

@@ -30,3 +30,20 @@ export const createRecruitmentPostAPI = async (postInfo) => {
     return err.response;
   }
 };
+
+export const applyRecruitmentAPI = async (postID, candidateInfo) => {
+  try {
+    const response = await privateRequest.post(`${PostEndpoints.CANDIDATE_APPLY}/${postID}`, {
+      title: candidateInfo.title,
+      content: candidateInfo.content,
+      recruitmentStartDate: candidateInfo.recruitmentStartDate,
+      recruitmentEndDate: candidateInfo.recruitmentEndDate,
+      position: candidateInfo.position,
+      expectedSalary: candidateInfo.expectedSalary,
+      workLocation: candidateInfo.workLocation,
+    });
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};

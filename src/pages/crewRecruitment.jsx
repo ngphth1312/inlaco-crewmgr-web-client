@@ -23,10 +23,9 @@ const CrewRecruitment = () => {
       setLoading(true);
       try {
         const response = await getAllPostAPI(0, 10);
-        await new Promise((resolve) => setTimeout(resolve, 400)); //Delay the reader for 400ms
+        await new Promise((resolve) => setTimeout(resolve, 400)); //Delay the UI for 400ms
 
         if (response.status === HttpStatusCodes.OK) {
-          console.log(response.data);
           setPosts(response.data);
         } else{
           console.error("Error when fetching posts: ", response);

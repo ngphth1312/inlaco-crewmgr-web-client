@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DirectionsBoatOutlinedIcon from "@mui/icons-material/DirectionsBoatOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -17,6 +18,26 @@ import { useAppContext } from "../../contexts/AppContext";
 
 const Item = ({ title, to, navigateState, icon, selected, setSelected }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Set the selected state based on the current path
+    const pathToTitleMap = {
+      "/": "Trang chủ",
+      "/crews": "Thông tin Thuyền viên",
+      "/mobilizations": "Lịch điều động",
+      "/crew-contracts": "Hợp đồng Thuyền viên",
+      "/supply-contracts": "Hợp đồng Cung ứng",
+      "/template-contracts": "Templates",
+      "/supply-requests": "Yêu cầu Cung ứng",
+      "/recruitment": "Tuyển dụng",
+      "/courses": "Đào tạo",
+    };
+
+    const currentPath = location.pathname;
+    const currentTitle = pathToTitleMap[currentPath] || "Trang chủ";
+    setSelected(currentTitle);
+  }, [location.pathname]);
 
   return (
     <MenuItem
@@ -152,6 +173,15 @@ const SideBar = () => {
                 >
                   {isCollapsed ? "TV" : "Thuyền Viên"}
                 </Typography>
+                {isCrewMember && !isGeneralUser && (
+                  <Item
+                    title="Hồ sơ cá nhân"
+                    to="/my-profile"
+                    icon={<AccountBoxRoundedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                )}
                 {isAdmin ? (
                   <>
                     <Item

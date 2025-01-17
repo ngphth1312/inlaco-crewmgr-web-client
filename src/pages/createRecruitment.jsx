@@ -86,12 +86,11 @@ const CreateRecruitment = () => {
         workLocation: values.workLocation,
       });
       if (response.status === HttpStatusCodes.CREATED) {
-        console.log("Successfully created recruitment: ", response.data);
+        resetForm();
+        navigate("/recruitment");
       } else {
         console.log("Failed to create recruitment: ", response);
       }
-      resetForm();
-      navigate("/recruitment");
     } catch (err) {
       console.log("Error when creating recruitment: ", err);
     } finally {

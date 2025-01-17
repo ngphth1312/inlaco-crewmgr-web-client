@@ -11,6 +11,7 @@ import BlankPage from "./pages/blankPage";
 import CrewInfos from "./pages/crewInfos";
 import AddCrewMember from "./pages/addCrewMember";
 import CrewMemberDetail from "./pages/crewMemberDetail";
+import CrewProfile from "./pages/crewProfile";
 
 import CrewMobilization from "./pages/crewMobilization";
 import CreateMobilization from "./pages/createMobilization";
@@ -86,8 +87,7 @@ function App() {
             setRefreshToken(refreshToken);
             setAccountName(accountName);
             setRoles(roles);
-            navigate("/crews"); //adjust this to keep the page stay at the same location when re-loading
-            console.log("Navigate to crews")
+            // navigate("/crews"); //adjust this to keep the page stay at the same location when re-loading
           } else {
             console.log("Navigate to login");
             navigate("/login");
@@ -109,7 +109,7 @@ function App() {
             setRefreshToken(refreshToken);
             setAccountName(accountName);
             setRoles(roles);
-            navigate("/"); //adjust this to keep the page stay at the same location when re-loading
+            // navigate("/"); //adjust this to keep the page stay at the same location when re-loading
           } else {
             navigate("/login");
           }
@@ -134,6 +134,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             {(isAdmin || isCrewMember) && (
               <>
+                <Route path="my-profile" element={<CrewProfile />} />
                 <Route path="/crews">
                   <Route index element={<CrewInfos />} />
                   <Route path="add" element={<AddCrewMember />} />

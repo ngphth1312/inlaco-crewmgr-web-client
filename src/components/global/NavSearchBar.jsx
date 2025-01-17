@@ -30,19 +30,19 @@ const NavSearchBar = ({
   const pages = isAdmin
     ? [
         { label: "Trang chủ", path: "/" },
-        { label: "Thông tin thuyền viên", path: "/crews" },
+        { label: "Thông tin Thuyền viên", path: "/crews" },
         { label: "Lịch điều động", path: "/mobilizations" },
-        { label: "Hợp đồng thuyền viên", path: "/crew-contracts" },
-        { label: "Hợp đồng cung ứng", path: "/supply-contracts" },
-        { label: "Mẫu hợp đồng", path: "/template-contracts" },
-        { label: "Yêu cầu cung ứng", path: "/supply-requests" },
+        { label: "Hợp đồng Thuyền viên", path: "/crew-contracts" },
+        { label: "Hợp đồng Cung ứng", path: "/supply-contracts" },
+        { label: "Templates", path: "/template-contracts" },
+        { label: "Yêu cầu Cung ứng", path: "/supply-requests" },
         { label: "Tuyển dụng", path: "/recruitment" },
         { label: "Đào tạo", path: "/courses" },
       ]
     : isCrewMember
     ? [
         { label: "Trang chủ", path: "/" },
-        { label: "Thông tin thuyền viên", path: "/crews" },
+        { label: "Hồ sơ cá nhân", path: "/my-profile" },
         { label: "Lịch điều động", path: "/mobilizations" },
         { label: "Hợp đồng thuyền viên", path: "/crew-contracts" },
         { label: "Đào tạo", path: "/courses" },

@@ -1,29 +1,56 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PageTitle, NoValuesOverlay, SearchBar } from "../components/global";
-import { Box, Button, Typography, } from "@mui/material";
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { mockCrewMemberInfos } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
+import { getAllCrewMemberAPI } from "../services/crewServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 
 const CrewInfos = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [crewMembers, setCrewMembers] = useState([]);
+
+  useEffect(() => {
+    const fetchCrewMembers = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllCrewMemberAPI(0, 5);
+        await new Promise((resolve) => setTimeout(resolve, 400)); //Delay the UI for 400ms
+
+        if (response.status === HttpStatusCodes.OK) {
+          console.log(response.data);
+          // setCrewMembers(response.data);
+        } else {
+          console.log("Error when fetching crew members: ", response);
+        }
+      } catch (err) {
+        console.error("Error when fetching crew members: ", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCrewMembers();
+  }, []);
 
   const onMemberDetailClick = (id) => {
     navigate(`/crews/${id}`);
   };
 
   const columns = [
-    {
-      field: "crewID",
-      headerName: "Mã TV",
-      sortable: false,
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
+    // {
+    //   field: "crewID",
+    //   headerName: "Mã TV",
+    //   sortable: false,
+    //   flex: 1,
+    //   align: "center",
+    //   headerAlign: "center",
+    // },
     {
       field: "fullName",
       headerName: "Họ tên",
@@ -33,7 +60,7 @@ const CrewInfos = () => {
       headerAlign: "center",
     },
     {
-      field: "dob",
+      field: "birthDate",
       headerName: "Ngày sinh",
       sortable: false,
       flex: 1,
@@ -49,22 +76,22 @@ const CrewInfos = () => {
       headerAlign: "center",
     },
     {
-      field: "position",
-      headerName: "Chức vụ",
+      field: "email",
+      headerName: "Email",
       sortable: false,
-      flex: 2,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: (params) => params?.name,
-    },
-    {
-      field: "workExp",
-      headerName: "Số năm KN",
-      sortable: false,
-      flex: 1,
+      flex: 1.75,
       align: "center",
       headerAlign: "center",
     },
+    // {
+    //   field: "position",
+    //   headerName: "Chức vụ",
+    //   sortable: false,
+    //   flex: 2,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   valueGetter: (params) => params?.name,
+    // },
     {
       field: "detail",
       headerName: "Chi tiết",
@@ -77,7 +104,9 @@ const CrewInfos = () => {
           <Button
             variant="contained"
             size="small"
-            onClick={() => {onMemberDetailClick(params?.id)}}//if you want to pass the crewID as params, use params?.row?.crewID
+            onClick={() => {
+              onMemberDetailClick(params?.id);
+            }} //if you want to pass the crewID as params, use params?.row?.crewID
             sx={{
               backgroundColor: COLOR.primary_green,
               color: COLOR.primary_black,
@@ -98,6 +127,21 @@ const CrewInfos = () => {
       },
     },
   ];
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
