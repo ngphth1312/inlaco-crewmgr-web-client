@@ -10,19 +10,6 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 
-// Main pages of the web
-const pages = [
-  { label: "Trang chủ", path: "/" },
-  { label: "Thông tin thuyền viên", path: "/crews" },
-  { label: "Lịch điều động", path: "/mobilizations" },
-  { label: "Hợp đồng thuyền viên", path: "/crew-contracts" },
-  { label: "Hợp đồng cung ứng", path: "/supply-contracts" },
-  { label: "Mẫu hợp đồng", path: "/template-contracts" },
-  { label: "Yêu cầu cung ứng", path: "/supply-requests" },
-  { label: "Tuyển dụng", path: "/recruitment" },
-  { label: "Đào tạo", path: "/courses" },
-];
-
 const NavSearchBar = ({
   placeholder,
   value,
@@ -36,8 +23,35 @@ const NavSearchBar = ({
   const [inputValue, setInputValue] = useState("");
   const { roles } = useAppContext();
 
-  const testRoles = ["ADMIN", "USER"];
-  const isAdmin = testRoles.includes("ADMIN");
+  const isAdmin = roles.includes("ADMIN");
+  const isCrewMember = roles.includes("SAILOR");
+  const isGeneralUser = roles.includes("USER");
+
+  const pages = isAdmin
+    ? [
+        { label: "Trang chủ", path: "/" },
+        { label: "Thông tin thuyền viên", path: "/crews" },
+        { label: "Lịch điều động", path: "/mobilizations" },
+        { label: "Hợp đồng thuyền viên", path: "/crew-contracts" },
+        { label: "Hợp đồng cung ứng", path: "/supply-contracts" },
+        { label: "Mẫu hợp đồng", path: "/template-contracts" },
+        { label: "Yêu cầu cung ứng", path: "/supply-requests" },
+        { label: "Tuyển dụng", path: "/recruitment" },
+        { label: "Đào tạo", path: "/courses" },
+      ]
+    : isCrewMember
+    ? [
+        { label: "Trang chủ", path: "/" },
+        { label: "Thông tin thuyền viên", path: "/crews" },
+        { label: "Lịch điều động", path: "/mobilizations" },
+        { label: "Hợp đồng thuyền viên", path: "/crew-contracts" },
+        { label: "Đào tạo", path: "/courses" },
+      ]
+    : [
+        { label: "Trang chủ", path: "/" },
+        { label: "Yêu cầu cung ứng", path: "/supply-requests" },
+        { label: "Tuyển dụng", path: "/recruitment" },
+      ];
 
   const handleInputChange = (event, value) => {
     setInputValue(value);
@@ -45,7 +59,7 @@ const NavSearchBar = ({
 
   const handleNavigate = (event, value) => {
     if (value) {
-      navigate(value.path, isAdmin); // Navigate to the selected page
+      navigate(value.path); // Navigate to the selected page
     }
   };
 

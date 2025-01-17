@@ -1,15 +1,45 @@
-import React, { useState } from "react";
-import { Pagination, Box, Typography, Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Pagination, Box, Typography, Button, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { PageTitle, } from "../components/global";
 import { RecruitmentCard } from "../components/other";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
+import { useAppContext } from "../contexts/AppContext";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { getAllPostAPI } from "../services/postServices";
 
 const CrewRecruitment = () => {
   const navigate = useNavigate();
-  const isAdmin = true; //this later will be replaced by the actual role of the user when fetching API
+  const { roles } = useAppContext();
+  const isAdmin = roles.includes("ADMIN");
+
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllPostAPI(0, 10);
+        await new Promise((resolve) => setTimeout(resolve, 400)); //Delay the reader for 400ms
+
+        if (response.status === HttpStatusCodes.OK) {
+          console.log(response.data);
+          setPosts(response.data);
+        } else{
+          console.error("Error when fetching posts: ", response);
+        }
+      } catch (error) {
+        console.error("Error when fetching posts: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [])
 
   const handleCreateRecruitmentClick = () => {
     navigate("/recruitment/create");
@@ -19,30 +49,27 @@ const CrewRecruitment = () => {
     navigate(`/recruitment/${id}`, { state: { isAdmin: isAdmin } });
   };
 
-
-  // Mock recruitment data
-  const recruitmentPosts = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    title: `Recruitment Title ${i + 1}`,
-    description: `This is the description for recruitment post ${
-      i + 1
-    }. In this job, you will participate as a role of a Something for our company. Your main job is to always be ready to be mobilization to ship from our partner company that request for a crew supply for there ship. We would like to work with workers who are keen on their job and do something for the company. You will receive salary as well of course babe`,
-    location: "Hà Nội",
-  }));
-
   const [page, setPage] = useState(1);
-  const postsPerPage = 10;
-
-  // Calculate posts for the current page
-  const currentPosts = recruitmentPosts.slice(
-    (page - 1) * postsPerPage,
-    page * postsPerPage
-  );
 
   // Handle pagination change
   const handlePageChange = (event, value) => {
     setPage(value);
   };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -72,7 +99,7 @@ const CrewRecruitment = () => {
                 color: COLOR.primary_green,
               }}
             >
-              {recruitmentPosts.length}&nbsp;
+              {posts.numberOfElements}&nbsp;
             </Typography>
             <Typography
               sx={{
@@ -110,20 +137,28 @@ const CrewRecruitment = () => {
         </Box>
         <Box sx={{}}>
           <Grid container spacing={4}>
-            {currentPosts.map((post) => (
-              <RecruitmentCard
-                key={post?.id}
-                title={post?.title}
-                description={post?.description}
-                location={post?.location}
-                isAdmin={isAdmin}
-                onClick={() => handleRecruitmentClick(post?.id)}
-              />
-            ))}
+            {posts.numberOfElements > 0 ? (
+              <>
+                {posts.content.map((post) => (
+                  <RecruitmentCard
+                    key={post?.id}
+                    title={post?.title}
+                    description={post?.content}
+                    // location={post?.location}
+                    isAdmin={isAdmin}
+                    onClick={() => handleRecruitmentClick(post?.id)}
+                  />
+                ))}
+              </>
+            ) : (
+              <Grid size={12} sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2,}}>
+                <Typography sx={{ fontSize: 20, fontWeight: "bold", fontStyle: "italic" }}>Chưa có bài đăng tuyển dụng nào</Typography>
+              </Grid>
+            )}
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
             <Pagination
-              count={Math.ceil(recruitmentPosts.length / postsPerPage)}
+              count={posts.totalPages}
               page={page}
               onChange={handlePageChange}
               sx={{

@@ -12,10 +12,14 @@ import SaveIcon from "@mui/icons-material/Save";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { createRecruitmentPostAPI } from "../services/postServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { dateStringToISOString } from "../utils/ValueConverter";
+import { useNavigate } from "react-router";
 
 const CreateRecruitment = () => {
-  // const navigate = useNavigate();
+
+  const navigate = useNavigate();
 
   const initialValues = {
     title: "",
@@ -64,16 +68,30 @@ const CreateRecruitment = () => {
   });
 
   const [createCourseLoading, setCreateCourseLoading] = useState(false);
-  const [isActive, setIsActive] = useState(true);
+  // const [isActive, setIsActive] = useState(true);
 
   const handleCreateRecruitmentSubmit = async (values, { resetForm }) => {
     setCreateCourseLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
-
-      console.log("Successfully submitted: ", values);
+      const response = await createRecruitmentPostAPI({
+        title: values.title,
+        content: values.content,
+        recruitmentStartDate: dateStringToISOString(
+          values.recruitmentStartDate
+        ),
+        recruitmentEndDate: dateStringToISOString(values.recruitmentEndDate),
+        position: values.position,
+        expectedSalary: values.salary,
+        workLocation: values.workLocation,
+      });
+      if (response.status === HttpStatusCodes.CREATED) {
+        console.log("Successfully created recruitment: ", response.data);
+      } else {
+        console.log("Failed to create recruitment: ", response);
+      }
       resetForm();
+      navigate("/recruitment");
     } catch (err) {
       console.log("Error when creating recruitment: ", err);
     } finally {

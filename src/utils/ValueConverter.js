@@ -109,6 +109,23 @@ export function formatDate(value) {
   }
 }
 
+export function dateStringToISOString(dateString) { //convert "yyyy-mm-dd" to "yyyy-mm-ddT00:00:00.000Z"
+  try {
+    // Create a new Date object using the date string
+    const date = new Date(dateString);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date");
+    }
+
+    // Return the ISO string representation of the date
+    return date.toISOString();
+  } catch (error) {
+    console.error("Error converting date string to ISOString:", error);
+    return null; // Return null on errors
+  }
+}
 
 export function formatDateString(value) {
   try {

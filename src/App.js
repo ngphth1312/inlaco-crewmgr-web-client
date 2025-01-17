@@ -57,9 +57,9 @@ function App() {
 
     const testRoles = ["ADMIN", "USER"];
 
-    const isAdmin = testRoles.includes("ADMIN");
-    const isCrewMember = testRoles.includes("SAILOR");
-    const isGeneralUser = testRoles.includes("USER");
+    const isAdmin = roles.includes("ADMIN");
+    const isCrewMember = roles.includes("SAILOR");
+    const isGeneralUser = roles.includes("USER");
 
   useEffect(() => {
     const fetchUserInfos = async () => {

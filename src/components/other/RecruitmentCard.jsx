@@ -28,7 +28,7 @@ const RecruitmentCard = ({ isAdmin, title, description, location, gridSize = 12,
               alignItems: "center",
             }}
           >
-            <LocationOnRoundedIcon
+            {/* <LocationOnRoundedIcon
               sx={{
                 width: 20,
                 height: 20,
@@ -38,7 +38,7 @@ const RecruitmentCard = ({ isAdmin, title, description, location, gridSize = 12,
             />
             <Typography sx={{ fontSize: 14, color: COLOR.primary_gray }}>
               {location}
-            </Typography>
+            </Typography> */}
           </Box>
           <Box sx={{ width: "80%" }}>
             <Typography
