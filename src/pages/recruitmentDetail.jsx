@@ -42,7 +42,6 @@ const RecruitmentDetail = () => {
         await new Promise((resolve) => setTimeout(resolve, 200)); //Delay 200ms to simulate API call
 
         if (response.status === HttpStatusCodes.OK) {
-          console.log("Recruitment info: ", response.data);
           setPostInfo(response.data);
           setIsActive(!response.date?.isActive);
         } else {

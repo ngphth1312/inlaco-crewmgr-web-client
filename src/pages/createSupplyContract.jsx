@@ -21,9 +21,8 @@ const CreateSupplyContract = () => {
   // const navigate = useNavigate();
 
   const initialValues = {
-    contractFile: null,
+    contractFileLink: "",
     partyA: {
-      cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",
       compAddress: "",
       compPhoneNumber: "",
@@ -31,7 +30,6 @@ const CreateSupplyContract = () => {
       representativePos: "Trưởng phòng Nhân sự",
     },
     partyB: {
-      cardPhoto: "",
       compName: "",
       compAddress: "",
       compPhoneNumber: "",

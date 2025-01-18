@@ -35,6 +35,17 @@ export const getAllCandidatesAPI = async (page, size, status) => {
   }
 };
 
+export const getCandidateByID_API = async (candidateID) => {
+  try {
+    const response = await privateRequest.get(
+      `${PostEndpoints.CANDIDATE_GENERAL}/${candidateID}`
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 export const createRecruitmentPostAPI = async (postInfo) => {
   try {
     const response = await privateRequest.post(`${PostEndpoints.GENERAL}`, {

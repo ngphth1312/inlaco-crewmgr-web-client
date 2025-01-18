@@ -60,7 +60,7 @@ const FileUploadField = ({ name, label = "File hợp đồng", disabled, sx = []
       ) : (
         <Box sx={{ display: "flex", alignItems: "center"}}>
           <a
-            href={URL.createObjectURL(field.value)}
+            href={field.value.url && URL.createObjectURL(field.value)}
             download={field.value.name}
             style={{
               whiteSpace: "nowrap",

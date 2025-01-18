@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PageTitle,
   SectionDivider,
   InfoTextField,
   StatusLabel,
-  HorizontalImageInput,
-  MultilineFileUploadField,
 } from "../components/global";
 import { CardPhotoInput, FileUploadField, } from "../components/contract";
 import {
@@ -15,7 +13,6 @@ import {
   TextField,
   MenuItem,
   CircularProgress,
-  InputAdornment,
 } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
@@ -23,40 +20,73 @@ import { COLOR } from "../assets/Color";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import { useNavigate, useParams } from "react-router";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { getCandidateByID_API } from "../services/postServices";
 
 const AdminCandidateDetail = () => {
   const navigate = useNavigate();
 
-  const { id, candidateID } = useParams();
-  const status = "Đang chờ xác nhận"; //Change this to the status of the candidate
-  //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
+  const { candidateID } = useParams();
 
-  // useEffect(() => {
-  //   fetchCandidateProfile(id);
-  // },[]);
-
-  const initialValues = {
-    cardPhoto: "",
-    fullName: "",
-    dob: "",
-    birthplace: "",
-    nationality: "",
-    phoneNumber: "",
-    email: "",
-    permanentAddr: "",
-    temporaryAddr: "",
-    ciNumber: "",
-    ciIssueDate: "",
-    ciIssuePlace: "",
-    ciImageFront: "",
-    ciImageBack: "",
-    attachedFiles: [],
-  };
+    const genders = [
+      { label: "Nam", value: "MALE" },
+      { label: "Nữ", value: "FEMALE" },
+      { label: "Khác", value: "OTHER" },
+    ];
 
   const [loading, setLoading] = useState(false);
+  const [candidateInfo, setCandidateInfo] = useState({});
+
+  useEffect(() => {
+    const fetchCandidateProfile = async () => {
+      setLoading(true);
+      try {
+        const response = await getCandidateByID_API(candidateID);
+        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
+
+        if (response.status === HttpStatusCodes.OK) {
+          console.log(
+            "Successfully fetched candidate profile: ",
+            response.data
+          );
+          setCandidateInfo(response.data);
+        } else {
+          console.log("Failed to fetch candidate profile");
+        }
+      } catch (err) {
+        console.log("Error when fetching candidate profile: ", err);
+      } finally{
+        setLoading(false);
+      }
+    }
+
+    fetchCandidateProfile();
+  },[]);
+
+  const statusMap = {
+    "APPLIED": "Đã nộp",
+    "WAIT_FOR_INTERVIEW": "Đang chờ phỏng vấn",
+    "REJECTED": "Từ chối",
+    "HIRED": "Đã ký hợp đồng",
+  };
+  
+  const status = statusMap[candidateInfo?.status] || "Lỗi";
+
+  const initialValues = {
+    fullName: "",
+    dob: "",
+    gender: "",
+    phoneNumber: "",
+    email: "",
+    address: "",
+    languageSkills: [],
+    cvFile: "",
+  };
+
+  const [buttonLoading, setButtonLoading] = useState(false);
 
     const handleApproveClick = async () => {
-      setLoading(true);
+      setButtonLoading(true);
       try {
         //Calling API to create a new crew member
         await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
@@ -65,12 +95,12 @@ const AdminCandidateDetail = () => {
       } catch (err) {
         console.log("Error when approving request: ", err);
       } finally {
-        setLoading(false);
+        setButtonLoading(false);
       }
     };
 
     const handleDeclineClick = async () => {
-      setLoading(true);
+      setButtonLoading(true);
       try {
         //Calling API to create a new crew member
         await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
@@ -79,15 +109,30 @@ const AdminCandidateDetail = () => {
       } catch (err) {
         console.log("Error when declining request: ", err);
       } finally {
-        setLoading(false);
+        setButtonLoading(false);
       }
     };
+
+  if (loading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
   return (
     <div>
       <Formik
         validateOnChange={false}
-        initialValues={initialValues}
+        initialValues={candidateInfo}
         // validationSchema={crewContractSchema}
         // onSubmit={handleApproveDeclineClick}
       >
@@ -113,19 +158,19 @@ const AdminCandidateDetail = () => {
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <PageTitle
                     title="THÔNG TIN CHI TIẾT ỨNG VIÊN"
-                    subtitle={`Ứng viên: ${id}`} //Change this to the actual candidateID
+                    subtitle={`Ứng viên: ${candidateInfo?.fullName}`}
                   />
-                  {status === "Chấp thuận" ? (
+                  {status === "Đã nộp" ? (
                     <StatusLabel
-                      label="Chấp thuận"
-                      color={COLOR.primary_green}
+                      label="Đã nộp"
+                      color={COLOR.primary_black_placeholder}
                     />
                   ) : status === "Từ chối" ? (
                     <StatusLabel label="Từ chối" color={COLOR.primary_orange} />
-                  ) : status === "Đang chờ xác nhận" ? (
+                  ) : status === "Đang chờ phỏng vấn" ? (
                     <StatusLabel
-                      label="Đang chờ xác nhận"
-                      color={COLOR.primary_black_placeholder}
+                      label="Đang chờ phỏng vấn"
+                      color={COLOR.primary_green}
                     />
                   ) : (
                     <StatusLabel
@@ -139,9 +184,7 @@ const AdminCandidateDetail = () => {
                     display: "flex",
                     alignItems: "end",
                     justifyContent:
-                      status === "Đang chờ xác nhận"
-                        ? "space-between"
-                        : "start",
+                      status === "Đã nộp" ? "space-between" : "start",
                     marginTop: 2,
                   }}
                 >
@@ -168,7 +211,7 @@ const AdminCandidateDetail = () => {
                       </Box>
                     )}
                   </Button> */}
-                  {status === "Đang chờ xác nhận" && (
+                  {status === "Đã nộp" && (
                     <Box
                       sx={{
                         display: "flex",
@@ -180,7 +223,7 @@ const AdminCandidateDetail = () => {
                       <Button
                         variant="contained"
                         onClick={() => handleApproveClick()}
-                        disabled={loading}
+                        disabled={buttonLoading}
                         sx={{
                           width: "30%",
                           padding: 1,
@@ -190,7 +233,7 @@ const AdminCandidateDetail = () => {
                           marginRight: 2,
                         }}
                       >
-                        {loading ? (
+                        {buttonLoading ? (
                           <CircularProgress
                             size={24}
                             color={COLOR.primary_black}
@@ -201,7 +244,7 @@ const AdminCandidateDetail = () => {
                               sx={{ marginRight: "5px", marginBottom: "1px" }}
                             />
                             <Typography sx={{ fontWeight: 700 }}>
-                              Chấp thuận
+                              Đã nộp
                             </Typography>
                           </Box>
                         )}
@@ -209,7 +252,7 @@ const AdminCandidateDetail = () => {
                       <Button
                         variant="contained"
                         onClick={() => handleDeclineClick()}
-                        disabled={loading}
+                        disabled={buttonLoading}
                         sx={{
                           width: "30%",
                           padding: 1,
@@ -218,7 +261,7 @@ const AdminCandidateDetail = () => {
                           minWidth: 130,
                         }}
                       >
-                        {loading ? (
+                        {buttonLoading ? (
                           <CircularProgress
                             size={24}
                             color={COLOR.primary_black}
@@ -236,17 +279,6 @@ const AdminCandidateDetail = () => {
                       </Button>
                     </Box>
                   )}
-                  <CardPhotoInput
-                    id="card-photo"
-                    name="cardPhoto"
-                    sx={{
-                      marginRight: status === "Đang chờ xác nhận" ? 2 : 0,
-                      marginLeft: status === "Đang chờ xác nhận" ? 0 : 2,
-                    }}
-                    onClick={() =>
-                      document.getElementById("card-photo").click()
-                    }
-                  />
                 </Box>
               </Box>
             </Box>
@@ -258,11 +290,10 @@ const AdminCandidateDetail = () => {
                   label="Họ và tên"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="fullName"
-                  value={values.fullName}
+                  value={values?.fullName}
                   error={!!touched.fullName && !!errors.fullName}
                   helperText={
                     touched.fullName && errors.fullName ? errors.fullName : " "
@@ -286,11 +317,10 @@ const AdminCandidateDetail = () => {
                   label="Ngày sinh"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
                   name="dob"
-                  value={values.dob}
+                  value={values?.dob}
                   error={!!touched.dob && !!errors.dob}
                   helperText={touched.dob && errors.dob ? errors.dob : " "}
                   onChange={handleChange}
@@ -315,61 +345,6 @@ const AdminCandidateDetail = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="birthplace"
-                  label="Nơi sinh"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="birthplace"
-                  value={values.birthplace}
-                  error={!!touched.birthplace && !!errors.birthplace}
-                  helperText={
-                    touched.birthplace && errors.birthplace
-                      ? errors.birthplace
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={5}>
-                <InfoTextField
-                  id="email"
-                  label="Email"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="email"
-                  value={values.email}
-                  error={!!touched.email && !!errors.email}
-                  helperText={
-                    touched.email && errors.email ? errors.email : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={4}>
-                <InfoTextField
                   id="phoneNumber"
                   label="Số điện thoại"
                   size="small"
@@ -377,7 +352,7 @@ const AdminCandidateDetail = () => {
                   required
                   fullWidth
                   name="phoneNumber"
-                  value={values.phoneNumber}
+                  value={values?.phoneNumber}
                   error={!!touched.phoneNumber && !!errors.phoneNumber}
                   helperText={
                     touched.phoneNumber && errors.phoneNumber
@@ -396,107 +371,70 @@ const AdminCandidateDetail = () => {
                   }}
                 />
               </Grid>
+              <Grid size={5}>
+                <InfoTextField
+                  id="address"
+                  label="Địa chỉ"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="address"
+                  value={values?.address}
+                  error={!!touched.address && !!errors.address}
+                  helperText={
+                    touched.address && errors.address
+                      ? errors.address
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
               <Grid size={3}>
                 <InfoTextField
-                  id="nationality"
-                  label="Quốc tịch"
+                  select
+                  id="gender"
+                  label="Giới tính"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
-                  name="nationality"
-                  value={values.nationality}
-                  error={!!touched.nationality && !!errors.nationality}
-                  helperText={
-                    touched.nationality && errors.nationality
-                      ? errors.nationality
-                      : " "
-                  }
+                  name="gender"
+                  value={values?.gender || "OTHER"}
+                  error={!!touched.gender && !!errors.gender}
+                  helperText={touched.gender && errors.gender}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={6}>
-                <InfoTextField
-                  id="permanent-address"
-                  label="Địa chỉ thường trú"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="permanentAddr"
-                  value={values.permanentAddr}
-                  error={!!touched.permanentAddr && !!errors.permanentAddr}
-                  helperText={
-                    touched.permanentAddr && errors.permanentAddr
-                      ? errors.permanentAddr
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={6}>
-                <InfoTextField
-                  id="temporary-address"
-                  label="Địa chỉ tạm trú"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="temporaryAddr"
-                  value={values.temporaryAddr}
-                  error={!!touched.temporaryAddr && !!errors.temporaryAddr}
-                  helperText={
-                    touched.temporaryAddr && errors.temporaryAddr
-                      ? errors.temporaryAddr
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
+                >
+                  {genders.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </InfoTextField>
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="ci-number"
-                  label="Số Căn cước công dân"
+                  id="email"
+                  label="Email"
                   size="small"
                   margin="none"
-                  disabled={true}
                   required
                   fullWidth
-                  name="ciNumber"
-                  value={values.ciNumber}
-                  error={!!touched.ciNumber && !!errors.ciNumber}
+                  name="email"
+                  value={values?.email}
+                  error={!!touched.email && !!errors.email}
                   helperText={
-                    touched.ciNumber && errors.ciNumber ? errors.ciNumber : " "
+                    touched.email && errors.email ? errors.email : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -506,63 +444,23 @@ const AdminCandidateDetail = () => {
                     },
                     "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
                       borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  id="ci-issue-date"
-                  type="date"
-                  label="Ngày cấp"
-                  size="small"
-                  margin="none"
-                  disabled={true}
-                  required
-                  fullWidth
-                  name="ciIssueDate"
-                  value={values.ciIssueDate}
-                  error={!!touched.ciIssueDate && !!errors.ciIssueDate}
-                  helperText={
-                    touched.ciIssueDate && errors.ciIssueDate
-                      ? errors.ciIssueDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                  slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
-                    inputLabel: {
-                      shrink: true,
                     },
                   }}
                 />
               </Grid>
               <Grid size={5}>
                 <InfoTextField
-                  id="ci-issue-place"
-                  label="Nơi cấp"
+                  id="language-skills"
+                  label="Trình độ ngoại ngữ (liệt kê nếu có)"
                   size="small"
                   margin="none"
-                  disabled={true}
-                  required
                   fullWidth
-                  name="ciIssuePlace"
-                  value={values.ciIssuePlace}
-                  error={!!touched.ciIssuePlace && !!errors.ciIssuePlace}
+                  name="languageSkills"
+                  value={values?.languageSkills}
+                  error={!!touched.languageSkills && !!errors.languageSkills}
                   helperText={
-                    touched.ciIssuePlace && errors.ciIssuePlace
-                      ? errors.ciIssuePlace
+                    touched.languageSkills && errors.languageSkills
+                      ? errors.languageSkills
                       : " "
                   }
                   onChange={handleChange}
@@ -577,67 +475,14 @@ const AdminCandidateDetail = () => {
                   }}
                 />
               </Grid>
-              <Grid size={6}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <HorizontalImageInput
-                    disabled={true}
-                    width={250}
-                    height={150}
-                    id="ci-image-front"
-                    name="ciImageFront"
-                    onClick={() =>
-                      document.getElementById("ci-image-front").click()
-                    }
-                  />
-                  <Typography
-                    mt={1}
-                    sx={{
-                      color: COLOR.primary_black_placeholder,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Ảnh chụp mặt trước CCCD
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid size={6}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <HorizontalImageInput
-                    disabled={true}
-                    width={250}
-                    height={150}
-                    id="ci-image-back"
-                    name="ciImageBack"
-                    onClick={() =>
-                      document.getElementById("ci-image-back").click()
-                    }
-                  />
-                  <Typography
-                    mt={1}
-                    sx={{
-                      color: COLOR.primary_black_placeholder,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Ảnh chụp mặt sau CCCD
-                  </Typography>
-                </Box>
-              </Grid>
             </Grid>
-            <SectionDivider sectionName="Tài liệu đính kèm: " />
-            <MultilineFileUploadField name="attachedFiles" disabled={true} />
+            <SectionDivider sectionName="CV đính kèm*: " />
+            <FileUploadField
+              label="CV đính kèm"
+              name="resume"
+              disabled={true}
+              sx={{ justifyContent: "start", marginLeft: 2 }}
+            />
           </Box>
         )}
       </Formik>

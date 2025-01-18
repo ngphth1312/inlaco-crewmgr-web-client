@@ -68,7 +68,7 @@ const ApplyRecruitment = () => {
 
     permanentAddr: yup
       .string()
-      .required("Địa chỉ thường trú không được để trống"),
+      .required("Địa chỉ không được để trống"),
     
     cvFile: yup
       .mixed()
@@ -86,7 +86,6 @@ const ApplyRecruitment = () => {
         name: values.cvFile.name,
         type: values.cvFile.type,
       };
-      console.log("Test: ", dateStringToISOString(values.dob));
       const response = await applyRecruitmentAPI(id, {
         birthDate: dateStringToISOString(values.dob),
         fullName: values.fullName,
@@ -101,7 +100,6 @@ const ApplyRecruitment = () => {
       
       if(response.status === HttpStatusCodes.CREATED) {
         resetForm();
-        console.log("Successfully submitted: ", values);
         navigate("/recruitment");
       }
     } catch (err) {
@@ -271,7 +269,7 @@ const ApplyRecruitment = () => {
               <Grid size={5}>
                 <InfoTextField
                   id="permanent-address"
-                  label="Địa chỉ thường trú"
+                  label="Địa chỉ"
                   size="small"
                   margin="none"
                   required
