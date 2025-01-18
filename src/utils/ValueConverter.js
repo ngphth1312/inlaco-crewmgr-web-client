@@ -127,6 +127,29 @@ export function dateStringToISOString(dateString) { //convert "yyyy-mm-dd" to "y
   }
 }
 
+export function isoStringToDateString(isoString) { //convert "yyyy-mm-ddT00:00:00.000Z" to "yyyy-mm-dd"
+  try {
+    // Create a new Date object using the ISO string
+    const date = new Date(isoString);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid ISO string");
+    }
+
+    // Extract and format date components
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
+    const day = String(date.getDate()).padStart(2, "0");
+
+    // Return the formatted date string in "yyyy-mm-dd" format
+    return `${year}-${month}-${day}`;
+  } catch (error) {
+    console.error("Error converting ISOString to date string:", error);
+    return null; // Return null on errors
+  }
+}
+
 export function formatDateString(value) {
   try {
     // Split the input date string by the hyphen

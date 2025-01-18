@@ -13,15 +13,14 @@ const InfoTextField = ({ sx, disabled, slotProps, multiline, minRow, maxRow, row
         { backgroundColor: "#FFF", marginBottom: 1 },
         ...(Array.isArray(sx) ? sx : [sx]),
         {
-          "& .Mui-disabled": {
-            color: COLOR.primary_black, // Keep text color the same
-            WebkitTextFillColor: COLOR.primary_black, // Keep text color the same for Safari
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: COLOR.primary_black, // Keep border color the same
-            },
-            "& .MuiInputLabel-root": {
-              color: COLOR.primary_black, // Keep label color the same
-            },
+          "& .MuiInputBase-input.Mui-disabled": {
+            WebkitTextFillColor: COLOR.primary_black,
+          },
+          "& .MuiOutlinedInput-root.Mui-disabled": {
+            WebkitTextFillColor: COLOR.primary_black,
+          },
+          "& .MuiInputLabel-root.Mui-disabled": {
+            WebkitTextFillColor: COLOR.primary_black,
           },
         },
       ]} // Merging styles with spread operator

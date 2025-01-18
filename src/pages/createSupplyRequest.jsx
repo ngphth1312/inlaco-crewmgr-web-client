@@ -54,8 +54,6 @@ const CreateSupplyRequest = () => {
       shipNationality: "",
       shipType: "",
     },
-
-    requestList: [],
   };
 
   const phoneRegex =

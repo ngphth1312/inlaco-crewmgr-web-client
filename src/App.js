@@ -191,7 +191,7 @@ function App() {
                   <Route path="create" element={<CreateRecruitment />} />
                   <Route path=":id" element={<RecruitmentDetail />} />
                   <Route
-                    path=":id/candidates/:candidateID/admin"
+                    path="candidates/:candidateID/admin"
                     element={<AdminCandidateDetail />}
                   />
 

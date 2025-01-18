@@ -11,7 +11,7 @@ const PageTitle = ({ title, subtitle }) => {
       >
         {title}
       </Typography>
-      <Typography variant="h7" color={COLOR.secondary_black}>
+      <Typography variant="h7" color={COLOR.secondary_black} sx={{ fontStyle: "italic" }}>
         {subtitle}
       </Typography>
     </Box>

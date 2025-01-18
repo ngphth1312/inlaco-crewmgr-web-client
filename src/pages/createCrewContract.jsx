@@ -23,7 +23,7 @@ const CreateCrewContract = () => {
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 
   const initialValues = {
-    contractFile: null,
+    contractFileLink: null,
     partyA: {
       cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",

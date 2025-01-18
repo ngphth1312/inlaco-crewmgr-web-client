@@ -22,35 +22,34 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
-
+import { applyRecruitmentAPI } from "../services/postServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { dateStringToISOString } from "../utils/ValueConverter";
 
 const ApplyRecruitment = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
 
+  const genders = [
+    { label: "Nam", value: "MALE" },
+    { label: "Nữ", value: "FEMALE" },
+    { label: "Khác", value: "OTHER" },
+  ];
 
   const initialValues = {
-    cardPhoto: "",
     fullName: "",
     dob: "",
-    birthplace: "",
-    nationality: "",
+    gender: "",
     phoneNumber: "",
     email: "",
     permanentAddr: "",
-    temporaryAddr: "",
-    ciNumber: "",
-    ciIssueDate: "",
-    ciIssuePlace: "",
-    ciImageFront: "",
-    ciImageBack: "",
-    attachedFiles: [],
+    languageSkills: [],
+    cvFile: "",
   };
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
-  const ciNumberRegex = "^\\d{12}$";
 
   const applicationSchema = yup.object().shape({
     fullName: yup.string().required("Họ và tên không được để trống"),
@@ -59,9 +58,8 @@ const ApplyRecruitment = () => {
       .date()
       .max(new Date(), "Ngày sinh không hợp lệ")
       .required("Ngày sinh không được để trống"),
-
-    birthplace: yup.string().required("Nơi sinh không được để trống"),
-    nationality: yup.string().required("Quốc tịch không được để trống"),
+    
+    gender: yup.string().required("Giới tính không được để trống"),
     phoneNumber: yup
       .string()
       .matches(phoneRegex, "Số điện thoại không hợp lệ")
@@ -71,17 +69,10 @@ const ApplyRecruitment = () => {
     permanentAddr: yup
       .string()
       .required("Địa chỉ thường trú không được để trống"),
-    temporaryAddr: yup.string().required("Địa chỉ tạm trú không được để trống"),
-
-    ciNumber: yup
-      .string()
-      .matches(ciNumberRegex, "Số CCCD không hợp lệ")
-      .required("Số căn cước công dân không được để trống"),
-    ciIssueDate: yup
-      .date()
-      .max(new Date(), "Ngày cấp không hợp lệ")
-      .required("Ngày cấp không được để trống"),
-    ciIssuePlace: yup.string().required("Nơi cấp không được để trống"),
+    
+    cvFile: yup
+      .mixed()
+      .required("Vui lòng tải lên CV")
   });
 
   const [loading, isLoading] = useState(false);
@@ -90,10 +81,29 @@ const ApplyRecruitment = () => {
     isLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
-
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      const tempFile = {
+        file: URL.createObjectURL(values.cvFile),
+        name: values.cvFile.name,
+        type: values.cvFile.type,
+      };
+      console.log("Test: ", dateStringToISOString(values.dob));
+      const response = await applyRecruitmentAPI(id, {
+        birthDate: dateStringToISOString(values.dob),
+        fullName: values.fullName,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        gender: values.gender,
+        address: values.permanentAddr,
+        languageSkills: [values.languageSkills],
+        resume: tempFile,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 400)); //Delay for 0.4s to simulate API call
+      
+      if(response.status === HttpStatusCodes.CREATED) {
+        resetForm();
+        console.log("Successfully submitted: ", values);
+        navigate("/recruitment");
+      }
     } catch (err) {
       console.log("Error when submitting application for a recruitment: ", err);
     } finally {
@@ -166,14 +176,6 @@ const ApplyRecruitment = () => {
                       </Box>
                     )}
                   </Button>
-                  <CardPhotoInput
-                    id="card-photo"
-                    name="cardPhoto"
-                    sx={{ marginLeft: 2, marginRight: 2, }}
-                    onClick={() =>
-                      document.getElementById("card-photo").click()
-                    }
-                  />
                 </Box>
               </Box>
             </Box>
@@ -240,60 +242,6 @@ const ApplyRecruitment = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="birthplace"
-                  label="Nơi sinh"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="birthplace"
-                  value={values.birthplace}
-                  error={!!touched.birthplace && !!errors.birthplace}
-                  helperText={
-                    touched.birthplace && errors.birthplace
-                      ? errors.birthplace
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={5}>
-                <InfoTextField
-                  id="email"
-                  label="Email"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="email"
-                  value={values.email}
-                  error={!!touched.email && !!errors.email}
-                  helperText={
-                    touched.email && errors.email ? errors.email : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={4}>
-                <InfoTextField
                   id="phoneNumber"
                   label="Số điện thoại"
                   size="small"
@@ -320,35 +268,7 @@ const ApplyRecruitment = () => {
                   }}
                 />
               </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  id="nationality"
-                  label="Quốc tịch"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="nationality"
-                  value={values.nationality}
-                  error={!!touched.nationality && !!errors.nationality}
-                  helperText={
-                    touched.nationality && errors.nationality
-                      ? errors.nationality
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={6}>
+              <Grid size={5}>
                 <InfoTextField
                   id="permanent-address"
                   label="Địa chỉ thường trú"
@@ -376,47 +296,42 @@ const ApplyRecruitment = () => {
                   }}
                 />
               </Grid>
-              <Grid size={6}>
+              <Grid size={3}>
                 <InfoTextField
-                  id="temporary-address"
-                  label="Địa chỉ tạm trú"
+                  select
+                  id="gender"
+                  label="Giới tính"
                   size="small"
                   margin="none"
                   required
                   fullWidth
-                  name="temporaryAddr"
-                  value={values.temporaryAddr}
-                  error={!!touched.temporaryAddr && !!errors.temporaryAddr}
-                  helperText={
-                    touched.temporaryAddr && errors.temporaryAddr
-                      ? errors.temporaryAddr
-                      : " "
-                  }
+                  name="gender"
+                  value={values.gender}
+                  error={!!touched.gender && !!errors.gender}
+                  helperText={touched.gender && errors.gender}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
+                >
+                  {genders.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </InfoTextField>
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="ci-number"
-                  label="Số Căn cước công dân"
+                  id="email"
+                  label="Email"
                   size="small"
                   margin="none"
                   required
                   fullWidth
-                  name="ciNumber"
-                  value={values.ciNumber}
-                  error={!!touched.ciNumber && !!errors.ciNumber}
+                  name="email"
+                  value={values.email}
+                  error={!!touched.email && !!errors.email}
                   helperText={
-                    touched.ciNumber && errors.ciNumber ? errors.ciNumber : " "
+                    touched.email && errors.email ? errors.email : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -426,62 +341,22 @@ const ApplyRecruitment = () => {
                     },
                     "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
                       borderColor: COLOR.primary_black,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  id="ci-issue-date"
-                  type="date"
-                  label="Ngày cấp"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="ciIssueDate"
-                  value={values.ciIssueDate}
-                  error={!!touched.ciIssueDate && !!errors.ciIssueDate}
-                  helperText={
-                    touched.ciIssueDate && errors.ciIssueDate
-                      ? errors.ciIssueDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                  slotProps={{
-                    input: {
-                      placeholder: "asjdbnaskjd",
-                    },
-                    inputLabel: {
-                      shrink: true,
                     },
                   }}
                 />
               </Grid>
               <Grid size={5}>
                 <InfoTextField
-                  id="ci-issue-place"
-                  label="Nơi cấp"
+                  id="language-skills"
+                  label="Trình độ ngoại ngữ (liệt kê nếu có)"
                   size="small"
                   margin="none"
-                  required
                   fullWidth
-                  name="ciIssuePlace"
-                  value={values.ciIssuePlace}
-                  error={!!touched.ciIssuePlace && !!errors.ciIssuePlace}
+                  name="languageSkills"
+                  value={values.languageSkills}
+                  error={!!touched.languageSkills && !!errors.languageSkills}
                   helperText={
-                    touched.ciIssuePlace && errors.ciIssuePlace
-                      ? errors.ciIssuePlace
-                      : " "
+                    touched.languageSkills && errors.languageSkills ? errors.languageSkills : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -495,65 +370,13 @@ const ApplyRecruitment = () => {
                   }}
                 />
               </Grid>
-              <Grid size={6}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <HorizontalImageInput
-                    width={250}
-                    height={150}
-                    id="ci-image-front"
-                    name="ciImageFront"
-                    onClick={() =>
-                      document.getElementById("ci-image-front").click()
-                    }
-                  />
-                  <Typography
-                    mt={1}
-                    sx={{
-                      color: COLOR.primary_black_placeholder,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Ảnh chụp mặt trước CCCD
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid size={6}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <HorizontalImageInput
-                    width={250}
-                    height={150}
-                    id="ci-image-back"
-                    name="ciImageBack"
-                    onClick={() =>
-                      document.getElementById("ci-image-back").click()
-                    }
-                  />
-                  <Typography
-                    mt={1}
-                    sx={{
-                      color: COLOR.primary_black_placeholder,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Ảnh chụp mặt sau CCCD
-                  </Typography>
-                </Box>
-              </Grid>
             </Grid>
-            <SectionDivider sectionName="Tài liệu đính kèm (nếu có): " />
-            <MultilineFileUploadField name="attachedFiles" />
+            <SectionDivider sectionName="CV đính kèm*: " />
+            <FileUploadField
+              label="Tải lên CV"
+              name="cvFile"
+              sx={{ justifyContent: "start", marginLeft: 2 }}
+            />
           </Box>
         )}
       </Formik>

@@ -18,8 +18,11 @@ import { dateStringToISOString } from "../utils/ValueConverter";
 import { useNavigate } from "react-router";
 
 const CreateRecruitment = () => {
-
   const navigate = useNavigate();
+  const today = new Date(); // Get the current date
+  const tomorrow = new Date(today); // Create a copy of today's date
+  tomorrow.setDate(today.getDate() + 1); // Increment the day by 1
+  tomorrow.setHours(0, 0, 0, 0); // Set the time to 00:00:00.000
 
   const initialValues = {
     title: "",
@@ -41,30 +44,30 @@ const CreateRecruitment = () => {
       .min(1, "Mức lương không hợp lệ")
       .required("Mức lương không được để trống"),
 
-    recruitmentStartDate: yup
-      .date()
-      .max(new Date(), "Ngày mở đăng ký không hợp lệ")
-      .required("Ngày mở đăng ký không được để trống")
-      .test(
-        "is-before-end-date",
-        "Ngày mở đăng ký phải trước ngày đóng đăng ký",
-        function (value) {
-          const { recruitmentEndDate } = this.parent; // Access sibling field recruitmentEndDate
-          return !recruitmentEndDate || value < recruitmentEndDate;
-        }
-      ),
+    // recruitmentStartDate: yup
+    //   .date()
+    //   .min(tomorrow, "Ngày mở đăng ký phải là ngày ở tương lai")
+    //   .required("Ngày mở đăng ký không được để trống")
+    //   .test(
+    //     "is-before-end-date",
+    //     "Ngày mở đăng ký phải trước ngày đóng đăng ký",
+    //     function (value) {
+    //       const { recruitmentEndDate } = this.parent; // Access sibling field recruitmentEndDate
+    //       return !recruitmentEndDate || value < recruitmentEndDate;
+    //     }
+    //   ),
 
-    recruitmentEndDate: yup
-      .date()
-      .required("Ngày đóng đăng ký không được để trống")
-      .test(
-        "is-after-start-date",
-        "Ngày đóng đăng ký phải sau ngày bắt đầu mở đăng ký",
-        function (value) {
-          const { recruitmentStartDate } = this.parent; // Access sibling field recruitmentStartDate
-          return !recruitmentStartDate || value > recruitmentStartDate;
-        }
-      ),
+    // recruitmentEndDate: yup
+    //   .date()
+    //   .required("Ngày đóng đăng ký không được để trống")
+    //   .test(
+    //     "is-after-start-date",
+    //     "Ngày đóng đăng ký phải sau ngày bắt đầu mở đăng ký",
+    //     function (value) {
+    //       const { recruitmentStartDate } = this.parent; // Access sibling field recruitmentStartDate
+    //       return !recruitmentStartDate || value > recruitmentStartDate;
+    //     }
+    //   ),
   });
 
   const [createCourseLoading, setCreateCourseLoading] = useState(false);
@@ -77,19 +80,19 @@ const CreateRecruitment = () => {
       const response = await createRecruitmentPostAPI({
         title: values.title,
         content: values.content,
-        recruitmentStartDate: dateStringToISOString(
-          values.recruitmentStartDate
-        ),
-        recruitmentEndDate: dateStringToISOString(values.recruitmentEndDate),
+        // recruitmentStartDate: dateStringToISOString(
+        //   values.recruitmentStartDate
+        // ),
+        // recruitmentEndDate: dateStringToISOString(values.recruitmentEndDate),
         position: values.position,
-        expectedSalary: values.salary,
+        expectedSalary: [1000, values.salary], // Changed to double[2] which is the salary range
         workLocation: values.workLocation,
       });
       if (response.status === HttpStatusCodes.CREATED) {
         resetForm();
         navigate("/recruitment");
       } else {
-        console.log("Failed to create recruitment: ", response);
+        console.log("Failed to create recruitment");
       }
     } catch (err) {
       console.log("Error when creating recruitment: ", err);
@@ -178,7 +181,7 @@ const CreateRecruitment = () => {
                 size="small"
                 margin="none"
                 type="date"
-                required
+                // required
                 fullWidth
                 name="recruitmentStartDate"
                 value={values.recruitmentStartDate}
@@ -223,7 +226,7 @@ const CreateRecruitment = () => {
                 size="small"
                 margin="none"
                 type="date"
-                required
+                // required
                 fullWidth
                 name="recruitmentEndDate"
                 value={values.recruitmentEndDate}
@@ -354,15 +357,9 @@ const CreateRecruitment = () => {
                   fullWidth
                   name="content"
                   value={values.content}
-                  error={
-                    !!touched.content &&
-                    !!errors.content
-                  }
+                  error={!!touched.content && !!errors.content}
                   helperText={
-                    touched.content &&
-                    errors.content
-                      ? errors.content
-                      : " "
+                    touched.content && errors.content ? errors.content : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}

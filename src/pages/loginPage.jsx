@@ -28,7 +28,8 @@ import { loginAPI } from "../services/authServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 
 const LoginPage = () => {
-  const { setAccessToken, setRefreshToken, setAccountName, setRoles } = useAppContext();
+  const { setAccessToken, setRefreshToken, setAccountName, setRoles } =
+    useAppContext();
   const navigate = useNavigate();
   const [isShowPass, setIsShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -39,8 +40,7 @@ const LoginPage = () => {
     password: "",
   };
 
-  const passwordRegex =
-    "^(?=.*[a-z])(?=.*[A-Z])[A-Za-z\\d@$!%*?&]{8,}$";
+  const passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])[A-Za-z\\d@$!%*?&]{8,}$";
 
   const loginSchema = yup.object().shape({
     email: yup
@@ -50,16 +50,19 @@ const LoginPage = () => {
 
     password: yup
       .string()
-      .matches(passwordRegex, "Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ hoa và 1 chữ thường")
-      .required("Vui lòng nhập mật khẩu\n\n"),//"\n" is to make sure the error message will be displayed in 2 lines for fixed height
+      .matches(
+        passwordRegex,
+        "Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ hoa và 1 chữ thường"
+      )
+      .required("Vui lòng nhập mật khẩu"), //"\n" is to make sure the error message will be displayed in 2 lines for fixed height
   });
 
   const handleLoginClick = async (values, { setErrors }) => {
     setLoginLoading(true);
-    try{
+    try {
       // validate login inputs and calling API to login
       const response = await loginAPI(values.email, values.password);
-      if(response.status === HttpStatusCodes.OK){
+      if (response.status === HttpStatusCodes.OK) {
         localStorage.setItem(StorageKey.REMEMBER_ME, rememberMe);
         const { jwt, name, roles } = response.data;
 
@@ -75,7 +78,7 @@ const LoginPage = () => {
           sessionStorage.setItem(StorageKey.ACCESS_TOKEN, accessToken);
           sessionStorage.setItem(StorageKey.REFRESH_TOKEN, refreshToken);
           sessionStorage.setItem(StorageKey.ACCOUNT_NAME, name);
-          sessionStorage.setItem(StorageKey.ROLES, roles);;
+          sessionStorage.setItem(StorageKey.ROLES, roles);
         }
 
         setAccessToken(accessToken);
@@ -84,7 +87,7 @@ const LoginPage = () => {
         setRoles(roles);
 
         navigate("/", { replace: true });
-      } else if (response.status === HttpStatusCodes.NOT_FOUND){
+      } else if (response.status === HttpStatusCodes.NOT_FOUND) {
         setErrors({
           email: "Tên đăng nhập hoặc mật khẩu không chính xác",
           password: "Tên đăng nhập hoặc mật khẩu không chính xác",
@@ -111,8 +114,12 @@ const LoginPage = () => {
       // console.log("Login successfully: ", values);
       // setAccessToken(mockAccessToken);
       // navigate("/", { replace: true });
-    } catch(err){
+    } catch (err) {
       console.log("Error when login: ", err);
+      setErrors({
+        email: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+        password: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+      });
     } finally {
       setLoginLoading(false);
     }
@@ -238,7 +245,9 @@ const LoginPage = () => {
                 value={values.password}
                 error={!!touched.password && !!errors.password}
                 helperText={
-                  touched.password && errors.password ? errors.password : " \n\n"
+                  touched.password && errors.password
+                    ? errors.password
+                    : " "
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -334,7 +343,11 @@ const LoginPage = () => {
                 }}
                 disabled={!isValid || !dirty}
               >
-                {loginLoading ? <CircularProgress color={COLOR.primary_white} size={24} /> : "Đăng nhập"}
+                {loginLoading ? (
+                  <CircularProgress color={COLOR.primary_white} size={24} />
+                ) : (
+                  "Đăng nhập"
+                )}
               </Button>
               <Divider
                 sx={{

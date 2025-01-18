@@ -35,7 +35,7 @@ const Item = ({ title, to, navigateState, icon, selected, setSelected }) => {
     };
 
     const currentPath = location.pathname;
-    const currentTitle = pathToTitleMap[currentPath] || "Trang chủ";
+    const currentTitle = pathToTitleMap[currentPath];
     setSelected(currentTitle);
   }, [location.pathname]);
 
