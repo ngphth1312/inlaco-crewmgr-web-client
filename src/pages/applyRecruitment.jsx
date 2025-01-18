@@ -70,9 +70,9 @@ const ApplyRecruitment = () => {
       .string()
       .required("Địa chỉ không được để trống"),
     
-    cvFile: yup
-      .mixed()
-      .required("Vui lòng tải lên CV")
+    // cvFile: yup
+    //   .mixed()
+    //   .required("Vui lòng tải lên CV")
   });
 
   const [loading, isLoading] = useState(false);

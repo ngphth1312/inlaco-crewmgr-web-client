@@ -20,7 +20,7 @@ const CrewInfos = () => {
       setLoading(true);
       try {
         const response = await getAllCrewMemberAPI(0, 5);
-        await new Promise((resolve) => setTimeout(resolve, 400)); //Delay the UI for 400ms
+        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 400ms
 
         if (response.status === HttpStatusCodes.OK) {
           console.log(response.data);
@@ -43,29 +43,94 @@ const CrewInfos = () => {
   };
 
   const columns = [
-    // {
-    //   field: "crewID",
-    //   headerName: "Mã TV",
-    //   sortable: false,
-    //   flex: 1,
-    //   align: "center",
-    //   headerAlign: "center",
-    // },
     {
       field: "fullName",
       headerName: "Họ tên",
-      sortable: false,
       flex: 2,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
+    },
+    {
+      field: "gender",
+      headerName: "Giới tính",
+      sortable: false,
+      flex: 0.75,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              width: "100%",
+            }}
+          >
+            {params.value === "MALE"
+              ? "Nam"
+              : params.value === "FEMALE"
+              ? "Nữ"
+              : "Khác"}
+          </Box>
+        );
+      },
     },
     {
       field: "birthDate",
       headerName: "Ngày sinh",
       sortable: false,
-      flex: 1,
+      flex: 1.5,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      sortable: false,
+      flex: 2,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       field: "phoneNumber",
@@ -74,55 +139,59 @@ const CrewInfos = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
-    {
-      field: "email",
-      headerName: "Email",
-      sortable: false,
-      flex: 1.75,
-      align: "center",
-      headerAlign: "center",
-    },
-    // {
-    //   field: "position",
-    //   headerName: "Chức vụ",
-    //   sortable: false,
-    //   flex: 2,
-    //   align: "center",
-    //   headerAlign: "center",
-    //   valueGetter: (params) => params?.name,
-    // },
     {
       field: "detail",
       headerName: "Chi tiết",
       sortable: false,
-      flex: 1,
+      flex: 0.75,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => {
-              onMemberDetailClick(params?.id);
-            }} //if you want to pass the crewID as params, use params?.row?.crewID
-            sx={{
-              backgroundColor: COLOR.primary_green,
-              color: COLOR.primary_black,
-              fontWeight: 700,
-              textTransform: "capitalize",
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+              justifyContent: "center",
+              padding: 10,
             }}
           >
-            <ArrowForwardIosRoundedIcon
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => onMemberDetailClick(params?.id)}
               sx={{
-                width: 15,
-                height: 15,
-                marginTop: "4px",
-                marginBottom: "4px",
+                backgroundColor: COLOR.primary_green,
+                color: COLOR.primary_black,
+                fontWeight: 700,
+                textTransform: "capitalize",
               }}
-            />
-          </Button>
+            >
+              <ArrowForwardIosRoundedIcon
+                sx={{
+                  width: 15,
+                  height: 15,
+                  marginTop: "4px",
+                  marginBottom: "4px",
+                }}
+              />
+            </Button>
+          </div>
         );
       },
     },

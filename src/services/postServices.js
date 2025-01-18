@@ -95,3 +95,25 @@ export const candidate_GetApplicationAPI = async () => {
     return err.response;
   }
 };
+
+export const approveCandidateApplicationAPI = async (candidateID) => {
+  try {
+    const response = await privateRequest.post(
+      `${PostEndpoints.REVIEW_CANDIDATE}/${candidateID}?autoEmail=true&status=WAIT_FOR_INTERVIEW`
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+export const rejectCandidateApplicationAPI = async (candidateID) => {
+  try {
+    const response = await privateRequest.post(
+      `${PostEndpoints.REVIEW_CANDIDATE}/${candidateID}?autoEmail=true&status=REJECTED`
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};

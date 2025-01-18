@@ -5,7 +5,7 @@ import {
   InfoTextField,
   StatusLabel,
 } from "../components/global";
-import { CardPhotoInput, FileUploadField, } from "../components/contract";
+import { CardPhotoInput, FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
@@ -21,24 +21,27 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import { useNavigate, useParams } from "react-router";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
-import { getCandidateByID_API } from "../services/postServices";
+import {
+  getCandidateByID_API,
+  approveCandidateApplicationAPI,
+  rejectCandidateApplicationAPI,
+} from "../services/postServices";
 
 const AdminCandidateDetail = () => {
   const navigate = useNavigate();
 
   const { candidateID } = useParams();
 
-    const genders = [
-      { label: "Nam", value: "MALE" },
-      { label: "Nữ", value: "FEMALE" },
-      { label: "Khác", value: "OTHER" },
-    ];
+  const genders = [
+    { label: "Nam", value: "MALE" },
+    { label: "Nữ", value: "FEMALE" },
+    { label: "Khác", value: "OTHER" },
+  ];
 
   const [loading, setLoading] = useState(false);
   const [candidateInfo, setCandidateInfo] = useState({});
 
-  useEffect(() => {
-    const fetchCandidateProfile = async () => {
+  const fetchCandidateProfile = async () => {
       setLoading(true);
       try {
         const response = await getCandidateByID_API(candidateID);
@@ -55,78 +58,82 @@ const AdminCandidateDetail = () => {
         }
       } catch (err) {
         console.log("Error when fetching candidate profile: ", err);
-      } finally{
+      } finally {
         setLoading(false);
       }
-    }
+    };
 
+  useEffect(() => {
     fetchCandidateProfile();
-  },[]);
+  }, []);
 
   const statusMap = {
-    "APPLIED": "Đã nộp",
-    "WAIT_FOR_INTERVIEW": "Đang chờ phỏng vấn",
-    "REJECTED": "Từ chối",
-    "HIRED": "Đã ký hợp đồng",
+    APPLIED: "Đã nộp",
+    WAIT_FOR_INTERVIEW: "Đang chờ phỏng vấn",
+    REJECTED: "Từ chối",
+    HIRED: "Đã ký hợp đồng",
   };
-  
-  const status = statusMap[candidateInfo?.status] || "Lỗi";
 
-  const initialValues = {
-    fullName: "",
-    dob: "",
-    gender: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
-    languageSkills: [],
-    cvFile: "",
-  };
+  const status = statusMap[candidateInfo?.status] || "Lỗi";
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
-    const handleApproveClick = async () => {
-      setButtonLoading(true);
-      try {
-        //Calling API to create a new crew member
-        await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
-
+  const handleApproveClick = async () => {
+    setButtonLoading(true);
+    try {
+      //Calling API to create a new crew member
+      const response = await approveCandidateApplicationAPI(candidateID);
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
+      
+      if(response.status === HttpStatusCodes.OK) {
         console.log("Successfully approved request");
-      } catch (err) {
-        console.log("Error when approving request: ", err);
-      } finally {
-        setButtonLoading(false);
+        await fetchCandidateProfile();
+      } else{
+        console.log("Failed to approve request");
       }
-    };
+      console.log("Successfully approved request");
+    } catch (err) {
+      console.log("Error when approving request: ", err);
+    } finally {
+      setButtonLoading(false);
+    }
+  };
 
-    const handleDeclineClick = async () => {
-      setButtonLoading(true);
-      try {
-        //Calling API to create a new crew member
-        await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
+  const handleDeclineClick = async () => {
+    setButtonLoading(true);
+    try {
+      //Calling API to create a new crew member
+      const response = await rejectCandidateApplicationAPI(candidateID);
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
 
+      if(response.status === HttpStatusCodes.OK) {
         console.log("Successfully declined request");
-      } catch (err) {
-        console.log("Error when declining request: ", err);
-      } finally {
-        setButtonLoading(false);
+        await fetchCandidateProfile();
       }
-    };
+      else{
+        console.log("Failed to decline request");
+      }
+    } catch (err) {
+      console.log("Error when declining request: ", err);
+    } finally {
+      setButtonLoading(false);
+    }
+  };
 
   if (loading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      );
-    }
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -244,7 +251,7 @@ const AdminCandidateDetail = () => {
                               sx={{ marginRight: "5px", marginBottom: "1px" }}
                             />
                             <Typography sx={{ fontWeight: 700 }}>
-                              Đã nộp
+                              CHẤP NHẬN
                             </Typography>
                           </Box>
                         )}
@@ -383,9 +390,7 @@ const AdminCandidateDetail = () => {
                   value={values?.address}
                   error={!!touched.address && !!errors.address}
                   helperText={
-                    touched.address && errors.address
-                      ? errors.address
-                      : " "
+                    touched.address && errors.address ? errors.address : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}

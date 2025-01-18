@@ -18,7 +18,9 @@ import { useAppContext } from "../contexts/AppContext";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 import { getAllPostAPI, getAllCandidatesAPI } from "../services/postServices";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import { formatDateTime } from "../utils/ValueConverter";
+import {
+  isoStringToAppDateString,
+} from "../utils/ValueConverter";
 
 const CrewRecruitment = () => {
   const navigate = useNavigate();
@@ -34,9 +36,10 @@ const CrewRecruitment = () => {
       setLoading(true);
       try {
         const response = await getAllPostAPI(0, 10);
-        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 400ms
+        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
 
         if (response.status === HttpStatusCodes.OK) {
+          console.log(response);
           setPosts(response.data);
         } else {
           console.error("Error when fetching posts: ", response);
@@ -102,7 +105,11 @@ const CrewRecruitment = () => {
               width: "100%",
             }}
           >
-            {params.value === "MALE" ? "Nam" : params.value === "FEMALE" ? "Nữ" : "Khác"}
+            {params.value === "MALE"
+              ? "Nam"
+              : params.value === "FEMALE"
+              ? "Nữ"
+              : "Khác"}
           </Box>
         );
       },
@@ -124,7 +131,7 @@ const CrewRecruitment = () => {
             width: "100%",
           }}
         >
-          {params.value}
+          {isoStringToAppDateString(params.value)}
         </Box>
       ),
     },
@@ -358,7 +365,7 @@ const CrewRecruitment = () => {
                       color: COLOR.primary_green,
                     }}
                   >
-                    {posts.numberOfElements}&nbsp;
+                    {posts.numberOfElements ? posts.numberOfElements : "0"}&nbsp;
                   </Typography>
                   <Typography
                     sx={{
