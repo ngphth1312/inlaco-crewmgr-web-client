@@ -4,15 +4,17 @@ import {
   Box,
   Typography,
   Button,
+  Select,
+  MenuItem,
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { PageTitle, SwitchBar, NoValuesOverlay } from "../components/global";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockCandidates } from "../data/mockData";
 import { RecruitmentCard } from "../components/other";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import { useNavigate, useLocation } from "react-router";
 import { useAppContext } from "../contexts/AppContext";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
@@ -26,6 +28,7 @@ const CrewRecruitment = () => {
   const navigate = useNavigate();
   const { roles } = useAppContext();
   const isAdmin = roles.includes("ADMIN");
+  const location = useLocation();
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -39,7 +42,6 @@ const CrewRecruitment = () => {
         await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
 
         if (response.status === HttpStatusCodes.OK) {
-          console.log(response);
           setPosts(response.data);
         } else {
           console.error("Error when fetching posts: ", response);
@@ -65,6 +67,17 @@ const CrewRecruitment = () => {
   const onAdminMemberDetailClick = (candidateID) => {
     navigate(`/recruitment/candidates/${candidateID}/admin`);
   };
+
+  const onCreateCrewMemberClick = (candidateID) => {
+    navigate(`/crews/add/${candidateID}`);
+  }
+
+  const statusFilters = [
+    { label: "Đã nộp", value: "APPLIED" },
+    { label: "Đã qua vòng phỏng vấn", value: "WAIT_FOR_INTERVIEW" },
+    { label: "Từ chối", value: "REJECTED" },
+    { label: "Đã ký hợp đồng", value: "HIRED" },
+  ];
 
   const columns = [
     {
@@ -179,9 +192,9 @@ const CrewRecruitment = () => {
     },
     {
       field: "detail",
-      headerName: "Chi tiết",
+      headerName: "Thao tác",
       sortable: false,
-      flex: 0.75,
+      flex: 1.5,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
@@ -192,9 +205,30 @@ const CrewRecruitment = () => {
               alignItems: "center",
               height: "100%",
               justifyContent: "center",
-              padding: 10,
+              padding: 5,
             }}
           >
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => onCreateCrewMemberClick(params?.id)}
+              sx={{
+                backgroundColor: COLOR.primary_gold,
+                color: COLOR.primary_black,
+                fontWeight: 700,
+                textTransform: "capitalize",
+                marginRight: "8px",
+              }}
+            >
+              <PersonAddAltRoundedIcon
+                sx={{
+                  width: 18,
+                  height: 18,
+                  marginTop: "3px",
+                  marginBottom: "3px",
+                }}
+              />
+            </Button>
             <Button
               variant="contained"
               size="small"
@@ -222,14 +256,42 @@ const CrewRecruitment = () => {
   ];
 
   const [page, setPage] = useState(1);
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(location.state?.tabValue || 0);
   const [candidateList, setCandidateList] = useState([]);
+  const [candidateStatus, setCandidateStatus] = useState(location.state?.candidateStatus || "APPLIED");
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      setSectionLoading(true);
+      try {
+        const response = await getAllCandidatesAPI(0, 20, candidateStatus);
+        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
+
+        if (response.status === HttpStatusCodes.OK) {
+          console.log("Candidates: ", response.data.content);
+          setCandidateList(response.data.content);
+        } else {
+          console.error("Error when fetching candidates: ", response);
+        }
+      } catch (error) {
+        console.error("Error when fetching candidates: ", error);
+      } finally {
+        setSectionLoading(false);
+      }
+    };
+
+    fetchCandidates();
+  }, [candidateStatus])
+
+  const handleStatusChange = (event) => {
+    setCandidateStatus(event.target.value);
+  };
 
   const handleTabChange = async (newValue) => {
     setSectionLoading(true);
-    if(newValue == 1){
+    if(newValue === 1){
       try{
-        const response = await getAllCandidatesAPI(0, 20, "APPLIED");
+        const response = await getAllCandidatesAPI(0, 20, candidateStatus);
         await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
 
         if (response.status === HttpStatusCodes.OK) {
@@ -246,10 +308,22 @@ const CrewRecruitment = () => {
       }
 
     } else{
-      setTabValue(newValue);
       setSectionLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
-      setSectionLoading(false);
+      try {
+        const response = await getAllPostAPI(0, 10);
+        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
+        
+        if (response.status === HttpStatusCodes.OK) {
+          setPosts(response.data);
+          setTabValue(newValue);
+        } else {
+          console.error("Error when fetching posts: ", response);
+        }
+      } catch (error) {
+        console.error("Error when fetching posts: ", error);
+      } finally {
+        setSectionLoading(false);
+      }
     }
   };
 
@@ -287,6 +361,7 @@ const CrewRecruitment = () => {
             tabLabel1={"Danh sách bài đăng"}
             tabLabel2={"Danh sách đơn ứng tuyển"}
             variant={"fullWidth"}
+            initialTab={tabValue}
             onChange={(newValue) => handleTabChange(newValue)}
             color={COLOR.secondary_blue}
             sx={{
@@ -297,46 +372,63 @@ const CrewRecruitment = () => {
           />
         )}
         {tabValue === 1 && !sectionLoading ? (
-          <Box
-            m="20px 0 0 0"
-            height="62vh"
-            maxHeight={550}
-            maxWidth={1600}
-            sx={{
-              "& .MuiDataGrid-columnHeader": {
-                backgroundColor: COLOR.secondary_blue,
-                color: COLOR.primary_white,
-              },
-              "& .MuiTablePagination-root": {
-                backgroundColor: COLOR.secondary_blue,
-                color: COLOR.primary_white,
-              },
-            }}
-          >
-            <DataGrid
-              disableRowSelectionOnClick
-              disableColumnMenu
-              disableColumnResize
-              getRowHeight={() => "auto"}
-              rows={candidateList}
-              columns={columns}
-              slots={{ noRowsOverlay: NoValuesOverlay }}
-              pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
-              initialState={{
-                pagination: {
-                  paginationModel: { pageSize: 5, page: 0 },
-                },
-              }}
+          <>
+            <Box sx={{ display: "flex", justifyContent: "end" }}>
+              <Select
+                label="Trạng thái"
+                value={candidateStatus}
+                size="small"
+                onChange={handleStatusChange}
+                sx={{ marginTop: 1, }}
+              >
+                {statusFilters.map((status) => (
+                  <MenuItem key={status.value} value={status.value}>
+                    {status.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+            <Box
+              m="8px 0 0 0"
+              height="62vh"
+              maxHeight={550}
+              maxWidth={1600}
               sx={{
-                backgroundColor: "#FFF",
-                headerAlign: "center",
-                "& .MuiDataGrid-columnHeaderTitle": {
-                  fontSize: 16,
-                  fontWeight: 700,
+                "& .MuiDataGrid-columnHeader": {
+                  backgroundColor: COLOR.secondary_blue,
+                  color: COLOR.primary_white,
+                },
+                "& .MuiTablePagination-root": {
+                  backgroundColor: COLOR.secondary_blue,
+                  color: COLOR.primary_white,
                 },
               }}
-            />
-          </Box>
+            >
+              <DataGrid
+                disableRowSelectionOnClick
+                disableColumnMenu
+                disableColumnResize
+                getRowHeight={() => "auto"}
+                rows={candidateList}
+                columns={columns}
+                slots={{ noRowsOverlay: NoValuesOverlay }}
+                pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+                initialState={{
+                  pagination: {
+                    paginationModel: { pageSize: 5, page: 0 },
+                  },
+                }}
+                sx={{
+                  backgroundColor: "#FFF",
+                  headerAlign: "center",
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    fontSize: 16,
+                    fontWeight: 700,
+                  },
+                }}
+              />
+            </Box>
+          </>
         ) : tabValue === 0 && !sectionLoading ? (
           <>
             <Box sx={{}}>
@@ -365,7 +457,8 @@ const CrewRecruitment = () => {
                       color: COLOR.primary_green,
                     }}
                   >
-                    {posts.numberOfElements ? posts.numberOfElements : "0"}&nbsp;
+                    {posts.numberOfElements ? posts.numberOfElements : "0"}
+                    &nbsp;
                   </Typography>
                   <Typography
                     sx={{
@@ -475,3 +568,4 @@ const CrewRecruitment = () => {
 };
 
 export default CrewRecruitment;
+

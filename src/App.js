@@ -137,7 +137,7 @@ function App() {
                 <Route path="my-profile" element={<CrewProfile />} />
                 <Route path="/crews">
                   <Route index element={<CrewInfos />} />
-                  <Route path="add" element={<AddCrewMember />} />
+                  <Route path="add/:candidateID" element={<AddCrewMember />} />
                   <Route path=":id" element={<CrewMemberDetail />} />
                 </Route>
                 <Route path="/mobilizations">

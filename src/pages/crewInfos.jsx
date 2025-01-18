@@ -1,30 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { PageTitle, NoValuesOverlay, SearchBar } from "../components/global";
+import {
+  PageTitle,
+  NoValuesOverlay,
+  SearchBar,
+  SwitchBar,
+} from "../components/global";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockCrewMemberInfos } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
 import { getAllCrewMemberAPI } from "../services/crewServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { isoStringToAppDateString } from "../utils/ValueConverter";
 
 const CrewInfos = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [crewMembers, setCrewMembers] = useState([]);
+  const [tabValue, setTabValue] = useState(0);
+  const [sectionLoading, setSectionLoading] = useState(false);
+
+  
 
   useEffect(() => {
-    const fetchCrewMembers = async () => {
+    const fetchCrewMembers = async (official) => {
       setLoading(true);
       try {
-        const response = await getAllCrewMemberAPI(0, 5);
-        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 400ms
+        const response = await getAllCrewMemberAPI(0, 10, official);
+        await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
 
         if (response.status === HttpStatusCodes.OK) {
-          console.log(response.data);
-          // setCrewMembers(response.data);
+          console.log(response.data.content);
+          setCrewMembers(response.data.content);
         } else {
           console.log("Error when fetching crew members: ", response);
         }
@@ -35,11 +44,39 @@ const CrewInfos = () => {
       }
     };
 
-    fetchCrewMembers();
+    fetchCrewMembers(true);
   }, []);
 
   const onMemberDetailClick = (id) => {
     navigate(`/crews/${id}`);
+  };
+
+  const fetchCrewMemberTabChange = async (official) => {
+    setSectionLoading(true);
+    try {
+      const response = await getAllCrewMemberAPI(0, 10, official);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
+      if (response.status === HttpStatusCodes.OK) {
+        setCrewMembers(response.data.content);
+      } else {
+        console.log("Error when fetching crew members: ", response);
+      }
+    } catch (err) {
+      console.error("Error when fetching crew members: ", err);
+    } finally {
+      setSectionLoading(false);
+    }
+  }
+
+  const handleTabChange = async (newValue) => {
+    if(newValue === 1){
+      await fetchCrewMemberTabChange(false);
+      setTabValue(newValue);
+    } else{
+      await fetchCrewMemberTabChange(true);
+      setTabValue(newValue);
+    }
   };
 
   const columns = [
@@ -107,7 +144,7 @@ const CrewInfos = () => {
             width: "100%",
           }}
         >
-          {params.value}
+          {isoStringToAppDateString(params.value)}
         </Box>
       ),
     },
@@ -157,7 +194,7 @@ const CrewInfos = () => {
       field: "detail",
       headerName: "Chi tiết",
       sortable: false,
-      flex: 0.75,
+      flex: 1.5,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
@@ -221,85 +258,116 @@ const CrewInfos = () => {
             subtitle="Danh sách Thuyền viên công ty"
           />
         </Box>
-        <Box
-          m="40px 0 0 0"
-          height="62vh"
-          maxHeight={550}
-          maxWidth={1600}
+        <SwitchBar
+          tabLabel1={"Danh sách Thuyền viên chính thức"}
+          tabLabel2={"Danh sách Thuyền viên chưa chính thức"}
+          variant={"fullWidth"}
+          onChange={(newValue) => handleTabChange(newValue)}
+          color={COLOR.secondary_blue}
           sx={{
-            "& .MuiDataGrid-columnHeader": {
-              backgroundColor: COLOR.secondary_blue,
-              color: COLOR.primary_white,
-            },
-            "& .MuiTablePagination-root": {
-              backgroundColor: COLOR.secondary_blue,
-              color: COLOR.primary_white,
-            },
+            backgroundColor: COLOR.secondary_white,
+            marginTop: 4,
           }}
-        >
+        />
+        {!sectionLoading ? (
+          <Box
+            m="24px 0 0 0"
+            height="80vh"
+            maxHeight={550}
+            maxWidth={1600}
+            sx={{
+              "& .MuiDataGrid-columnHeader": {
+                backgroundColor: COLOR.secondary_blue,
+                color: COLOR.primary_white,
+              },
+              "& .MuiTablePagination-root": {
+                backgroundColor: COLOR.secondary_blue,
+                color: COLOR.primary_white,
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                paddingBottom: 2,
+                justifyContent: "space-between",
+              }}
+            >
+              <SearchBar
+                placeholder={
+                  "Nhập thông tin thuyền viên cần tìm kiếm (VD: Tên thuyền viên, Chức vụ,...)"
+                }
+                color={COLOR.primary_black}
+                backgroundColor={COLOR.secondary_white}
+                sx={{
+                  width: "40%",
+                }}
+              />
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: COLOR.primary_gold,
+                  color: COLOR.primary_black,
+                  borderRadius: 2,
+                }}
+                onClick={() =>
+                  navigate("/recruitment", {
+                    state: {
+                      tabValue: 1,
+                      candidateStatus: "WAIT_FOR_INTERVIEW",
+                    },
+                  })
+                }
+              >
+                <AddCircleRoundedIcon />
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    marginLeft: "4px",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Thêm thuyền viên
+                </Typography>
+              </Button>
+            </Box>
+            <DataGrid
+              disableRowSelectionOnClick
+              disableColumnMenu
+              disableColumnResize
+              rows={crewMembers}
+              columns={columns}
+              slots={{ noRowsOverlay: NoValuesOverlay }}
+              pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 5, page: 0 },
+                },
+              }}
+              sx={{
+                backgroundColor: "#FFF",
+                headerAlign: "center",
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  fontSize: 16,
+                  fontWeight: 700,
+                },
+              }}
+            />
+          </Box>
+        ) : (
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              paddingBottom: 2,
-              justifyContent: "space-between",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
             }}
           >
-            <SearchBar
-              placeholder={
-                "Nhập thông tin thuyền viên cần tìm kiếm (VD: Tên thuyền viên, Chức vụ,...)"
-              }
-              color={COLOR.primary_black}
-              backgroundColor={COLOR.secondary_white}
-              sx={{
-                width: "40%",
-              }}
-            />
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: COLOR.primary_gold,
-                color: COLOR.primary_black,
-                borderRadius: 2,
-              }}
-              onClick={() => navigate("/crews/add")}
-            >
-              <AddCircleRoundedIcon />
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  marginLeft: "4px",
-                  textTransform: "capitalize",
-                }}
-              >
-                Thêm thuyền viên
-              </Typography>
-            </Button>
+            <CircularProgress />
           </Box>
-          <DataGrid
-            disableRowSelectionOnClick
-            disableColumnMenu
-            disableColumnResize
-            rows={mockCrewMemberInfos}
-            columns={columns}
-            slots={{ noRowsOverlay: NoValuesOverlay }}
-            pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 5, page: 0 },
-              },
-            }}
-            sx={{
-              backgroundColor: "#FFF",
-              headerAlign: "center",
-              "& .MuiDataGrid-columnHeaderTitle": {
-                fontSize: 16,
-                fontWeight: 700,
-              },
-            }}
-          />
-        </Box>
+        )}
       </Box>
     </div>
   );

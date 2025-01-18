@@ -48,10 +48,6 @@ const AdminCandidateDetail = () => {
         await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
 
         if (response.status === HttpStatusCodes.OK) {
-          console.log(
-            "Successfully fetched candidate profile: ",
-            response.data
-          );
           setCandidateInfo(response.data);
         } else {
           console.log("Failed to fetch candidate profile");
@@ -69,7 +65,7 @@ const AdminCandidateDetail = () => {
 
   const statusMap = {
     APPLIED: "Đã nộp",
-    WAIT_FOR_INTERVIEW: "Đang chờ phỏng vấn",
+    WAIT_FOR_INTERVIEW: "Đã qua vòng phỏng vấn",
     REJECTED: "Từ chối",
     HIRED: "Đã ký hợp đồng",
   };
@@ -86,7 +82,6 @@ const AdminCandidateDetail = () => {
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
       
       if(response.status === HttpStatusCodes.OK) {
-        console.log("Successfully approved request");
         await fetchCandidateProfile();
       } else{
         console.log("Failed to approve request");
@@ -107,7 +102,6 @@ const AdminCandidateDetail = () => {
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
 
       if(response.status === HttpStatusCodes.OK) {
-        console.log("Successfully declined request");
         await fetchCandidateProfile();
       }
       else{
@@ -174,9 +168,9 @@ const AdminCandidateDetail = () => {
                     />
                   ) : status === "Từ chối" ? (
                     <StatusLabel label="Từ chối" color={COLOR.primary_orange} />
-                  ) : status === "Đang chờ phỏng vấn" ? (
+                  ) : status === "Đã qua vòng phỏng vấn" ? (
                     <StatusLabel
-                      label="Đang chờ phỏng vấn"
+                      label="Đã qua vòng phỏng vấn"
                       color={COLOR.primary_green}
                     />
                   ) : (

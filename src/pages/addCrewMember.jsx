@@ -19,10 +19,11 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const AddCrewMember = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { candidateID } = useParams();
 
   const paymentStatus = ["Đã thanh toán", "Chưa thanh toán"];
 

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Tabs, Tab, Box, } from "@mui/material";
 
-const SwitchBar = ({ tabLabel1, tabLabel2, variant, color, onChange, sx = [] }) => {
-    const [value, setValue] = useState(0);
+const SwitchBar = ({ tabLabel1, tabLabel2, variant, color, onChange, initialTab = 0, sx = [] }) => {
+    const [value, setValue] = useState(initialTab);
 
   const handleValueChange = (event, newValue) => {
     setValue(newValue);
