@@ -4,9 +4,27 @@ import AppProperty from "../assets/constants/appProperty";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 import { localStorage, sessionStorage, StorageKey } from "./storageUtils";
 
-axios.defaults.baseURL = AppProperty.INLACO_API_URL;
+const privateRequest = axios.create({
+  baseURL: AppProperty.INLACO_API_URL,
+  headers: {
+    post: {
+      "Content-Type": "application/json",
+    },
+    get: {
+      "Content-Type": "application/json",
+    },
+    patch: {
+      "Content-Type": "application/merge-patch+json",
+    },
+    delete: {
+      "Content-Type": "application/json",
+    },
+  },
+});
 
-axios.interceptors.request.use(
+// privateRequest.defaults.baseURL = AppProperty.INLACO_API_URL;
+
+privateRequest.interceptors.request.use(
   async (config) => {
     const rememberMe = await localStorage.getItem(StorageKey.REMEMBER_ME);
 
@@ -25,7 +43,7 @@ axios.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-axios.interceptors.response.use(
+privateRequest.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -43,7 +61,7 @@ axios.interceptors.response.use(
           ...config.headers,
           Authorization: `Bearer ${newAccessToken}`,
         };
-        return axios(config);
+        return privateRequest(config);
       }
       //   //logout without sending the refresh token back to server
       //   toast.warn("Session expired. Please login again.");
@@ -54,6 +72,6 @@ axios.interceptors.response.use(
   }
 );
 
-const privateRequest = axios;
+// const privateRequest = axios;
 
 export default privateRequest;

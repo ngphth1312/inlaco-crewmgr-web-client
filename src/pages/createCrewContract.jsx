@@ -15,10 +15,11 @@ import SaveIcon from "@mui/icons-material/Save";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const CreateCrewContract = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { crewMemberID } = useParams();
 
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 

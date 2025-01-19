@@ -1,6 +1,7 @@
 import privateRequest from "../utils/privateRequest";
 import publicRequest from "../utils/publicRequest";
 import CrewEndpoints from "../api/crewEndpoints";
+import { dateStringToISOString } from "../utils/ValueConverter";
 
 export const getAllCrewMemberAPI = async (page, size, official) => {
   try {
@@ -13,7 +14,72 @@ export const getAllCrewMemberAPI = async (page, size, official) => {
   }
 };
 
-export const createCrMemberFrCandidateAPI = async (candidateID, candidateInfo) => {
+export const getCrewMemberByID_API = async (crewMemberID) => {
+  try {
+    const response = await privateRequest.get(
+      `${CrewEndpoints.GENERAL}/${crewMemberID}`
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+export const editCrewMemberProfileAPI = async (
+  crewMemberID,
+  crewMemberInfo
+) => {
+  try {
+    const response = await privateRequest.patch(
+      `${CrewEndpoints.GENERAL}/${crewMemberID}`,
+      {
+        birthDate: dateStringToISOString(crewMemberInfo.dob),
+        fullName: crewMemberInfo.fullName,
+        email: crewMemberInfo.email,
+        phoneNumber: crewMemberInfo.phoneNumber,
+        address: crewMemberInfo.address,
+        gender: crewMemberInfo.gender,
+        languageSkills: [crewMemberInfo.languageSkills],
+        professionalPosition: crewMemberInfo.jobInfo.position,
+        expertiseLevels: [crewMemberInfo.jobInfo.expertiseLevels],
+        experiences: [crewMemberInfo.jobInfo.experience],
+        socialInsuranceCode: crewMemberInfo.insuranceInfo.socialInsID,
+        // socialInsuranceImages: [
+        //   {
+        //     url: "string",
+        //     name: "string",
+        //     type: "string",
+        //   },
+        // ],
+        accidentInsuranceCode: crewMemberInfo.insuranceInfo.accidentInsID,
+        // accidentInsuranceImages: [
+        //   {
+        //     url: "string",
+        //     name: "string",
+        //     type: "string",
+        //   },
+        // ],
+        // healthInsuranceCode: crewMemberInfo.insuranceInfo.healthInsID,
+        // healthInsHospital: crewMemberInfo.insuranceInfo.healthInsHospital,
+        // healthInsuranceImages: [
+        //   {
+        //     url: "string",
+        //     name: "string",
+        //     type: "string",
+        //   },
+        // ],
+      },
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+export const createCrMemberFrCandidateAPI = async (
+  candidateID,
+  candidateInfo
+) => {
   try {
     const response = await privateRequest.post(
       `${CrewEndpoints.GENERAL}/${candidateID}`,

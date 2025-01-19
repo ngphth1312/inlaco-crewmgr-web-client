@@ -148,7 +148,7 @@ function App() {
 
                 <Route path="/crew-contracts">
                   <Route index element={<CrewContract />} />
-                  <Route path="create" element={<CreateCrewContract />} />
+                  <Route path="create/:crewMemberID" element={<CreateCrewContract />} />
                   <Route path=":id" element={<CrewContractDetail />} />
                   <Route
                     path=":id/create-addendum"

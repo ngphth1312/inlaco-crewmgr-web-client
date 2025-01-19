@@ -10,6 +10,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import { useNavigate } from "react-router";
 import { getAllCrewMemberAPI } from "../services/crewServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
@@ -21,8 +22,6 @@ const CrewInfos = () => {
   const [crewMembers, setCrewMembers] = useState([]);
   const [tabValue, setTabValue] = useState(0);
   const [sectionLoading, setSectionLoading] = useState(false);
-
-  
 
   useEffect(() => {
     const fetchCrewMembers = async (official) => {
@@ -48,7 +47,7 @@ const CrewInfos = () => {
   }, []);
 
   const onMemberDetailClick = (id) => {
-    navigate(`/crews/${id}`);
+    navigate(`/crews/${id}`, { state: { official: tabValue === 0 ? true : false } });
   };
 
   const fetchCrewMemberTabChange = async (official) => {
@@ -69,6 +68,10 @@ const CrewInfos = () => {
     }
   }
 
+  const onCreateCrewContractClick = async (id) => {
+    navigate(`/crew-contracts/create/${id}`);
+  }
+    
   const handleTabChange = async (newValue) => {
     if(newValue === 1){
       await fetchCrewMemberTabChange(false);
@@ -208,6 +211,29 @@ const CrewInfos = () => {
               padding: 10,
             }}
           >
+            {tabValue === 1 && (
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => onCreateCrewContractClick(params?.id)}
+                sx={{
+                  backgroundColor: COLOR.primary_gold,
+                  color: COLOR.primary_black,
+                  fontWeight: 700,
+                  textTransform: "capitalize",
+                  marginRight: "8px",
+                }}
+              >
+                <AssignmentIndOutlinedIcon
+                  sx={{
+                    width: 18,
+                    height: 18,
+                    marginTop: "3px",
+                    marginBottom: "3px",
+                  }}
+                />
+              </Button>
+            )}
             <Button
               variant="contained"
               size="small"

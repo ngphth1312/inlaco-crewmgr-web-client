@@ -44,6 +44,7 @@ const AddCrewMember = () => {
     address: candidateInfo?.address || "",
     phoneNumber: candidateInfo?.phoneNumber || "",
     email: candidateInfo?.email || "",
+    languageSkills: candidateInfo?.languageSkills ? candidateInfo?.languageSkills[0] : "",
 
     insuranceInfo: {
       socialInsID: "",
@@ -309,7 +310,7 @@ const AddCrewMember = () => {
                 >
                   Thông tin công việc
                 </span>{" "}
-                sẽ được thêm khi{" "}
+                sẽ được thêm sau khi{" "}
                 <span
                   style={{
                     fontStyle: "italic",
@@ -428,7 +429,7 @@ const AddCrewMember = () => {
                       fontWeight: 700,
                     }}
                   >
-                    Ảnh chụp BHXH hoặc tra cứu BHXH:{" "}
+                    Ảnh chụp BHTN hoặc tra cứu BHTN:{" "}
                   </Typography>
                   <HorizontalImageInput
                     id="accident-ins-image"
