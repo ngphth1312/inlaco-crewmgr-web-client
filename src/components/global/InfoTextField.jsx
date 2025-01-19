@@ -9,6 +9,7 @@ const InfoTextField = ({ sx, disabled, slotProps, multiline, minRow, maxRow, row
       disabled={disabled}
       multiline={multiline}
       rows={rows}
+      
       sx={[
         { backgroundColor: "#FFF", marginBottom: 1 },
         ...(Array.isArray(sx) ? sx : [sx]),

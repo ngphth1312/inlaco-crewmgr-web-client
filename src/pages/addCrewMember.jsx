@@ -10,7 +10,6 @@ import {
   Box,
   Button,
   Typography,
-  TextField,
   MenuItem,
   CircularProgress,
 } from "@mui/material";
@@ -19,55 +18,49 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation } from "react-router";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { createCrMemberFrCandidateAPI } from "../services/crewServices";
+import { dateStringToISOString, isoStringToDateString } from "../utils/ValueConverter";
 
 const AddCrewMember = () => {
   const navigate = useNavigate();
   const { candidateID } = useParams();
-
-  const paymentStatus = ["Đã thanh toán", "Chưa thanh toán"];
+  const location = useLocation();
+  const candidateInfo = location.state?.candidateInfo;
 
   const genders = [
-    { label: "Nam", value: "Nam" },
-    { label: "Nữ", value: "Nữ" },
-    { label: "Khác", value: "Khác" },
+    { label: "Nam", value: "MALE" },
+    { label: "Nữ", value: "FEMALE" },
+    { label: "Khác", value: "OTHER" },
   ];
+  console.log("CandidateInfo: ", candidateInfo);
 
   const initialValues = {
     cardPhoto: "",
-    fullName: "",
-    dob: "",
-    ciNumber: "",
-    gender: "",
-    address: "",
-    phoneNumber: "",
-    email: "",
+    fullName: candidateInfo?.fullName || "",
+    dob: candidateInfo?.birthDate ? isoStringToDateString(candidateInfo?.birthDate) : "",
+    gender: candidateInfo?.gender || "OTHER",
+    address: candidateInfo?.address || "",
+    phoneNumber: candidateInfo?.phoneNumber || "",
+    email: candidateInfo?.email || "",
 
     insuranceInfo: {
       socialInsID: "",
-      socialInsStartDate: "",
-      socialInsEndDate: "",
       socialInsImage: "",
-      socialInsStatus: "Chưa thanh toán",
 
       accidentInsID: "",
-      accidentInsStartDate: "",
-      accidentInsEndDate: "",
       accidentInsImage: "",
-      accidentInsStatus: "Chưa thanh toán",
 
       healthInsID: "",
-      healthInsStartDate: "",
-      healthInsEndDate: "",
       healthInsImage: "",
-      healthInsStatus: "Chưa thanh toán",
       healthInsHospital: "",
     },
   };
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
-  const ciNumberRegex = "^\\d{12}$";
+  // const ciNumberRegex = "^\\d{12}$";
 
   const crewMemberInfosSchema = yup.object().shape({
     fullName: yup.string().required("Họ và tên không được để trống"),
@@ -75,11 +68,6 @@ const AddCrewMember = () => {
       .date()
       .max(new Date(), "Ngày sinh không hợp lệ")
       .required("Ngày sinh không được để trống"),
-
-    ciNumber: yup
-      .string()
-      .matches(ciNumberRegex, "Số CCCD không hợp lệ")
-      .required("Số căn cước công dân không được để trống"),
 
     gender: yup.string().required("Vui lòng chọn giới tính"),
     address: yup.string().required("Địa chỉ không được để trống"),
@@ -93,75 +81,6 @@ const AddCrewMember = () => {
       .string()
       .email("Email không hợp lệ")
       .required("Email không được để trống"),
-
-    insuranceInfo: yup.object().shape({
-      // BHXH:
-      socialInsStartDate: yup
-        .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
-        .test(
-          "is-before-end-date",
-          "Ngày bắt đầu phải trước ngày kết thúc",
-          function (value) {
-            const { socialInsEndDate } = this.parent; // Access sibling field socialInsEndDate
-            return !socialInsEndDate || value < socialInsEndDate;
-          }
-        ),
-      socialInsEndDate: yup
-        .date()
-        .test(
-          "is-after-start-date",
-          "Ngày kết thúc phải sau ngày bắt đầu",
-          function (value) {
-            const { socialInsStartDate } = this.parent; // Access sibling field socialInsStartDate
-            return !socialInsStartDate || value > socialInsStartDate;
-          }
-        ),
-      // BHTN:
-      accidentInsStartDate: yup
-        .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
-        .test(
-          "is-before-end-date",
-          "Ngày bắt đầu phải trước ngày kết thúc",
-          function (value) {
-            const { accidentInsEndDate } = this.parent; // Access sibling field accidentInsEndDate
-            return !accidentInsEndDate || value < accidentInsEndDate;
-          }
-        ),
-      accidentInsEndDate: yup
-        .date()
-        .test(
-          "is-after-start-date",
-          "Ngày kết thúc phải sau ngày bắt đầu",
-          function (value) {
-            const { accidentInsStartDate } = this.parent; // Access sibling field accidentInsStartDate
-            return !accidentInsStartDate || value > accidentInsStartDate;
-          }
-        ),
-      // BHYT:
-      healthInsStartDate: yup
-        .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
-        .test(
-          "is-before-end-date",
-          "Ngày bắt đầu phải trước ngày kết thúc",
-          function (value) {
-            const { healthInsEndDate } = this.parent; // Access sibling field healthInsEndDate
-            return !healthInsEndDate || value < healthInsEndDate;
-          }
-        ),
-      healthInsEndDate: yup
-        .date()
-        .test(
-          "is-after-start-date",
-          "Ngày kết thúc phải sau ngày bắt đầu",
-          function (value) {
-            const { healthInsStartDate } = this.parent; // Access sibling field healthInsStartDate
-            return !healthInsStartDate || value > healthInsStartDate;
-          }
-        ),
-    }),
   });
 
   const [addCrewLoading, setAddCrewLoading] = useState(false);
@@ -170,10 +89,26 @@ const AddCrewMember = () => {
     setAddCrewLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await createCrMemberFrCandidateAPI(candidateID, {
+        birthDate: dateStringToISOString(values.dob),
+        fullName: values.fullName,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        address: values.address,
+        gender: values.gender,
+        socialInsuranceCode: values.insuranceInfo.socialInsID,
+        accidentInsuranceCode: values.insuranceInfo.accidentInsID,
+        //add more later
+      });
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay for 200ms
 
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      if (response.status === HttpStatusCodes.CREATED) {
+        console.log("Successfully adding new crew member");
+        resetForm();
+        navigate("/crews");
+      } else{
+        console.log("Failed to adding new crew member");
+      }
     } catch (err) {
       console.log("Error when adding new crew member: ", err);
     } finally {
@@ -216,7 +151,7 @@ const AddCrewMember = () => {
                 <Button
                   variant="contained"
                   type="submit"
-                  disabled={!isValid || !dirty}
+                  disabled={!isValid}
                   sx={{
                     width: "10%",
                     padding: 1,
@@ -246,7 +181,7 @@ const AddCrewMember = () => {
             </Box>
             <SectionDivider sectionName="Thông tin cá nhân*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={4}>
+              <Grid size={5}>
                 <InfoTextField
                   id="full-name"
                   label="Họ và tên"
@@ -286,22 +221,6 @@ const AddCrewMember = () => {
                   }}
                 />
               </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  id="ci-number"
-                  label="Số Căn cước công dân"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="ciNumber"
-                  value={values.ciNumber}
-                  error={!!touched.ciNumber && !!errors.ciNumber}
-                  helperText={touched.ciNumber && errors.ciNumber}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </Grid>
               <Grid size={2}>
                 <InfoTextField
                   select
@@ -325,7 +244,23 @@ const AddCrewMember = () => {
                   ))}
                 </InfoTextField>
               </Grid>
-              <Grid size={7}>
+              <Grid size={2}>
+                <InfoTextField
+                  id="phone-number"
+                  label="Số điện thoại"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  value={values.phoneNumber}
+                  error={!!touched.phoneNumber && !!errors.phoneNumber}
+                  helperText={touched.phoneNumber && errors.phoneNumber}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={5}>
                 <InfoTextField
                   id="address"
                   label="Địa chỉ"
@@ -355,22 +290,6 @@ const AddCrewMember = () => {
                   value={values.email}
                   error={!!touched.email && !!errors.email}
                   helperText={touched.email && errors.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </Grid>
-              <Grid size={2}>
-                <InfoTextField
-                  id="phone-number"
-                  label="Số điện thoại"
-                  size="small"
-                  margin="none"
-                  required
-                  fullWidth
-                  name="phoneNumber"
-                  value={values.phoneNumber}
-                  error={!!touched.phoneNumber && !!errors.phoneNumber}
-                  helperText={touched.phoneNumber && errors.phoneNumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -416,8 +335,8 @@ const AddCrewMember = () => {
             >
               1. Bảo hiểm Xã hội:
             </Typography>
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={4}>
+            <Grid container spacing={4} mx={2} rowSpacing={1} pt={2}>
+              <Grid size={4} sx={{ display: "flex", alignItems: "end" }}>
                 <InfoTextField
                   // id=""
                   label="Mã số BHXH"
@@ -434,101 +353,14 @@ const AddCrewMember = () => {
                     touched.insuranceInfo?.socialInsID &&
                     errors.insuranceInfo?.socialInsID
                       ? errors.insuranceInfo?.socialInsID
-                      : " "
+                      : ""
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ marginBottom: 0 }}
                 />
               </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ngày tham gia"
-                  size="small"
-                  margin="none"
-                  type="date"
-                  fullWidth
-                  name="insuranceInfo.socialInsStartDate"
-                  value={values.insuranceInfo?.socialInsStartDate}
-                  error={
-                    !!touched.insuranceInfo?.socialInsStartDate &&
-                    !!errors.insuranceInfo?.socialInsStartDate
-                  }
-                  helperText={
-                    touched.insuranceInfo?.socialInsStartDate &&
-                    errors.insuranceInfo?.socialInsStartDate
-                      ? errors.insuranceInfo?.socialInsStartDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ngày hết hạn"
-                  size="small"
-                  margin="none"
-                  type="date"
-                  fullWidth
-                  name="insuranceInfo.socialInsEndDate"
-                  value={values.insuranceInfo?.socialInsEndDate}
-                  error={
-                    !!touched.insuranceInfo?.socialInsEndDate &&
-                    !!errors.insuranceInfo?.socialInsEndDate
-                  }
-                  helperText={
-                    touched.insuranceInfo?.socialInsEndDate &&
-                    errors.insuranceInfo?.socialInsEndDate
-                      ? errors.insuranceInfo?.socialInsEndDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={2}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Trạng thái"
-                  size="small"
-                  margin="none"
-                  select
-                  fullWidth
-                  name="insuranceInfo.socialInsStatus"
-                  value={values.insuranceInfo?.socialInsStatus}
-                  error={
-                    !!touched.insuranceInfo?.socialInsStatus &&
-                    !!errors.insuranceInfo?.socialInsStatus
-                  }
-                  helperText={
-                    touched.insuranceInfo?.socialInsStatus &&
-                    errors.insuranceInfo?.socialInsStatus
-                      ? errors.insuranceInfo?.socialInsStatus
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                >
-                  {paymentStatus.map((status) => (
-                    <MenuItem key={status} value={status}>
-                      {status}
-                    </MenuItem>
-                  ))}
-                </InfoTextField>
-              </Grid>
-              <Grid size={12}>
+              <Grid size={8}>
                 <Box sx={{ display: "flex", alignItems: "end" }}>
                   <Typography
                     mr={2}
@@ -537,14 +369,14 @@ const AddCrewMember = () => {
                       fontWeight: 700,
                     }}
                   >
-                    Ảnh chụp BHTN hoặc tra cứu BHTN:{" "}
+                    Ảnh chụp BHXH hoặc tra cứu BHXH:{" "}
                   </Typography>
                   <HorizontalImageInput
                     id="social-ins-image"
                     name="insuranceInfo.socialInsImage"
                     onClick={() =>
                       document.getElementById("social-ins-image").click()
-                    } 
+                    }
                   />
                 </Box>
               </Grid>
@@ -562,8 +394,8 @@ const AddCrewMember = () => {
             >
               2. Bảo hiểm Tai nạn:
             </Typography>
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={4}>
+            <Grid container spacing={4} mx={2} rowSpacing={1} pt={2}>
+              <Grid size={4} sx={{ display: "flex", alignItems: "end" }}>
                 <InfoTextField
                   // id=""
                   label="Mã số BHTN"
@@ -580,101 +412,14 @@ const AddCrewMember = () => {
                     touched.insuranceInfo?.accidentInsID &&
                     errors.insuranceInfo?.accidentInsID
                       ? errors.insuranceInfo?.accidentInsID
-                      : " "
+                      : ""
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ marginBottom: 0 }}
                 />
               </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ngày tham gia"
-                  size="small"
-                  margin="none"
-                  type="date"
-                  fullWidth
-                  name="insuranceInfo.accidentInsStartDate"
-                  value={values.insuranceInfo?.accidentInsStartDate}
-                  error={
-                    !!touched.insuranceInfo?.accidentInsStartDate &&
-                    !!errors.insuranceInfo?.accidentInsStartDate
-                  }
-                  helperText={
-                    touched.insuranceInfo?.accidentInsStartDate &&
-                    errors.insuranceInfo?.accidentInsStartDate
-                      ? errors.insuranceInfo?.accidentInsStartDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ngày hết hạn"
-                  size="small"
-                  margin="none"
-                  type="date"
-                  fullWidth
-                  name="insuranceInfo.accidentInsEndDate"
-                  value={values.insuranceInfo?.accidentInsEndDate}
-                  error={
-                    !!touched.insuranceInfo?.accidentInsEndDate &&
-                    !!errors.insuranceInfo?.accidentInsEndDate
-                  }
-                  helperText={
-                    touched.insuranceInfo?.accidentInsEndDate &&
-                    errors.insuranceInfo?.accidentInsEndDate
-                      ? errors.insuranceInfo?.accidentInsEndDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={2}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Trạng thái"
-                  size="small"
-                  margin="none"
-                  select
-                  fullWidth
-                  name="insuranceInfo.accidentInsStatus"
-                  value={values.insuranceInfo?.accidentInsStatus}
-                  error={
-                    !!touched.insuranceInfo?.accidentInsStatus &&
-                    !!errors.insuranceInfo?.accidentInsStatus
-                  }
-                  helperText={
-                    touched.insuranceInfo?.accidentInsStatus &&
-                    errors.insuranceInfo?.accidentInsStatus
-                      ? errors.insuranceInfo?.accidentInsStatus
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                >
-                  {paymentStatus.map((status) => (
-                    <MenuItem key={status} value={status}>
-                      {status}
-                    </MenuItem>
-                  ))}
-                </InfoTextField>
-              </Grid>
-              <Grid size={12}>
+              <Grid size={8}>
                 <Box sx={{ display: "flex", alignItems: "end" }}>
                   <Typography
                     mr={2}
@@ -708,8 +453,8 @@ const AddCrewMember = () => {
             >
               3. Bảo hiểm Y tế:
             </Typography>
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={4}>
+            <Grid container spacing={4} mx={2} rowSpacing={2} pt={2}>
+              <Grid size={4} sx={{ display: "flex", alignItems: "end" }}>
                 <InfoTextField
                   // id=""
                   label="Mã số BHYT"
@@ -726,101 +471,34 @@ const AddCrewMember = () => {
                     touched.insuranceInfo?.healthInsID &&
                     errors.insuranceInfo?.healthInsID
                       ? errors.insuranceInfo?.healthInsID
-                      : " "
+                      : ""
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{ marginBottom: 0 }}
                 />
               </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ngày tham gia"
-                  size="small"
-                  margin="none"
-                  type="date"
-                  fullWidth
-                  name="insuranceInfo.healthInsStartDate"
-                  value={values.insuranceInfo?.healthInsStartDate}
-                  error={
-                    !!touched.insuranceInfo?.healthInsStartDate &&
-                    !!errors.insuranceInfo?.healthInsStartDate
-                  }
-                  helperText={
-                    touched.insuranceInfo?.healthInsStartDate &&
-                    errors.insuranceInfo?.healthInsStartDate
-                      ? errors.insuranceInfo?.healthInsStartDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
+              <Grid size={8}>
+                <Box sx={{ display: "flex", alignItems: "end" }}>
+                  <Typography
+                    mr={2}
+                    sx={{
+                      color: COLOR.primary_black_placeholder,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Ảnh chụp BHYT hoặc tra cứu BHYT:{" "}
+                  </Typography>
+                  <HorizontalImageInput
+                    id="health-ins-image"
+                    name="insuranceInfo.healthInsImage"
+                    onClick={() =>
+                      document.getElementById("health-ins-image").click()
+                    }
+                  />
+                </Box>
               </Grid>
-              <Grid size={3}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Ngày hết hạn"
-                  size="small"
-                  margin="none"
-                  type="date"
-                  fullWidth
-                  name="insuranceInfo.healthInsEndDate"
-                  value={values.insuranceInfo?.healthInsEndDate}
-                  error={
-                    !!touched.insuranceInfo?.healthInsEndDate &&
-                    !!errors.insuranceInfo?.healthInsEndDate
-                  }
-                  helperText={
-                    touched.insuranceInfo?.healthInsEndDate &&
-                    errors.insuranceInfo?.healthInsEndDate
-                      ? errors.insuranceInfo?.healthInsEndDate
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={2}>
-                <InfoTextField
-                  // id="salary-review-period"
-                  label="Trạng thái"
-                  size="small"
-                  margin="none"
-                  select
-                  fullWidth
-                  name="insuranceInfo.healthInsStatus"
-                  value={values.insuranceInfo?.healthInsStatus}
-                  error={
-                    !!touched.insuranceInfo?.healthInsStatus &&
-                    !!errors.insuranceInfo?.healthInsStatus
-                  }
-                  helperText={
-                    touched.insuranceInfo?.healthInsStatus &&
-                    errors.insuranceInfo?.healthInsStatus
-                      ? errors.insuranceInfo?.healthInsStatus
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                >
-                  {paymentStatus.map((status) => (
-                    <MenuItem key={status} value={status}>
-                      {status}
-                    </MenuItem>
-                  ))}
-                </InfoTextField>
-              </Grid>
-              <Grid size={6}>
+              <Grid size={9}>
                 <InfoTextField
                   // id="salary-review-period"
                   label="Nơi đăng ký khám chữa bệnh ban đầu"
@@ -843,25 +521,6 @@ const AddCrewMember = () => {
                   onBlur={handleBlur}
                 />
               </Grid>
-              <Grid size={6} />
-              <Box sx={{ display: "flex", alignItems: "end" }}>
-                <Typography
-                  mr={2}
-                  sx={{
-                    color: COLOR.primary_black_placeholder,
-                    fontWeight: 700,
-                  }}
-                >
-                  Ảnh chụp BHYT hoặc tra cứu BHYT:{" "}
-                </Typography>
-                <HorizontalImageInput
-                  id="health-ins-image"
-                  name="insuranceInfo.healthInsImage"
-                  onClick={() =>
-                    document.getElementById("health-ins-image").click()
-                  }
-                />
-              </Box>
             </Grid>
           </Box>
         )}

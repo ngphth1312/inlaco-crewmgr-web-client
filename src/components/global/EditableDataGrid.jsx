@@ -4,7 +4,6 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import CancelIcon from "@mui/icons-material/Close";
 import {
   GridRowModes,
@@ -15,7 +14,7 @@ import {
 // import { mockCrewMemberInfos } from "../../data/mockData";
 import { COLOR } from "../../assets/Color";
 import { NoValuesOverlay } from "../global";
-import { useField, useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 
 // Use to replace the "position.name" field with "positionName" field
 // function replacePositionName(arr) {
@@ -174,8 +173,6 @@ const EditableDataGrid = ({
       field: "phoneNumber",
       headerName: "SĐT",
       flex: 2,
-      align: "left",
-      headerAlign: "left",
       editable: isEditable,
       align: "center",
       headerAlign: "center",

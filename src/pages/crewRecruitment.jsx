@@ -68,8 +68,10 @@ const CrewRecruitment = () => {
     navigate(`/recruitment/candidates/${candidateID}/admin`);
   };
 
-  const onCreateCrewMemberClick = (candidateID) => {
-    navigate(`/crews/add/${candidateID}`);
+  const onCreateCrewMemberClick = (candidateID, candidateInfo) => {
+    navigate(`/crews/add/${candidateID}`, {
+      state: { candidateInfo: candidateInfo },
+    });
   }
 
   const statusFilters = [
@@ -208,27 +210,29 @@ const CrewRecruitment = () => {
               padding: 5,
             }}
           >
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => onCreateCrewMemberClick(params?.id)}
-              sx={{
-                backgroundColor: COLOR.primary_gold,
-                color: COLOR.primary_black,
-                fontWeight: 700,
-                textTransform: "capitalize",
-                marginRight: "8px",
-              }}
-            >
-              <PersonAddAltRoundedIcon
+            {candidateStatus === "WAIT_FOR_INTERVIEW" && (
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => onCreateCrewMemberClick(params?.id, params?.row)}
                 sx={{
-                  width: 18,
-                  height: 18,
-                  marginTop: "3px",
-                  marginBottom: "3px",
+                  backgroundColor: COLOR.primary_gold,
+                  color: COLOR.primary_black,
+                  fontWeight: 700,
+                  textTransform: "capitalize",
+                  marginRight: "8px",
                 }}
-              />
-            </Button>
+              >
+                <PersonAddAltRoundedIcon
+                  sx={{
+                    width: 18,
+                    height: 18,
+                    marginTop: "3px",
+                    marginBottom: "3px",
+                  }}
+                />
+              </Button>
+            )}
             <Button
               variant="contained"
               size="small"
@@ -280,7 +284,9 @@ const CrewRecruitment = () => {
       }
     };
 
-    fetchCandidates();
+    if(isAdmin){
+      fetchCandidates();
+    }
   }, [candidateStatus])
 
   const handleStatusChange = (event) => {
