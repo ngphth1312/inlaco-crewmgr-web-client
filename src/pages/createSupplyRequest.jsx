@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PageTitle,
   SectionDivider,
@@ -20,9 +20,12 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { createSupplyRequestAPI } from "../services/supplyReqServices";
+import { dateTimeStringToISOString } from "../utils/ValueConverter";
 
 const CreateSupplyRequest = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   fetchRequestInfos(id);
@@ -84,7 +87,7 @@ const CreateSupplyRequest = () => {
     requestInfo: yup.object().shape({
       timeOfDeparture: yup
         .date()
-        .max(new Date(), "Thời gian khởi hành không hợp lệ")
+        .min(new Date(), "Thời gian khởi hành không hợp lệ")
         .required("Thời gian khởi hành dự kiến không được để trống")
         .test(
           "is-before-end-datetime",
@@ -127,10 +130,15 @@ const CreateSupplyRequest = () => {
     setIsLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
-
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      const response = await createSupplyRequestAPI(values);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // Delay 0.2s
+      
+      if (response.status === HttpStatusCodes.CREATED) {
+        resetForm();
+        navigate("/supply-requests");
+      } else{
+        console.log("Failed to create supply request");
+      }
     } catch (err) {
       console.log("Error when creating supply request: ", err);
     } finally {

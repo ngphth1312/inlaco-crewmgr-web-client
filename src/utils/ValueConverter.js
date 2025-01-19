@@ -127,6 +127,54 @@ export function dateStringToISOString(dateString) { //convert "yyyy-mm-dd" to "y
   }
 }
 
+export function dateTimeStringToISOString(dateTimeString) {
+  try {
+    // Split date and time parts
+    const [datePart, timePart] = dateTimeString.split("T");
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hours, minutes] = timePart.split(":").map(Number);
+
+    // Create date in UTC
+    const date = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date");
+    }
+
+    return date.toISOString();
+  } catch (error) {
+    console.error("Error converting datetime string to ISOString:", error);
+    return null;
+  }
+}
+
+// export function isoStringToDateTimeString(isoString) {
+//   try {
+//     const date = new Date(isoString);
+
+//     // Check if date is valid
+//     if (isNaN(date.getTime())) {
+//       throw new Error("Invalid date");
+//     }
+
+//     // Get time components
+//     const hours = String(date.getHours()).padStart(2, "0");
+//     const minutes = String(date.getMinutes()).padStart(2, "0");
+
+//     // Get date components
+//     const day = String(date.getDate()).padStart(2, "0");
+//     const month = String(date.getMonth() + 1).padStart(2, "0");
+//     const year = date.getFullYear();
+
+//     // Combine into required format
+//     return `${hours}:${minutes} - ${day}/${month}/${year}`;
+//   } catch (error) {
+//     console.error("Error converting ISO string to datetime:", error);
+//     return null;
+//   }
+// }
+
 export function isoStringToDateString(isoString) { //convert "yyyy-mm-ddT00:00:00.000Z" to "yyyy-mm-dd"
   try {
     // Create a new Date object using the ISO string

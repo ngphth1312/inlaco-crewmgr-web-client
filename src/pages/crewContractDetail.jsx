@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { PageTitle, SectionDivider, InfoTextField, MultilineFileUploadField } from "../components/global";
+import {
+  PageTitle,
+  SectionDivider,
+  InfoTextField,
+  MultilineFileUploadField,
+} from "../components/global";
 import { FileUploadField } from "../components/contract";
 import {
   Box,
@@ -8,6 +13,7 @@ import {
   TextField,
   MenuItem,
   CircularProgress,
+  IconButton,
   InputAdornment,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
@@ -16,10 +22,11 @@ import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
 import DifferenceRoundedIcon from "@mui/icons-material/DifferenceRounded";
 import GetAppRoundedIcon from "@mui/icons-material/GetAppRounded";
+import HandshakeRoundedIcon from "@mui/icons-material/HandshakeRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation } from "react-router";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { saveAs } from "file-saver";
@@ -30,7 +37,8 @@ const CrewContractDetail = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const isOfficialContract = true; //temp variable, this must be fetched from the API
+  const location = useLocation();
+  const isOfficialContract = location.state?.signed;
 
   // useEffect(() => {
   //   fetchCrewContractInfos(id);
@@ -207,77 +215,81 @@ const CrewContractDetail = () => {
     }
   };
 
+  const handleApproveContract = async () => {
+
+  };
+
   const handleDownloadPaperContractClick = (values) => {
-      const loadFile = (url, callback) => {
-        JSZipUtils.getBinaryContent(url, callback);
-      };
-  
-      loadFile(
-        require("../assets/templates/template-hop-dong-thuyen-vien.docx"),
-        (error, content) => {
-          if (error) {
-            throw error;
-          }
-  
-          // Initialize PizZip with the .docx content
-          const zip = new PizZip(content);
-  
-          // Initialize docxtemplater
-          const doc = new Docxtemplater(zip, {
-            paragraphLoop: true,
-            linebreaks: true,
-          });
-  
-          // Set dynamic values for placeholders
-          doc.setData({
-            compName: values.partyA.compName,
-            compAddress: values.partyA.compAddress,
-            compPhoneNumber: values.partyA.compPhoneNumber,
-            representative: values.partyA.representative,
-            representativePos: values.partyA.representativePos,
-
-            fullName: values.partyB.fullName,
-            dob: formatDateString(values.partyB.dob),
-            birthplace: values.partyB.birthplace,
-            nationality: values.partyB.nationality,
-            permanentAddr: values.partyB.permanentAddr,
-            temporaryAddr: values.partyB.temporaryAddr,
-            ciNumber: values.partyB.ciNumber,
-            ciIssueDate: formatDateString(values.partyB.ciIssueDate),
-            ciIssuePlace: values.partyB.ciIssuePlace,
-
-            startDate: formatDateString(values.jobInfo.startDate),
-            endDate: formatDateString(values.jobInfo.endDate),
-            workingLocation: values.jobInfo.workingLocation,
-            position: values.jobInfo.position,
-            jobDescription: values.jobInfo.jobDescription,
-
-            basicSalary: values.salaryInfo.basicSalary,
-            allowance: values.salaryInfo.allowance,
-            receiveMethod: values.salaryInfo.receiveMethod,
-            payday: values.salaryInfo.payday,
-            salaryReviewPeriod: values.salaryInfo.salaryReviewPeriod,
-          });
-  
-          try {
-            // Render the document with dynamic data
-            doc.render();
-  
-            // Generate the final document
-            const out = doc.getZip().generate({
-              type: "blob",
-              mimeType:
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            });
-  
-            // Save the file locally
-            saveAs(out, "hop-dong-thuyen-vien.docx");
-          } catch (error) {
-            console.error("Error generating document:", error);
-          }
-        }
-      );
+    const loadFile = (url, callback) => {
+      JSZipUtils.getBinaryContent(url, callback);
     };
+
+    loadFile(
+      require("../assets/templates/template-hop-dong-thuyen-vien.docx"),
+      (error, content) => {
+        if (error) {
+          throw error;
+        }
+
+        // Initialize PizZip with the .docx content
+        const zip = new PizZip(content);
+
+        // Initialize docxtemplater
+        const doc = new Docxtemplater(zip, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+
+        // Set dynamic values for placeholders
+        doc.setData({
+          compName: values.partyA.compName,
+          compAddress: values.partyA.compAddress,
+          compPhoneNumber: values.partyA.compPhoneNumber,
+          representative: values.partyA.representative,
+          representativePos: values.partyA.representativePos,
+
+          fullName: values.partyB.fullName,
+          dob: formatDateString(values.partyB.dob),
+          birthplace: values.partyB.birthplace,
+          nationality: values.partyB.nationality,
+          permanentAddr: values.partyB.permanentAddr,
+          temporaryAddr: values.partyB.temporaryAddr,
+          ciNumber: values.partyB.ciNumber,
+          ciIssueDate: formatDateString(values.partyB.ciIssueDate),
+          ciIssuePlace: values.partyB.ciIssuePlace,
+
+          startDate: formatDateString(values.jobInfo.startDate),
+          endDate: formatDateString(values.jobInfo.endDate),
+          workingLocation: values.jobInfo.workingLocation,
+          position: values.jobInfo.position,
+          jobDescription: values.jobInfo.jobDescription,
+
+          basicSalary: values.salaryInfo.basicSalary,
+          allowance: values.salaryInfo.allowance,
+          receiveMethod: values.salaryInfo.receiveMethod,
+          payday: values.salaryInfo.payday,
+          salaryReviewPeriod: values.salaryInfo.salaryReviewPeriod,
+        });
+
+        try {
+          // Render the document with dynamic data
+          doc.render();
+
+          // Generate the final document
+          const out = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+
+          // Save the file locally
+          saveAs(out, "hop-dong-thuyen-vien.docx");
+        } catch (error) {
+          console.error("Error generating document:", error);
+        }
+      }
+    );
+  };
 
   return (
     <div>
@@ -307,10 +319,34 @@ const CrewContractDetail = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <PageTitle
-                  title="CHI TIẾT HỢP ĐỒNG THUYỀN VIÊN"
-                  subtitle={`Mã hợp đồng: ${id}`} //Change this to the actual contractID, this currently display an id, not contractID
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
+                >
+                  <PageTitle
+                    title="CHI TIẾT HỢP ĐỒNG THUYỀN VIÊN"
+                    subtitle={
+                      isOfficialContract
+                        ? `Mã hợp đồng: ${id}`
+                        : "Hợp đồng đang chờ ký kết"
+                    }
+                  />
+                  {!isEditable && !isOfficialContract && (
+                    <IconButton
+                      sx={{
+                        backgroundColor: COLOR.primary_blue,
+                        color: COLOR.primary_white,
+                        "&:hover": { backgroundColor: COLOR.secondary_blue },
+                      }}
+                      onClick={() => handleDownloadPaperContractClick(values)}
+                    >
+                      <GetAppRoundedIcon sx={{ width: 28, height: 28 }} />
+                    </IconButton>
+                  )}
+                </Box>
                 <Box
                   sx={{
                     display: "flex",
@@ -454,15 +490,15 @@ const CrewContractDetail = () => {
                               width: "35%",
                               padding: 1,
                               color: COLOR.primary_white,
-                              backgroundColor: COLOR.primary_blue,
+                              backgroundColor: COLOR.primary_green,
                               minWidth: 130,
                             }}
                             onClick={() =>
-                              handleDownloadPaperContractClick(values)
+                              handleApproveContract()
                             }
                           >
                             <Box sx={{ display: "flex", alignItems: "end" }}>
-                              <GetAppRoundedIcon
+                              <HandshakeRoundedIcon
                                 sx={{
                                   marginRight: "5px",
                                   width: 22,
@@ -472,7 +508,7 @@ const CrewContractDetail = () => {
                               <Typography
                                 sx={{ fontWeight: 700, fontSize: 14 }}
                               >
-                                Tải xuống Template
+                                Xác nhận ký kết
                               </Typography>
                             </Box>
                           </Button>
@@ -1361,7 +1397,11 @@ const CrewContractDetail = () => {
             {isOfficialContract && (
               <>
                 <SectionDivider sectionName="Phụ lục đính kèm (nếu có): " />
-                <MultilineFileUploadField label="Tải lên phụ lục đính kèm" name="addendum" disabled={true} />
+                <MultilineFileUploadField
+                  label="Tải lên phụ lục đính kèm"
+                  name="addendum"
+                  disabled={true}
+                />
               </>
             )}
           </Box>

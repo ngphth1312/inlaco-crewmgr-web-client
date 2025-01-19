@@ -16,6 +16,9 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { createCrewContractAPI } from "../services/contractServices";
+import { dateStringToISOString } from "../utils/ValueConverter";
 
 const CreateCrewContract = () => {
   const navigate = useNavigate();
@@ -24,7 +27,8 @@ const CreateCrewContract = () => {
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 
   const initialValues = {
-    contractFileLink: null,
+    contractFileLink: "",
+    title: "",
     partyA: {
       cardPhoto: "",
       compName: "Công ty INLACO Hải Phòng",
@@ -65,6 +69,8 @@ const CreateCrewContract = () => {
   const ciNumberRegex = "^\\d{12}$";
 
   const crewContractSchema = yup.object().shape({
+    title: yup.string().required("Tiêu đề không được để trống"),
+
     partyA: yup.object().shape({
       compName: yup.string().required("Tên công ty không được để trống"),
       compAddress: yup.string().required("Địa chỉ không được để trống"),
@@ -112,7 +118,7 @@ const CreateCrewContract = () => {
     jobInfo: yup.object().shape({
       startDate: yup
         .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
+        .min(new Date(), "Ngày bắt đầu không hợp lệ")
         .required("Ngày bắt đầu không được để trống")
         .test(
           "is-before-end-date",
@@ -170,10 +176,52 @@ const CreateCrewContract = () => {
     setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await createCrewContractAPI(crewMemberID, {
+        title: values.title,
+        initiator: {
+          partyName: values.partyA.compName,
+          address: values.partyA.compAddress,
+          phone: values.partyA.compPhoneNumber,
+          representer: values.partyA.representative,
+          email: "thong2046@gmail.com",
+          type: "STATIC",
+        },
+        signedPartners: [
+          {
+            partyName: values.partyB.fullName,
+            address: values.partyB.permanentAddr,
+            type: "LABOR",
+            customAttributes: {
+              dob: dateStringToISOString(values.partyB.dob),
+              birthplace: values.partyB.birthplace,
+              nationality: values.partyB.nationality,
+              temporaryAddr: values.partyB.temporaryAddr,
+              ciNumber: values.partyB.ciNumber,
+              ciIssueDate: dateStringToISOString(values.partyB.ciIssueDate),
+              ciIssuePlace: values.partyB.ciIssuePlace,
+            },
+          },
+        ],
+        activationDate: dateStringToISOString(values.jobInfo.startDate),
+        expiredDate: dateStringToISOString(values.jobInfo.endDate),
+        customAttributes: {
+          workingLocation: values.jobInfo.workingLocation,
+          position: values.jobInfo.position,
+          jobDescription: values.jobInfo.jobDescription,
+          basicSalary: values.salaryInfo.basicSalary,
+          allowance: values.salaryInfo.allowance,
+          receiveMethod: values.salaryInfo.receiveMethod,
+          payday: values.salaryInfo.payday,
+          salaryReviewPeriod: values.salaryInfo.salaryReviewPeriod,
+        },
+      });
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
 
+      if(response.status === HttpStatusCodes.CREATED){
+        resetForm();
+        console.log("Successfully created contract");
+      }
       console.log("Successfully submitted: ", values);
-      resetForm();
     } catch (err) {
       console.log("Error when creating crew contract: ", err);
     } finally {
@@ -247,7 +295,39 @@ const CreateCrewContract = () => {
                 </Box>
               </Box>
             </Box>
-            <SectionDivider sectionName="Người sử dụng lao động (Bên A)*: " />
+            <Grid
+              container
+              spacing={2}
+              mt={2}
+              mx={2}
+              rowSpacing={1}
+              pt={2}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Grid size={6}>
+                <InfoTextField
+                  id="title"
+                  label="Tiêu đề hợp đồng"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="title"
+                  value={values.title}
+                  error={
+                    !!touched.title && !!errors.title
+                  }
+                  helperText={
+                    touched.title && errors.title
+                      ? errors.title
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            <SectionDivider sx={{ marginTop: 1, }} sectionName="Người sử dụng lao động (Bên A)*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
                 <InfoTextField

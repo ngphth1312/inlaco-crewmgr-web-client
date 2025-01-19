@@ -28,16 +28,18 @@ import {
   getCrewMemberByID_API,
   editCrewMemberProfileAPI,
 } from "../services/crewServices";
-import { isoStringToDateString, dateStringToISOString } from "../utils/ValueConverter";
+import {
+  isoStringToDateString,
+  dateStringToISOString,
+} from "../utils/ValueConverter";
 
 const CrewMemberDetail = () => {
   // const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  // const official = location.state?.official;
-  const official = true;
-
+  const official = location.state?.official;
+// 
   const [crewMemberInfo, setCrewMemberInfo] = useState({});
 
   const fetchCrewMemberInfos = async (crewMemberID) => {
@@ -79,14 +81,24 @@ const CrewMemberDetail = () => {
     address: crewMemberInfo?.address || "",
     phoneNumber: crewMemberInfo?.phoneNumber || "",
     email: crewMemberInfo?.email || "",
-    languageSkills: crewMemberInfo?.languageSkills
-      ? crewMemberInfo?.languageSkills[0]
-      : "",
+    languageSkills:
+      crewMemberInfo?.languageSkills &&
+      crewMemberInfo?.languageSkills[0] !== null
+        ? crewMemberInfo?.languageSkills[0]
+        : "",
 
     jobInfo: {
       position: crewMemberInfo?.professionalPosition || "",
-      experience: crewMemberInfo?.experiences || "",
-      expertiseLevels: crewMemberInfo?.expertiseLevels ? crewMemberInfo?.expertiseLevels[0] : "",
+      experience:
+        crewMemberInfo?.experience &&
+        crewMemberInfo?.experience[0] !== null
+          ? crewMemberInfo?.experience[0]
+          : "",
+      expertiseLevels:
+        crewMemberInfo?.expertiseLevels &&
+        crewMemberInfo?.expertiseLevels[0] !== null
+          ? crewMemberInfo?.expertiseLevels[0]
+          : "",
     },
 
     insuranceInfo: {
@@ -142,11 +154,11 @@ const CrewMemberDetail = () => {
       const response = await editCrewMemberProfileAPI(id, values);
       // await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
       console.log(response);
-      if(response.status === HttpStatusCodes.OK) {
+      if (response.status === HttpStatusCodes.OK) {
         await fetchCrewMemberInfos(id);
         setIsEditable(false);
         // console.log("Successfully saving update: ", values);
-      } else{
+      } else {
         console.log("Error when saving crew member info update");
       }
     } catch (err) {
@@ -733,35 +745,13 @@ const CrewMemberDetail = () => {
                     touched.insuranceInfo?.healthInsID &&
                     errors.insuranceInfo?.healthInsID
                       ? errors.insuranceInfo?.healthInsID
-                      : ""
+                      : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{ marginBottom: 0 }}
                 />
               </Grid>
               <Grid size={8}>
-                <Box sx={{ display: "flex", alignItems: "end" }}>
-                  <Typography
-                    mr={2}
-                    sx={{
-                      color: COLOR.primary_black_placeholder,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Ảnh chụp BHYT hoặc tra cứu BHYT:{" "}
-                  </Typography>
-                  <HorizontalImageInput
-                    disabled={!isEditable}
-                    id="health-ins-image"
-                    name="insuranceInfo.healthInsImage"
-                    onClick={() =>
-                      document.getElementById("health-ins-image").click()
-                    }
-                  />
-                </Box>
-              </Grid>
-              <Grid size={9}>
                 <InfoTextField
                   // id="salary-review-period"
                   label="Nơi đăng ký khám chữa bệnh ban đầu"
@@ -784,6 +774,27 @@ const CrewMemberDetail = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
+              </Grid>
+              <Grid size={8}>
+                <Box sx={{ display: "flex", alignItems: "end" }}>
+                  <Typography
+                    mr={2}
+                    sx={{
+                      color: COLOR.primary_black_placeholder,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Ảnh chụp BHYT hoặc tra cứu BHYT:{" "}
+                  </Typography>
+                  <HorizontalImageInput
+                    disabled={!isEditable}
+                    id="health-ins-image"
+                    name="insuranceInfo.healthInsImage"
+                    onClick={() =>
+                      document.getElementById("health-ins-image").click()
+                    }
+                  />
+                </Box>
               </Grid>
             </Grid>
           </Box>

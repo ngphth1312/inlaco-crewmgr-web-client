@@ -1,18 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PageTitle, NoValuesOverlay } from "../components/global";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockSupplyRequest } from "../data/mockData";
 import { ScheduleCell, ShipInfoCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
+import { useAppContext } from "../contexts/AppContext";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { getAllSupplyRequestAPI } from "../services/supplyReqServices";
+import { formatDateTime } from "../utils/ValueConverter";
 
 const SupplyRequest = () => {
   const navigate = useNavigate();
+  const { roles } = useAppContext();
 
-  const isAdmin = true; //Change this to false to see the user view
+  const isAdmin = roles.includes("ADMIN");
+  const [loading, setLoading] = useState(false);
+  const [supplyRequests, setSupplyRequests] = useState([]);
+
+  useEffect(() => {
+    const fetchSupplyRequests = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllSupplyRequestAPI(0, 10, "");
+        if (response.status === HttpStatusCodes.OK) {
+          console.log(response.data.content);
+          const requests = response.data.content;
+
+          const formattedRequests = requests.map((request) => ({
+            id: request.id,
+            companyName: request.companyName,
+            representativeInfo: {
+              representativeName: request.representativeName,
+              email: request.companyEmail,
+              phoneNumber: request.companyPhone,
+            },
+            shipInfo: {
+              IMONumber: request.shipInfo.imonumber,
+              name: request.shipInfo.name,
+              countryCode: request.shipInfo.countryISO,
+              type: request.shipInfo.shipType,
+              // imageUrl: request.shipInfo.imageUrl,
+            },
+            scheduleInfo: {
+              startLocation: request.departurePoint,
+              startDate: request.estimatedDepartureTime,
+              endLocation: request.arrivalPoint,
+              estimatedEndTime: request.estimatedArrivalTime,
+            },
+          }));
+
+          setSupplyRequests(formattedRequests);
+        } else {
+          console.error("Error fetching supply requests:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching supply requests");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSupplyRequests();
+  }, []);
 
   const onRequestDetailClick = (id) => {
     if (isAdmin) {
@@ -24,10 +76,10 @@ const SupplyRequest = () => {
 
   const columns = [
     {
-      field: "partnerName",
+      field: "companyName",
       headerName: "Tên công ty",
       sortable: false,
-      flex: 2,
+      flex: 1.5,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -44,7 +96,7 @@ const SupplyRequest = () => {
       ),
     },
     {
-      field: "representInfo",
+      field: "representativeInfo",
       headerName: "Thông tin Người đại diện",
       sortable: false,
       flex: 2,
@@ -62,7 +114,7 @@ const SupplyRequest = () => {
         >
           <p style={{ margin: 0, textAlign: "left" }}>
             <strong>Tên: </strong>
-            {params.value?.name}
+            {params.value.representativeName}
           </p>
           <p style={{ margin: 0, textAlign: "left" }}>
             <strong>Email: </strong>
@@ -94,7 +146,7 @@ const SupplyRequest = () => {
       },
     },
     {
-      field: "schedule",
+      field: "scheduleInfo",
       headerName: "Lịch trình",
       sortable: false,
       flex: 2,
@@ -103,10 +155,10 @@ const SupplyRequest = () => {
       renderCell: (params) => {
         return (
           <ScheduleCell
-            startLocation={params?.row?.startLocation}
-            startDate={params?.row?.startDate}
-            endLocation={params?.row?.endLocation}
-            estimatedEndTime={params?.row?.estimatedEndTime}
+            startLocation={params?.value?.startLocation}
+            startDate={formatDateTime(params?.value?.startDate)}
+            endLocation={params?.value?.endLocation}
+            estimatedEndTime={formatDateTime(params?.value?.estimatedEndTime)}
           />
         );
       },
@@ -153,6 +205,21 @@ const SupplyRequest = () => {
       },
     },
   ];
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -208,7 +275,7 @@ const SupplyRequest = () => {
             disableColumnMenu
             disableColumnResize
             getRowHeight={() => "auto"}
-            rows={mockSupplyRequest}
+            rows={supplyRequests}
             columns={columns}
             slots={{ noRowsOverlay: NoValuesOverlay }}
             pageSizeOptions={[5, 10, { value: -1, label: "All" }]}

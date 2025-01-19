@@ -11,7 +11,7 @@ export const COLOR = {
   secondary_white: "#E8EFF7",
 
   //Alert
-  primary_green: "#5ABF80",
+  primary_green: "#5ABF8F",
   primary_orange: "#E74C3C",
   primary_gold: "#FFC860 ",
   primary_light_gold: "#FFDEA6",
