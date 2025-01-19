@@ -25,6 +25,8 @@ const SupplyRequest = () => {
       setLoading(true);
       try {
         const response = await getAllSupplyRequestAPI(0, 10, "");
+        await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
         if (response.status === HttpStatusCodes.OK) {
           console.log(response.data.content);
           const requests = response.data.content;
@@ -203,7 +205,7 @@ const SupplyRequest = () => {
           </div>
         );
       },
-    },
+  },
   ];
 
   if (loading) {

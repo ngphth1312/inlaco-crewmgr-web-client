@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PageTitle,
   SectionDivider,
@@ -15,7 +15,6 @@ import {
   Typography,
   TextField,
   CircularProgress,
-  InputAdornment,
 } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
@@ -23,74 +22,134 @@ import { COLOR } from "../assets/Color";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import { useNavigate, useParams } from "react-router";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { getSupplyReqByID_API, reviewSupplyReqAPI } from "../services/supplyReqServices";
+import { isoStringToMUIDateTime } from "../utils/ValueConverter";
 
 const AdminSupplyRequestDetail = () => {
   // const navigate = useNavigate();
   const { id } = useParams();
-  const status = "Đang chờ xác nhận"; //Change this to the status of the request
-  //"Chấp thuận", "Từ chối", "Đang chờ xác nhận", "Đã ký hợp đồng"
 
-  // useEffect(() => {
-  //   fetchRequestInfos(id);
-  // },[]);
+  const [loading, setLoading] = useState(false);
+  const [requestInfos, setRequestInfos] = useState({});
+
+  const fetchRequestInfos = async (supplyReqID) => {
+    setLoading(true);
+    try {
+      const response = await getSupplyReqByID_API(supplyReqID);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
+      if (response.status === HttpStatusCodes.OK) {
+        setRequestInfos(response.data);
+      } else {
+        console.log("Error fetching request infos");
+      }
+    } catch (err) {
+      console.log("Error fetching request infos: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchRequestInfos(id);
+  }, []);
+
+  const statusMap = {
+    PENDING: "Đang chờ xác nhận",
+    APPROVED: "Chấp thuận",
+    REJECTED: "Từ chối",
+    ACTIVE: "Đã ký hợp đồng",
+  };
+
+  const status = statusMap[requestInfos?.status] || "Lỗi";
+  // const status = "Từ chối";
 
   const initialValues = {
     requestListFileLink: "",
     compInfo: {
-      compName: "",
-      compAddress: "",
-      compPhoneNumber: "",
-      compEmail: "",
-      representative: "",
-      representativePos: "",
+      compName: requestInfos?.companyName,
+      compAddress: requestInfos?.companyAddress,
+      compPhoneNumber: requestInfos?.companyPhone,
+      compEmail: requestInfos?.companyEmail,
+      representative: requestInfos?.representativeName,
+      representativePos: requestInfos?.representativeTitle,
     },
 
     requestInfo: {
-      timeOfDeparture: "",
-      departureLocation: "",
-      UN_LOCODE_DepartureLocation: "",
+      timeOfDeparture: requestInfos?.estimatedDepartureTime
+        ? isoStringToMUIDateTime(requestInfos?.estimatedDepartureTime)
+        : "",
+      departureLocation: requestInfos?.departurePoint,
+      UN_LOCODE_DepartureLocation: requestInfos?.departureUNLOCODE,
 
-      estimatedTimeOfArrival: "",
-      arrivalLocation: "",
-      UN_LOCODE_ArrivalLocation: "",
+      estimatedTimeOfArrival: requestInfos?.estimatedArrivalTime
+        ? isoStringToMUIDateTime(requestInfos?.estimatedArrivalTime)
+        : "",
+      arrivalLocation: requestInfos?.arrivalPoint,
+      UN_LOCODE_ArrivalLocation: requestInfos?.arrivalUNLOCODE,
 
       shipImage: "",
-      shipIMO: "",
-      shipName: "",
-      shipNationality: "",
-      shipType: "",
+      shipIMO: requestInfos?.shipInfo?.imonumber,
+      shipName: requestInfos?.shipInfo?.name,
+      shipNationality: requestInfos.shipInfo?.nationality ? requestInfos?.shipInfo?.countryISO : "",
+      shipType: requestInfos?.shipInfo?.shipType,
     },
   };
 
-  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const handleApproveClick = async () => {
-    setLoading(true);
+    setButtonLoading(true);
     try {
-      //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
+      const response = await reviewSupplyReqAPI(id, true);
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay for 200ms
 
-      console.log("Successfully approved request");
+      if (response.status === HttpStatusCodes.NO_CONTENT) {
+        console.log("Successfully approved request");
+        await fetchRequestInfos(id);
+      } else{
+        console.log("Error when approving request");
+      }
     } catch (err) {
       console.log("Error when approving request: ", err);
     } finally {
-      setLoading(false);
+      setButtonLoading(false);
     }
   };
 
   const handleDeclineClick = async () => {
-    setLoading(true);
+    setButtonLoading(true);
     try {
-      //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //Mock API call
+      const response = await reviewSupplyReqAPI(id, false);
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay for 200ms
 
-      console.log("Successfully declined request");
+      if (response.status === HttpStatusCodes.NO_CONTENT) {
+        console.log("Successfully declined request");
+        await fetchRequestInfos(id);
+      }else{
+        console.log("Error when declining request"); 
+      }
     } catch (err) {
       console.log("Error when declining request: ", err);
     } finally {
-      setLoading(false);
+      setButtonLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -142,7 +201,7 @@ const AdminSupplyRequestDetail = () => {
                     />
                   )}
                 </Box>
-                <Box sx={{ display: "flex", }}>
+                <Box sx={{ display: "flex", justifyContent: status === "Đang chờ xác nhận" ? "space-between" : "end" }}>
                   {status === "Đang chờ xác nhận" && (
                     <Box
                       sx={{
@@ -155,7 +214,7 @@ const AdminSupplyRequestDetail = () => {
                       <Button
                         variant="contained"
                         onClick={() => handleApproveClick()}
-                        disabled={loading}
+                        disabled={buttonLoading}
                         sx={{
                           width: "30%",
                           padding: 1,
@@ -167,7 +226,7 @@ const AdminSupplyRequestDetail = () => {
                           marginBottom: 2,
                         }}
                       >
-                        {loading ? (
+                        {buttonLoading ? (
                           <CircularProgress
                             size={24}
                             color={COLOR.primary_black}
@@ -186,7 +245,7 @@ const AdminSupplyRequestDetail = () => {
                       <Button
                         variant="contained"
                         onClick={() => handleDeclineClick()}
-                        disabled={loading}
+                        disabled={buttonLoading}
                         sx={{
                           width: "30%",
                           padding: 1,
@@ -197,7 +256,7 @@ const AdminSupplyRequestDetail = () => {
                           marginBottom: 2,
                         }}
                       >
-                        {loading ? (
+                        {buttonLoading ? (
                           <CircularProgress
                             size={24}
                             color={COLOR.primary_black}
@@ -215,7 +274,11 @@ const AdminSupplyRequestDetail = () => {
                       </Button>
                     </Box>
                   )}
-                  <FileUploadField label="Danh sách số lượng cần cung ứng" disabled={true} name="requestListFileLink" />
+                  <FileUploadField
+                    label="Danh sách số lượng cần cung ứng"
+                    disabled={true}
+                    name="requestListFileLink"
+                  />
                 </Box>
               </Box>
             </Box>

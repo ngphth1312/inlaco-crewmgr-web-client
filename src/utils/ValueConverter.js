@@ -149,31 +149,30 @@ export function dateTimeStringToISOString(dateTimeString) {
   }
 }
 
-// export function isoStringToDateTimeString(isoString) {
-//   try {
-//     const date = new Date(isoString);
+export function isoStringToMUIDateTime(isoString) {
+  try {
+    const date = new Date(isoString);
 
-//     // Check if date is valid
-//     if (isNaN(date.getTime())) {
-//       throw new Error("Invalid date");
-//     }
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid ISO string");
+    }
 
-//     // Get time components
-//     const hours = String(date.getHours()).padStart(2, "0");
-//     const minutes = String(date.getMinutes()).padStart(2, "0");
+    // Extract date components
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
 
-//     // Get date components
-//     const day = String(date.getDate()).padStart(2, "0");
-//     const month = String(date.getMonth() + 1).padStart(2, "0");
-//     const year = date.getFullYear();
+    // Extract time components
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
 
-//     // Combine into required format
-//     return `${hours}:${minutes} - ${day}/${month}/${year}`;
-//   } catch (error) {
-//     console.error("Error converting ISO string to datetime:", error);
-//     return null;
-//   }
-// }
+    // Return in MUI datetime format
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  } catch (error) {
+    console.error("Error converting ISOString to MUI datetime:", error);
+    return null;
+  }
+}
 
 export function isoStringToDateString(isoString) { //convert "yyyy-mm-ddT00:00:00.000Z" to "yyyy-mm-dd"
   try {
