@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PageTitle,
   SectionDivider,
@@ -32,6 +32,13 @@ import Docxtemplater from "docxtemplater";
 import { saveAs } from "file-saver";
 import JSZipUtils from "jszip-utils";
 import { formatDateString } from "../utils/ValueConverter";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import {
+  getCrewContractByID_API,
+  editCrewContractAPI,
+  activeContractByID_API
+} from "../services/contractServices";
+import { isoStringToDateString, dateStringToISOString } from "../utils/ValueConverter";
 
 const CrewContractDetail = () => {
   const navigate = useNavigate();
@@ -40,45 +47,108 @@ const CrewContractDetail = () => {
   const location = useLocation();
   const isOfficialContract = location.state?.signed;
 
-  // useEffect(() => {
-  //   fetchCrewContractInfos(id);
-  // },[]);
+  const [loading, setLoading] = useState(false);
+  const [contractInfo, setContractInfo] = useState({});
+
+  const fetchCrewContractInfo = async (id) => {
+    setLoading(true);
+    try {
+      const response = await getCrewContractByID_API(id);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
+      if (response.status === HttpStatusCodes.OK) {
+        console.log("Crew contract info: ", response.data);
+        setContractInfo(response.data);
+      }
+    } catch (err) {
+      console.log("Error when fetching crew contract info: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCrewContractInfo(id);
+  }, []);
 
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
 
   const initialValues = {
     contractFileLink: "",
+    title: contractInfo.title,
     partyA: {
-      compName: "Công ty INLACO Hải Phòng",
-      compAddress: "",
-      compPhoneNumber: "",
-      representative: "",
+      compName: contractInfo.initiator?.partyName,
+      compAddress: contractInfo.initiator?.address,
+      compPhoneNumber: contractInfo.initiator?.phone,
+      representative: contractInfo.initiator?.representer,
       representativePos: "Trưởng phòng Nhân sự",
     },
     partyB: {
-      fullName: "",
-      dob: "",
-      birthplace: "",
-      nationality: "",
-      permanentAddr: "",
-      temporaryAddr: "",
-      ciNumber: "",
-      ciIssueDate: "",
-      ciIssuePlace: "",
+      fullName: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.partyName
+        : "",
+      dob: contractInfo.signedPartners
+        ? isoStringToDateString(
+            contractInfo.signedPartners[0]?.customAttributes[0]?.value
+          )
+        : "", //dob
+      birthplace: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.customAttributes[1]?.value
+        : "", //birthplace
+      nationality: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.customAttributes[2]?.value
+        : "", //nationality
+      permanentAddr: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.address
+        : "", //permanentAddr
+      temporaryAddr: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.customAttributes[3]?.value
+        : "", //temporaryAddr
+      ciNumber: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.customAttributes[4]?.value
+        : "", //ciNumber
+      ciIssueDate: contractInfo.signedPartners
+        ? isoStringToDateString(
+            contractInfo.signedPartners[0]?.customAttributes[5]?.value
+          )
+        : "", //ciIssueDate
+      ciIssuePlace: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.customAttributes[6]?.value
+        : "", //ciIssuePlace
     },
     jobInfo: {
-      startDate: "",
-      endDate: "",
-      workingLocation: "Địa điểm làm việc sẽ được thông báo sau",
-      position: "",
-      jobDescription: "",
+      startDate: contractInfo.activationDate
+        ? isoStringToDateString(contractInfo.activationDate)
+        : "", //startDate
+      endDate: contractInfo.expiredDate
+        ? isoStringToDateString(contractInfo.expiredDate)
+        : "", //endDate
+      workingLocation: contractInfo.customAttributes
+        ? contractInfo.customAttributes[0]?.value
+        : "", //workingLocation
+      position: contractInfo.customAttributes
+        ? contractInfo.customAttributes[1]?.value
+        : "", //position
+      jobDescription: contractInfo.customAttributes
+        ? contractInfo.customAttributes[2]?.value
+        : "", //jobDescription
     },
     salaryInfo: {
-      basicSalary: "",
-      allowance: "",
-      receiveMethod: "Tiền mặt",
-      payday: "Ngày 5 hàng tháng",
-      salaryReviewPeriod: "Mỗi 3 tháng",
+      basicSalary: contractInfo.customAttributes
+        ? contractInfo.customAttributes[3]?.value
+        : "", //basicSalary
+      allowance: contractInfo.customAttributes
+        ? contractInfo.customAttributes[4]?.value
+        : "", //allowance
+      receiveMethod: contractInfo.customAttributes
+        ? contractInfo.customAttributes[5]?.value
+        : "", //receiveMethod
+      payday: contractInfo.customAttributes
+        ? contractInfo.customAttributes[6]?.value
+        : "", //payday
+      salaryReviewPeriod: contractInfo.customAttributes
+        ? contractInfo.customAttributes[7]?.value
+        : "", //salaryReviewPeriod
     },
     addendum: [],
   };
@@ -88,6 +158,7 @@ const CrewContractDetail = () => {
   const ciNumberRegex = "^\\d{12}$";
 
   const crewContractSchema = yup.object().shape({
+    title: yup.string().required("Tiêu đề không được để trống"),
     partyA: yup.object().shape({
       compName: yup.string().required("Tên công ty không được để trống"),
       compAddress: yup.string().required("Địa chỉ không được để trống"),
@@ -135,7 +206,7 @@ const CrewContractDetail = () => {
     jobInfo: yup.object().shape({
       startDate: yup
         .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
+        .min(new Date(), "Ngày bắt đầu không hợp lệ")
         .required("Ngày bắt đầu không được để trống")
         .test(
           "is-before-end-date",
@@ -204,7 +275,91 @@ const CrewContractDetail = () => {
     // setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await editCrewContractAPI(id, {
+        title: values.title,
+        initiator: {
+          partyName: values.partyA.compName,
+          address: values.partyA.compAddress,
+          phone: values.partyA.compPhoneNumber,
+          representer: values.partyA.representative,
+          email: "thong2046@gmail.com",
+          type: "STATIC",
+        },
+        signedPartners: [
+          {
+            partyName: values.partyB.fullName,
+            address: values.partyB.permanentAddr,
+            type: "LABOR",
+            customAttributes: [
+              {
+                key: "dob",
+                value: dateStringToISOString(values.partyB.dob),
+              },
+              {
+                key: "birthplace",
+                value: values.partyB.birthplace,
+              },
+              {
+                key: "nationality",
+                value: values.partyB.nationality,
+              },
+              {
+                key: "temporaryAddr",
+                value: values.partyB.temporaryAddr,
+              },
+              {
+                key: "ciNumber",
+                value: values.partyB.ciNumber,
+              },
+              {
+                key: "ciIssueDate",
+                value: dateStringToISOString(values.partyB.ciIssueDate),
+              },
+              {
+                key: "ciIssuePlace",
+                value: values.partyB.ciIssuePlace,
+              },
+            ],
+          },
+        ],
+        activationDate: dateStringToISOString(values.jobInfo.startDate),
+        expiredDate: dateStringToISOString(values.jobInfo.endDate),
+        customAttributes: [
+          {
+            key: "workingLocation",
+            value: values.jobInfo.workingLocation,
+          },
+          {
+            key: "position",
+            value: values.jobInfo.position,
+          },
+          {
+            key: "jobDescription",
+            value: values.jobInfo.jobDescription,
+          },
+          {
+            key: "basicSalary",
+            value: values.salaryInfo.basicSalary,
+          },
+          {
+            key: "allowance",
+            value: values.salaryInfo.allowance,
+          },
+          {
+            key: "receiveMethod",
+            value: values.salaryInfo.receiveMethod,
+          },
+          {
+            key: "payday",
+            value: values.salaryInfo.payday,
+          },
+          {
+            key: "salaryReviewPeriod",
+            value: values.salaryInfo.salaryReviewPeriod,
+          },
+        ],
+      });
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
 
       console.log("Successfully updating: ", values);
       setIsEditable(false);
@@ -216,7 +371,14 @@ const CrewContractDetail = () => {
   };
 
   const handleApproveContract = async () => {
-
+    try{
+      const response = await activeContractByID_API(id);
+      if(response.status === HttpStatusCodes.OK){
+        navigate("/crew-contracts");
+      }
+    } catch(err){
+      console.log("Error when approving contract: ", err);
+    }
   };
 
   const handleDownloadPaperContractClick = (values) => {
@@ -290,6 +452,21 @@ const CrewContractDetail = () => {
       }
     );
   };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -493,9 +670,7 @@ const CrewContractDetail = () => {
                               backgroundColor: COLOR.primary_green,
                               minWidth: 130,
                             }}
-                            onClick={() =>
-                              handleApproveContract()
-                            }
+                            onClick={() => handleApproveContract()}
                           >
                             <Box sx={{ display: "flex", alignItems: "end" }}>
                               <HandshakeRoundedIcon
@@ -542,7 +717,39 @@ const CrewContractDetail = () => {
                 </Box>
               </Box>
             </Box>
-            <SectionDivider sectionName="Người sử dụng lao động (Bên A)*: " />
+            <Grid
+              container
+              spacing={2}
+              mt={3}
+              mx={2}
+              rowSpacing={1}
+              pt={2}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Grid size={6}>
+                <InfoTextField
+                  id="title"
+                  label="Tiêu đề hợp đồng"
+                  size="small"
+                  margin="none"
+                  required
+                  disabled={!isEditable}
+                  fullWidth
+                  name="title"
+                  value={values.title}
+                  error={!!touched.title && !!errors.title}
+                  helperText={
+                    touched.title && errors.title ? errors.title : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            <SectionDivider
+              sx={{ marginTop: 1 }}
+              sectionName="Người sử dụng lao động (Bên A)*: "
+            />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
                 <InfoTextField

@@ -9,13 +9,13 @@ import {
   MenuItem,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockCrewContracts } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
 import { getCrewContractsAPI } from "../services/contractServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { isoStringToAppDateString } from "../utils/ValueConverter";
 
 const CrewContract = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const CrewContract = () => {
       await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
 
       if (response.status === HttpStatusCodes.OK) {
-        console.log("Crew contracts: ", response);
-        setCrewContracts(response.data);
+        console.log("Crew contracts: ", response.data.content);
+        setCrewContracts(response.data.content);
       }
     } catch (err) {
       console.log("Error when fetching crew contracts: ", err);
@@ -60,23 +60,6 @@ const CrewContract = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "Mã TV",
-      sortable: false,
-      flex: 0.75,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "parties",
-      headerName: "Tên thuyền viên",
-      sortable: false,
-      flex: 2,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: (params) => params?.name,
-    },
-    {
       field: "title",
       headerName: "Tiêu đề",
       sortable: false,
@@ -86,19 +69,25 @@ const CrewContract = () => {
     },
     {
       field: "activationDate",
-      headerName: "Ngày bắt đầu",
+      headerName: "Ngày có hiệu lực",
       sortable: false,
       flex: 1,
       align: "center",
       headerAlign: "center",
+      valueFormatter: (params) => {
+        return params ? isoStringToAppDateString(params) : "";
+      },
     },
     {
       field: "expiredDate",
-      headerName: "Ngày kết thúc",
+      headerName: "Ngày hết hạn",
       sortable: false,
       flex: 1,
       align: "center",
       headerAlign: "center",
+      valueFormatter: (params) => {
+        return params ? isoStringToAppDateString(params) : "";
+      },
     },
     {
       field: "detail",
@@ -197,7 +186,7 @@ const CrewContract = () => {
               disableRowSelectionOnClick
               disableColumnMenu
               disableColumnResize
-              rows={mockCrewContracts}
+              rows={crewContracts}
               columns={columns}
               slots={{ noRowsOverlay: NoValuesOverlay }}
               pageSizeOptions={[5, 10, { value: -1, label: "All" }]}

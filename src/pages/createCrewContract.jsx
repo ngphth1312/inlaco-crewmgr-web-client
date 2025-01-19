@@ -191,37 +191,83 @@ const CreateCrewContract = () => {
             partyName: values.partyB.fullName,
             address: values.partyB.permanentAddr,
             type: "LABOR",
-            customAttributes: {
-              dob: dateStringToISOString(values.partyB.dob),
-              birthplace: values.partyB.birthplace,
-              nationality: values.partyB.nationality,
-              temporaryAddr: values.partyB.temporaryAddr,
-              ciNumber: values.partyB.ciNumber,
-              ciIssueDate: dateStringToISOString(values.partyB.ciIssueDate),
-              ciIssuePlace: values.partyB.ciIssuePlace,
-            },
+            customAttributes: [
+              {
+                key: "dob",
+                value: dateStringToISOString(values.partyB.dob),
+              },
+              {
+                key: "birthplace",
+                value: values.partyB.birthplace,
+              },
+              {
+                key: "nationality",
+                value: values.partyB.nationality,
+              },
+              {
+                key: "temporaryAddr",
+                value: values.partyB.temporaryAddr,
+              },
+              {
+                key: "ciNumber",
+                value: values.partyB.ciNumber,
+              },
+              {
+                key: "ciIssueDate",
+                value: dateStringToISOString(values.partyB.ciIssueDate),
+              },
+              {
+                key: "ciIssuePlace",
+                value: values.partyB.ciIssuePlace,
+              },
+            ],
           },
         ],
         activationDate: dateStringToISOString(values.jobInfo.startDate),
         expiredDate: dateStringToISOString(values.jobInfo.endDate),
-        customAttributes: {
-          workingLocation: values.jobInfo.workingLocation,
-          position: values.jobInfo.position,
-          jobDescription: values.jobInfo.jobDescription,
-          basicSalary: values.salaryInfo.basicSalary,
-          allowance: values.salaryInfo.allowance,
-          receiveMethod: values.salaryInfo.receiveMethod,
-          payday: values.salaryInfo.payday,
-          salaryReviewPeriod: values.salaryInfo.salaryReviewPeriod,
-        },
+        customAttributes: [
+          {
+            key: "workingLocation",
+            value: values.jobInfo.workingLocation,
+          },
+          {
+            key: "position",
+            value: values.jobInfo.position,
+          },
+          {
+            key: "jobDescription",
+            value: values.jobInfo.jobDescription,
+          },
+          {
+            key: "basicSalary",
+            value: values.salaryInfo.basicSalary,
+          },
+          {
+            key: "allowance",
+            value: values.salaryInfo.allowance,
+          },
+          {
+            key: "receiveMethod",
+            value: values.salaryInfo.receiveMethod,
+          },
+          {
+            key: "payday",
+            value: values.salaryInfo.payday,
+          },
+          {
+            key: "salaryReviewPeriod",
+            value: values.salaryInfo.salaryReviewPeriod,
+          },
+        ],
       });
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
 
       if(response.status === HttpStatusCodes.CREATED){
-        resetForm();
         console.log("Successfully created contract");
+        resetForm();
+        navigate("/crew-contracts");
       }
-      console.log("Successfully submitted: ", values);
+      // console.log("Successfully submitted: ", values);
     } catch (err) {
       console.log("Error when creating crew contract: ", err);
     } finally {
