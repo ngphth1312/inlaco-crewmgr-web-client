@@ -1,64 +1,143 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageTitle, SectionDivider, InfoTextField } from "../components/global";
 import { FileUploadField } from "../components/contract";
-import { Box, Button, Typography, InputAdornment } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  InputAdornment,
+  CircularProgress,
+  IconButton,
+} from "@mui/material";
 import { COLOR } from "../assets/Color";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
 import DifferenceRoundedIcon from "@mui/icons-material/DifferenceRounded";
 import GetAppRoundedIcon from "@mui/icons-material/GetAppRounded";
+import HandshakeRoundedIcon from "@mui/icons-material/HandshakeRounded";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation } from "react-router";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { saveAs } from "file-saver";
 import JSZipUtils from "jszip-utils";
+import {
+  getCrewContractByID_API,
+  activeContractByID_API,
+  editSupplyContractAPI,
+} from "../services/contractServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import {
+  isoStringToDateString,
+  isoStringToMUIDateTime,
+  formatDateString,
+  dateStringToISOString,
+} from "../utils/ValueConverter";
 
 const SupplyContractDetail = () => {
   const navigate = useNavigate();
-  
+
   const { id } = useParams();
-  const isOfficialContract = true; //edit this later
+  const location = useLocation();
+  const isOfficialContract = location.state?.signed;
+  // const isOfficialContract = true; //edit this later
+
+  const [loading, setLoading] = useState(false);
+  const [contractInfo, setContractInfo] = useState({});
+
+  const fetchContractInfo = async (id) => {
+    setLoading(true);
+    try {
+      //Call API to get contract info
+      const response = await getCrewContractByID_API(id);
+      await new Promise((resolve) => setTimeout(resolve, 200)); //delay 200ms
+
+      if (response.status === HttpStatusCodes.OK) {
+        console.log("Successfully fetched contract info");
+        console.log("Contract info: ", response.data);
+        setContractInfo(response.data);
+      }
+    } catch (err) {
+      console.log("Error when fetching contract info: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchContractInfo(id);
+  }, []);
+
+  console.log(contractInfo);
 
   const initialValues = {
     contractFileLink: "",
+    title: contractInfo.title || "",
     partyA: {
-      cardPhoto: "",
-      compName: "Công ty INLACO Hải Phòng",
-      compAddress: "",
-      compPhoneNumber: "",
-      representative: "",
-      representativePos: "Trưởng phòng Nhân sự",
+      compName: contractInfo.initiator?.partyName,
+      compAddress: contractInfo.initiator?.address,
+      compPhoneNumber: contractInfo.initiator?.phone,
+      representative: contractInfo.initiator?.representer,
+      representativePos: "Trưởng phòng nhân sự",
     },
     partyB: {
-      cardPhoto: "",
-      compName: "",
-      compAddress: "",
-      compPhoneNumber: "",
-      representative: "",
-      representativePos: "",
+      compName: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.partyName
+        : "",
+      compAddress: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.address
+        : "",
+      compPhoneNumber: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.phone
+        : "",
+      representative: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0]?.representer
+        : "",
+      representativePos: contractInfo.signedPartners
+        ? contractInfo.signedPartners[0].customAttributes[0].value
+        : "",
     },
     contractInfo: {
-      startDate: "",
-      endDate: "",
-      numOfCrewMember: "",
+      startDate: contractInfo.activationDate
+        ? isoStringToDateString(contractInfo.activationDate)
+        : "", //startDate
+      endDate: contractInfo.expiredDate
+        ? isoStringToDateString(contractInfo.expiredDate)
+        : "", //endDate
+      numOfCrewMember: contractInfo.customAttributes
+        ? contractInfo.customAttributes[0].value
+        : "", //numOfCrewMember
 
-      timeOfDeparture: "",
-      departureLocation: "",
-      UN_LOCODE_DepartureLocation: "",
+      timeOfDeparture: contractInfo.customAttributes
+        ? isoStringToMUIDateTime(contractInfo.customAttributes[1].value)
+        : "", //timeOfDeparture
+      UN_LOCODE_DepartureLocation: contractInfo.customAttributes
+        ? contractInfo.customAttributes[2].value
+        : "", //UN_LOCODE_DepartureLocation
+      departureLocation: contractInfo.customAttributes
+        ? contractInfo.customAttributes[3].value
+        : "", //departureLocation
 
-      estimatedTimeOfArrival: "",
-      arrivalLocation: "",
-      UN_LOCODE_ArrivalLocation: "",
+      estimatedTimeOfArrival: contractInfo.customAttributes
+        ? isoStringToMUIDateTime(contractInfo.customAttributes[4].value)
+        : "", //estimatedTimeOfArrival
+      arrivalLocation: contractInfo.customAttributes
+        ? contractInfo.customAttributes[6].value
+        : "", //arrivalLocation
+      UN_LOCODE_ArrivalLocation: contractInfo.customAttributes
+        ? contractInfo.customAttributes[5].value
+        : "", //UN_LOCODE_ArrivalLocation
     },
   };
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
-  const ciNumberRegex = "^\\d{12}$";
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const supplyContractSchema = yup.object().shape({
     partyA: yup.object().shape({
@@ -96,7 +175,7 @@ const SupplyContractDetail = () => {
     contractInfo: yup.object().shape({
       startDate: yup
         .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
+        .min(yesterday, "Ngày bắt đầu không hợp lệ")
         .required("Ngày bắt đầu không được để trống")
         .test(
           "is-before-end-date",
@@ -126,7 +205,7 @@ const SupplyContractDetail = () => {
 
       timeOfDeparture: yup
         .date()
-        .max(new Date(), "Thời gian khởi hành không hợp lệ")
+        .min(yesterday, "Thời gian khởi hành không hợp lệ")
         .test(
           "is-before-end-datetime",
           "Thời gian khởi hành phải trước thời gian đến nơi dự kiến",
@@ -164,6 +243,17 @@ const SupplyContractDetail = () => {
     setIsEditable(false);
   };
 
+  const handleApproveContract = async () => {
+    try {
+      const response = await activeContractByID_API(id);
+      if (response.status === HttpStatusCodes.OK) {
+        navigate("/supply-contracts");
+      }
+    } catch (err) {
+      console.log("Error when approving contract: ", err);
+    }
+  };
+
   const handleDownloadPaperContractClick = (values) => {
     const loadFile = (url, callback) => {
       JSZipUtils.getBinaryContent(url, callback);
@@ -187,6 +277,7 @@ const SupplyContractDetail = () => {
 
         // Set dynamic values for placeholders
         doc.setData({
+          title: values.title,
           partyA_representative: values.partyA.representative,
           partyA_representativePos: values.partyA.representativePos,
           partyA_compAddress: values.partyA.compAddress,
@@ -196,8 +287,8 @@ const SupplyContractDetail = () => {
           partyB_representativePos: values.partyB.representativePos,
           partyB_compAddress: values.partyB.compAddress,
           partyB_phoneNumber: values.partyB.compPhoneNumber,
-          startDate: values.contractInfo.startDate,
-          endDate: values.contractInfo.endDate,
+          startDate: formatDateString(values.contractInfo.startDate),
+          endDate: formatDateString(values.contractInfo.endDate),
         });
 
         try {
@@ -221,19 +312,97 @@ const SupplyContractDetail = () => {
   };
 
   const handleCreateSupplyContractSubmit = async (values) => {
-    // setCreateContractLoading(true);
+    setLoading(true);
     try {
       //Calling API to create a new crew member
+      const response = await editSupplyContractAPI(id, {
+        title: values.title,
+        initiator: {
+          partyName: values.partyA.compName,
+          address: values.partyA.compAddress,
+          phone: values.partyA.compPhoneNumber,
+          representer: values.partyA.representative,
+          email: "thong2046@gmail.com",
+          type: "STATIC",
+        },
+        signedPartners: [
+          {
+            partyName: values.partyB.compName,
+            address: values.partyB.compAddress,
+            phone: values.partyB.compPhoneNumber,
+            representer: values.partyB.representative,
+            type: "DYNAMIC",
+            customAttributes: [
+              {
+                key: "representativePos",
+                value: values.partyB.representativePos,
+              },
+            ],
+          },
+        ],
+        activationDate: dateStringToISOString(values.contractInfo.startDate),
+        expiredDate: dateStringToISOString(values.contractInfo.endDate),
+        customAttributes: [
+          {
+            key: "numOfCrewMember",
+            value: values.contractInfo.numOfCrewMember,
+          },
+          {
+            key: "timeOfDeparture",
+            value: dateStringToISOString(values.contractInfo.timeOfDeparture),
+          },
+          {
+            key: "UN_LOCODE_DepartureLocation",
+            value: values.contractInfo.UN_LOCODE_DepartureLocation,
+          },
+          {
+            key: "departureLocation",
+            value: values.contractInfo.departureLocation,
+          },
+          {
+            key: "estimatedTimeOfArrival",
+            value: dateStringToISOString(
+              values.contractInfo.estimatedTimeOfArrival
+            ),
+          },
+          {
+            key: "arrivalLocation",
+            value: values.contractInfo.arrivalLocation,
+          },
+          {
+            key: "UN_LOCODE_ArrivalLocation",
+            value: values.contractInfo.UN_LOCODE_ArrivalLocation,
+          },
+        ],
+      });
       await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
 
-      console.log("Successfully submitted: ", values);
-      setIsEditable(false);
+      if (response.status === HttpStatusCodes.OK) {
+        // console.log("Successfully submitted: ", values);
+        setIsEditable(false);
+        await fetchContractInfo(id);
+      }
     } catch (err) {
-      console.log("Error when creating supply contract: ", err);
+      console.log("Error when updating supply contract: ", err);
     } finally {
-      //   setCreateContractLoading(false);
+        setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -263,10 +432,34 @@ const SupplyContractDetail = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <PageTitle
-                  title="CHI TIẾT HỢP ĐỒNG CUNG ỨNG THUYỀN VIÊN"
-                  subtitle={`Mã hợp đồng: ${id}`} //Change this to the actual contractID, this currently display an id, not contractID
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
+                >
+                  <PageTitle
+                    title="CHI TIẾT HỢP ĐỒNG CUNG ỨNG THUYỀN VIÊN"
+                    subtitle={
+                      isOfficialContract
+                        ? `Tên hợp đồng: ${contractInfo.title}`
+                        : "Hợp đồng chưa chính thức (đang chờ ký kết)"
+                    }
+                  />
+                  {!isEditable && !isOfficialContract && (
+                    <IconButton
+                      sx={{
+                        backgroundColor: COLOR.primary_blue,
+                        color: COLOR.primary_white,
+                        "&:hover": { backgroundColor: COLOR.secondary_blue },
+                      }}
+                      onClick={() => handleDownloadPaperContractClick(values)}
+                    >
+                      <GetAppRoundedIcon sx={{ width: 28, height: 28 }} />
+                    </IconButton>
+                  )}
+                </Box>
                 <Box
                   sx={{
                     display: "flex",
@@ -387,15 +580,13 @@ const SupplyContractDetail = () => {
                               width: "35%",
                               padding: 1,
                               color: COLOR.primary_white,
-                              backgroundColor: COLOR.primary_blue,
+                              backgroundColor: COLOR.primary_green,
                               minWidth: 130,
                             }}
-                            onClick={() =>
-                              handleDownloadPaperContractClick(values)
-                            }
+                            onClick={() => handleApproveContract()}
                           >
                             <Box sx={{ display: "flex", alignItems: "end" }}>
-                              <GetAppRoundedIcon
+                              <HandshakeRoundedIcon
                                 sx={{
                                   marginRight: "5px",
                                   width: 22,
@@ -405,7 +596,7 @@ const SupplyContractDetail = () => {
                               <Typography
                                 sx={{ fontWeight: 700, fontSize: 14 }}
                               >
-                                Tải xuống Template
+                                Xác nhận ký kết
                               </Typography>
                             </Box>
                           </Button>
@@ -439,7 +630,39 @@ const SupplyContractDetail = () => {
                 </Box>
               </Box>
             </Box>
-            <SectionDivider sectionName="Công ty Cung ứng lao động (Bên A)*: " />
+            <Grid
+              container
+              spacing={2}
+              mt={3}
+              mx={2}
+              rowSpacing={1}
+              pt={2}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Grid size={6}>
+                <InfoTextField
+                  id="title"
+                  label="Tiêu đề hợp đồng"
+                  size="small"
+                  margin="none"
+                  required
+                  disabled={!isEditable}
+                  fullWidth
+                  name="title"
+                  value={values.title}
+                  error={!!touched.title && !!errors.title}
+                  helperText={
+                    touched.title && errors.title ? errors.title : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            <SectionDivider
+              sx={{ marginTop: 1 }}
+              sectionName="Công ty Cung ứng lao động (Bên A)*: "
+            />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
                 <InfoTextField

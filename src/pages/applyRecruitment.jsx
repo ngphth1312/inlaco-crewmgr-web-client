@@ -81,11 +81,11 @@ const ApplyRecruitment = () => {
     isLoading(true);
     try {
       //Calling API to create a new crew member
-      const tempFile = {
-        file: URL.createObjectURL(values.cvFile),
-        name: values.cvFile.name,
-        type: values.cvFile.type,
-      };
+      // const tempFile = {
+      //   file: URL.createObjectURL(values.cvFile),
+      //   name: values.cvFile.name,
+      //   type: values.cvFile.type,
+      // };
       const response = await applyRecruitmentAPI(id, {
         birthDate: dateStringToISOString(values.dob),
         fullName: values.fullName,
@@ -94,7 +94,7 @@ const ApplyRecruitment = () => {
         gender: values.gender,
         address: values.permanentAddr,
         languageSkills: [values.languageSkills],
-        resume: tempFile,
+        // resume: tempFile,
       });
       await new Promise((resolve) => setTimeout(resolve, 400)); //Delay for 0.4s to simulate API call
       

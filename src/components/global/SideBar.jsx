@@ -133,7 +133,7 @@ const SideBar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={require("../../assets/images/admin-avatar.jpg")}
+                  src={require("../../assets/images/profile-logo-placeholder.jpg")}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>

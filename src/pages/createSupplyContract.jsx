@@ -15,7 +15,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, } from "react-router";
 import { createSupplyContractAPI } from "../services/contractServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 import { dateStringToISOString } from "../utils/ValueConverter";
@@ -27,6 +27,7 @@ const CreateSupplyContract = () => {
 
   const initialValues = {
     contractFileLink: "",
+    title: "",
     partyA: {
       compName: "Công ty INLACO Hải Phòng",
       compAddress: "",
@@ -63,6 +64,7 @@ const CreateSupplyContract = () => {
   yesterday.setDate(yesterday.getDate() - 1);
 
   const supplyContractSchema = yup.object().shape({
+    title: yup.string().required("Tiêu đề không được để trống"),
     partyA: yup.object().shape({
       compName: yup.string().required("Tên công ty không được để trống"),
       compAddress: yup.string().required("Địa chỉ không được để trống"),
@@ -173,13 +175,13 @@ const CreateSupplyContract = () => {
             address: values.partyB.compAddress,
             phone: values.partyB.compPhoneNumber,
             representer: values.partyB.representative,
-            type: "STATIC",
-            // customAttributes: [
-            //   {
-            //     key: "representativePos",
-            //     value: values.partyB.representativePos,
-            //   },
-            // ],
+            type: "DYNAMIC",
+            customAttributes: [
+              {
+                key: "representativePos",
+                value: values.partyB.representativePos,
+              },
+            ],
           },
         ],
         activationDate: dateStringToISOString(values.contractInfo.startDate),
@@ -297,7 +299,35 @@ const CreateSupplyContract = () => {
                 </Box>
               </Box>
             </Box>
-            <SectionDivider sectionName="Công ty Cung ứng lao động (Bên A)*: " />
+            <Grid
+              container
+              spacing={2}
+              mt={3}
+              mx={2}
+              rowSpacing={1}
+              pt={2}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Grid size={6}>
+                <InfoTextField
+                  id="title"
+                  label="Tiêu đề hợp đồng"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="title"
+                  value={values.title}
+                  error={!!touched.title && !!errors.title}
+                  helperText={
+                    touched.title && errors.title ? errors.title : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+            </Grid>
+            <SectionDivider sx={{ marginTop: 1, }} sectionName="Công ty Cung ứng lao động (Bên A)*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={4}>
                 <InfoTextField

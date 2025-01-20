@@ -75,7 +75,7 @@ const CrewContractDetail = () => {
 
   const initialValues = {
     contractFileLink: "",
-    title: contractInfo.title,
+    title: contractInfo.title || "",
     partyA: {
       compName: contractInfo.initiator?.partyName,
       compAddress: contractInfo.initiator?.address,
@@ -156,6 +156,8 @@ const CrewContractDetail = () => {
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
   const ciNumberRegex = "^\\d{12}$";
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const crewContractSchema = yup.object().shape({
     title: yup.string().required("Tiêu đề không được để trống"),
@@ -206,7 +208,7 @@ const CrewContractDetail = () => {
     jobInfo: yup.object().shape({
       startDate: yup
         .date()
-        .min(new Date(), "Ngày bắt đầu không hợp lệ")
+        .min(yesterday, "Ngày bắt đầu không hợp lệ")
         .required("Ngày bắt đầu không được để trống")
         .test(
           "is-before-end-date",
@@ -360,9 +362,11 @@ const CrewContractDetail = () => {
         ],
       });
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
+      if(response.status === HttpStatusCodes.OK){
+        console.log("Successfully updating: ", values);
+        setIsEditable(false);
+      }
 
-      console.log("Successfully updating: ", values);
-      setIsEditable(false);
     } catch (err) {
       console.log("Error when updating crew contract: ", err);
     } finally {

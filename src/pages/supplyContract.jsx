@@ -56,7 +56,7 @@ const SupplyContract = () => {
   };
 
   const onContractDetailClick = (id) => {
-    navigate(`/supply-contracts/${id}`);
+    navigate(`/supply-contracts/${id}`, { state: { signed: isSignedContract } });
   };
 
   const columns = [
