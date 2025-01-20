@@ -39,7 +39,7 @@ const ShipInfoCell = ({
       >
         <img
           src={
-            imageError
+            imageError || !imageUrl
               ? require("../../assets/images/no-ship-photo.png")
               : imageUrl
           }

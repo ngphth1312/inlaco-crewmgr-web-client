@@ -38,9 +38,6 @@ export const getSupplyContractsAPI = async (page, size, signed) => {
 
 export const createCrewContractAPI = async (crewMemberID, crewContractInfo) => {
   try {
-    console.log("start date: ", crewContractInfo.activationDate);
-    console.log("end date: ", crewContractInfo.expiredDate);
-    
     const response = await privateRequest.post(
       `${ContractEndpoints.LABOR_GENERAL}/${crewMemberID}`,
       {
@@ -52,6 +49,27 @@ export const createCrewContractAPI = async (crewMemberID, crewContractInfo) => {
         expiredDate: crewContractInfo.expiredDate,
         type: "LABOR_CONTRACT",
         customAttributes: crewContractInfo.customAttributes,
+      }
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+export const createSupplyContractAPI = async (supplyReqID, supplyContractInfo) => {
+  try {
+    const response = await privateRequest.post(
+      `${ContractEndpoints.SUPPLY_GENERAL}/${supplyReqID}`,
+      {
+        title: supplyContractInfo.title,
+        initiator: supplyContractInfo.initiator,
+        signedPartners: supplyContractInfo.signedPartners,
+        terms: [],
+        activationDate: supplyContractInfo.activationDate,
+        expiredDate: supplyContractInfo.expiredDate,
+        type: "SUPPLY_CONTRACT",
+        customAttributes: supplyContractInfo.customAttributes,
       }
     );
     return response;

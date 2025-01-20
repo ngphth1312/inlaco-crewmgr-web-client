@@ -39,7 +39,6 @@ const AdminCandidateDetail = () => {
     { label: "Khác", value: "OTHER" },
   ];
 
-
   const [loading, setLoading] = useState(false);
   const [candidateInfo, setCandidateInfo] = useState({});
 
@@ -72,16 +71,18 @@ const AdminCandidateDetail = () => {
     HIRED: "Đã ký hợp đồng",
   };
 
-    const initialValues = {
-      fullName: candidateInfo?.fullName || "",
-      dob: candidateInfo?.birthDate ? isoStringToDateString(candidateInfo.birthDate) : "",
-      phoneNumber: candidateInfo?.phoneNumber || "",
-      address: candidateInfo?.address || "",
-      gender: candidateInfo?.gender ? candidateInfo.gender : "OTHER",
-      email: candidateInfo?.email || "",
-      languageSkills: candidateInfo?.languageSkills || "",
-      resume: "",
-    };
+  const initialValues = {
+    fullName: candidateInfo?.fullName || "",
+    dob: candidateInfo?.birthDate
+      ? isoStringToDateString(candidateInfo.birthDate)
+      : "",
+    phoneNumber: candidateInfo?.phoneNumber || "",
+    address: candidateInfo?.address || "",
+    gender: candidateInfo?.gender ? candidateInfo.gender : "OTHER",
+    email: candidateInfo?.email || "",
+    languageSkills: candidateInfo?.languageSkills || "",
+    resume: "",
+  };
 
   const status = statusMap[candidateInfo?.status] || "Lỗi";
 

@@ -16,11 +16,14 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router";
+import { createSupplyContractAPI } from "../services/contractServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { dateStringToISOString } from "../utils/ValueConverter";
 
 const CreateSupplyContract = () => {
   const navigate = useNavigate();
 
-  const { supplyReqID } = useParams();  
+  const { supplyReqID } = useParams();
 
   const initialValues = {
     contractFileLink: "",
@@ -36,7 +39,7 @@ const CreateSupplyContract = () => {
       compAddress: "",
       compPhoneNumber: "",
       representative: "",
-      representativePos: "",
+      representativePos: "Trưởng phòng Nhân sự",
     },
     contractInfo: {
       startDate: "",
@@ -55,7 +58,9 @@ const CreateSupplyContract = () => {
 
   const phoneRegex =
     "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
-  const ciNumberRegex = "^\\d{12}$";
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const supplyContractSchema = yup.object().shape({
     partyA: yup.object().shape({
@@ -93,7 +98,7 @@ const CreateSupplyContract = () => {
     contractInfo: yup.object().shape({
       startDate: yup
         .date()
-        .max(new Date(), "Ngày bắt đầu không hợp lệ")
+        .min(yesterday, "Ngày bắt đầu không hợp lệ")
         .required("Ngày bắt đầu không được để trống")
         .test(
           "is-before-end-date",
@@ -123,7 +128,7 @@ const CreateSupplyContract = () => {
 
       timeOfDeparture: yup
         .date()
-        .max(new Date(), "Thời gian khởi hành không hợp lệ")
+        .min(yesterday, "Thời gian khởi hành không hợp lệ")
         .test(
           "is-before-end-datetime",
           "Thời gian khởi hành phải trước thời gian đến nơi dự kiến",
@@ -152,10 +157,73 @@ const CreateSupplyContract = () => {
     setCreateContractLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await createSupplyContractAPI(supplyReqID, {
+        title: values.title,
+        initiator: {
+          partyName: values.partyA.compName,
+          address: values.partyA.compAddress,
+          phone: values.partyA.compPhoneNumber,
+          representer: values.partyA.representative,
+          email: "thong2046@gmail.com",
+          type: "STATIC",
+        },
+        signedPartners: [
+          {
+            partyName: values.partyB.compName,
+            address: values.partyB.compAddress,
+            phone: values.partyB.compPhoneNumber,
+            representer: values.partyB.representative,
+            type: "STATIC",
+            // customAttributes: [
+            //   {
+            //     key: "representativePos",
+            //     value: values.partyB.representativePos,
+            //   },
+            // ],
+          },
+        ],
+        activationDate: dateStringToISOString(values.contractInfo.startDate),
+        expiredDate: dateStringToISOString(values.contractInfo.endDate),
+        customAttributes: [
+          {
+            key: "numOfCrewMember",
+            value: values.contractInfo.numOfCrewMember,
+          },
+          {
+            key: "timeOfDeparture",
+            value: dateStringToISOString(values.contractInfo.timeOfDeparture),
+          },
+          {
+            key: "UN_LOCODE_DepartureLocation",
+            value: values.contractInfo.UN_LOCODE_DepartureLocation,
+          },
+          {
+            key: "departureLocation",
+            value: values.contractInfo.departureLocation,
+          },
+          {
+            key: "estimatedTimeOfArrival",
+            value: dateStringToISOString(
+              values.contractInfo.estimatedTimeOfArrival
+            ),
+          },
+          {
+            key: "arrivalLocation",
+            value: values.contractInfo.arrivalLocation,
+          },
+          {
+            key: "UN_LOCODE_ArrivalLocation",
+            value: values.contractInfo.UN_LOCODE_ArrivalLocation,
+          },
+        ],
+      });
+      await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
 
-      console.log("Successfully submitted: ", values);
-      resetForm();
+      if (response.status === HttpStatusCodes.CREATED) {
+        console.log("Successfully submitted: ", values);
+        resetForm();
+        navigate("/supply-contracts");
+      }
     } catch (err) {
       console.log("Error when creating supply contract: ", err);
     } finally {
