@@ -25,6 +25,8 @@ const CreateCrewContract = () => {
   const { crewMemberID } = useParams();
 
   const receiveMethod = ["Tiền mặt", "Chuyển khoản ngân hàng"];
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const initialValues = {
     contractFileLink: "",
@@ -118,7 +120,7 @@ const CreateCrewContract = () => {
     jobInfo: yup.object().shape({
       startDate: yup
         .date()
-        .min(new Date(), "Ngày bắt đầu không hợp lệ")
+        .min(yesterday, "Ngày bắt đầu không hợp lệ")
         .required("Ngày bắt đầu không được để trống")
         .test(
           "is-before-end-date",
@@ -267,7 +269,7 @@ const CreateCrewContract = () => {
         resetForm();
         navigate("/crew-contracts");
       }
-      // console.log("Successfully submitted: ", values);
+      console.log("Successfully submitted: ", values);
     } catch (err) {
       console.log("Error when creating crew contract: ", err);
     } finally {

@@ -15,10 +15,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const CreateSupplyContract = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const { supplyReqID } = useParams();  
 
   const initialValues = {
     contractFileLink: "",

@@ -49,7 +49,7 @@ const CrewContract = () => {
     setIsSignedContract(event.target.value);
   };
 
-  const onMemberDetailClick = (id) => {
+  const onContractDetailClick = (id) => {
     navigate(`/crew-contracts/${id}`, { state: { signed: isSignedContract } });
   };
 
@@ -68,7 +68,7 @@ const CrewContract = () => {
       headerAlign: "center",
     },
     {
-      field: "activationDate",
+      field: "freezedAt",
       headerName: "Ngày có hiệu lực",
       sortable: false,
       flex: 1,
@@ -101,7 +101,7 @@ const CrewContract = () => {
           <Button
             variant="contained"
             size="small"
-            onClick={() => onMemberDetailClick(params?.id)}
+            onClick={() => onContractDetailClick(params?.id)}
             sx={{
               backgroundColor: COLOR.primary_green,
               color: COLOR.primary_black,

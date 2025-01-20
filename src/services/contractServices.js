@@ -38,6 +38,9 @@ export const getSupplyContractsAPI = async (page, size, signed) => {
 
 export const createCrewContractAPI = async (crewMemberID, crewContractInfo) => {
   try {
+    console.log("start date: ", crewContractInfo.activationDate);
+    console.log("end date: ", crewContractInfo.expiredDate);
+    
     const response = await privateRequest.post(
       `${ContractEndpoints.LABOR_GENERAL}/${crewMemberID}`,
       {

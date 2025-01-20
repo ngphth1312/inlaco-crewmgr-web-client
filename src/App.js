@@ -157,7 +157,7 @@ function App() {
                 </Route>
                 <Route path="/supply-contracts">
                   <Route index element={<SupplyContract />} />
-                  <Route path="create" element={<CreateSupplyContract />} />
+                  <Route path="create/:supplyReqID" element={<CreateSupplyContract />} />
                   <Route path=":id" element={<SupplyContractDetail />} />
                   <Route
                     path=":id/create-addendum"

@@ -26,6 +26,7 @@ import {
   approveCandidateApplicationAPI,
   rejectCandidateApplicationAPI,
 } from "../services/postServices";
+import { isoStringToDateString } from "../utils/ValueConverter";
 
 const AdminCandidateDetail = () => {
   const navigate = useNavigate();
@@ -38,26 +39,27 @@ const AdminCandidateDetail = () => {
     { label: "Khác", value: "OTHER" },
   ];
 
+
   const [loading, setLoading] = useState(false);
   const [candidateInfo, setCandidateInfo] = useState({});
 
   const fetchCandidateProfile = async () => {
-      setLoading(true);
-      try {
-        const response = await getCandidateByID_API(candidateID);
-        await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
+    setLoading(true);
+    try {
+      const response = await getCandidateByID_API(candidateID);
+      await new Promise((resolve) => setTimeout(resolve, 200)); //Delay the UI for 200ms
 
-        if (response.status === HttpStatusCodes.OK) {
-          setCandidateInfo(response.data);
-        } else {
-          console.log("Failed to fetch candidate profile");
-        }
-      } catch (err) {
-        console.log("Error when fetching candidate profile: ", err);
-      } finally {
-        setLoading(false);
+      if (response.status === HttpStatusCodes.OK) {
+        setCandidateInfo(response.data);
+      } else {
+        console.log("Failed to fetch candidate profile");
       }
-    };
+    } catch (err) {
+      console.log("Error when fetching candidate profile: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchCandidateProfile();
@@ -70,6 +72,17 @@ const AdminCandidateDetail = () => {
     HIRED: "Đã ký hợp đồng",
   };
 
+    const initialValues = {
+      fullName: candidateInfo?.fullName || "",
+      dob: candidateInfo?.birthDate ? isoStringToDateString(candidateInfo.birthDate) : "",
+      phoneNumber: candidateInfo?.phoneNumber || "",
+      address: candidateInfo?.address || "",
+      gender: candidateInfo?.gender ? candidateInfo.gender : "OTHER",
+      email: candidateInfo?.email || "",
+      languageSkills: candidateInfo?.languageSkills || "",
+      resume: "",
+    };
+
   const status = statusMap[candidateInfo?.status] || "Lỗi";
 
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -80,10 +93,10 @@ const AdminCandidateDetail = () => {
       //Calling API to create a new crew member
       const response = await approveCandidateApplicationAPI(candidateID);
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
-      
-      if(response.status === HttpStatusCodes.OK) {
+
+      if (response.status === HttpStatusCodes.OK) {
         await fetchCandidateProfile();
-      } else{
+      } else {
         console.log("Failed to approve request");
       }
       console.log("Successfully approved request");
@@ -101,10 +114,9 @@ const AdminCandidateDetail = () => {
       const response = await rejectCandidateApplicationAPI(candidateID);
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
 
-      if(response.status === HttpStatusCodes.OK) {
+      if (response.status === HttpStatusCodes.OK) {
         await fetchCandidateProfile();
-      }
-      else{
+      } else {
         console.log("Failed to decline request");
       }
     } catch (err) {
@@ -133,7 +145,7 @@ const AdminCandidateDetail = () => {
     <div>
       <Formik
         validateOnChange={false}
-        initialValues={candidateInfo}
+        initialValues={initialValues}
         // validationSchema={crewContractSchema}
         // onSubmit={handleApproveDeclineClick}
       >
@@ -301,14 +313,6 @@ const AdminCandidateDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -326,14 +330,6 @@ const AdminCandidateDetail = () => {
                   helperText={touched.dob && errors.dob ? errors.dob : " "}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                   slotProps={{
                     input: {
                       placeholder: "asjdbnaskjd",
@@ -362,14 +358,6 @@ const AdminCandidateDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={5}>
@@ -388,14 +376,6 @@ const AdminCandidateDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={3}>
@@ -437,14 +417,6 @@ const AdminCandidateDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={5}>
@@ -464,14 +436,6 @@ const AdminCandidateDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
             </Grid>

@@ -16,6 +16,7 @@ import {
   TextField,
   CircularProgress,
 } from "@mui/material";
+import NoteAddRoundedIcon from "@mui/icons-material/NoteAddRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { COLOR } from "../assets/Color";
@@ -23,11 +24,14 @@ import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import { useNavigate, useParams } from "react-router";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
-import { getSupplyReqByID_API, reviewSupplyReqAPI } from "../services/supplyReqServices";
+import {
+  getSupplyReqByID_API,
+  reviewSupplyReqAPI,
+} from "../services/supplyReqServices";
 import { isoStringToMUIDateTime } from "../utils/ValueConverter";
 
 const AdminSupplyRequestDetail = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [loading, setLoading] = useState(false);
@@ -91,7 +95,9 @@ const AdminSupplyRequestDetail = () => {
       shipImage: "",
       shipIMO: requestInfos?.shipInfo?.imonumber,
       shipName: requestInfos?.shipInfo?.name,
-      shipNationality: requestInfos.shipInfo?.nationality ? requestInfos?.shipInfo?.countryISO : "",
+      shipNationality: requestInfos.shipInfo?.nationality
+        ? requestInfos?.shipInfo?.countryISO
+        : "",
       shipType: requestInfos?.shipInfo?.shipType,
     },
   };
@@ -107,7 +113,7 @@ const AdminSupplyRequestDetail = () => {
       if (response.status === HttpStatusCodes.NO_CONTENT) {
         console.log("Successfully approved request");
         await fetchRequestInfos(id);
-      } else{
+      } else {
         console.log("Error when approving request");
       }
     } catch (err) {
@@ -126,14 +132,18 @@ const AdminSupplyRequestDetail = () => {
       if (response.status === HttpStatusCodes.NO_CONTENT) {
         console.log("Successfully declined request");
         await fetchRequestInfos(id);
-      }else{
-        console.log("Error when declining request"); 
+      } else {
+        console.log("Error when declining request");
       }
     } catch (err) {
       console.log("Error when declining request: ", err);
     } finally {
       setButtonLoading(false);
     }
+  };
+
+  const handleCreateSupplyContractClick = () => {
+    navigate(`/supply-contracts/create/${id}`);
   };
 
   if (loading) {
@@ -201,8 +211,17 @@ const AdminSupplyRequestDetail = () => {
                     />
                   )}
                 </Box>
-                <Box sx={{ display: "flex", justifyContent: status === "Đang chờ xác nhận" ? "space-between" : "end" }}>
-                  {status === "Đang chờ xác nhận" && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent:
+                      status === "Đang chờ xác nhận" || "Chấp thuận"
+                        ? "space-between"
+                        : "end",
+                    alignItems: "center",
+                  }}
+                >
+                  {status === "Đang chờ xác nhận" ? (
                     <Box
                       sx={{
                         display: "flex",
@@ -273,12 +292,35 @@ const AdminSupplyRequestDetail = () => {
                         )}
                       </Button>
                     </Box>
+                  ) : status === "Chấp thuận" ? (
+                    <>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          width: "16%",
+                          padding: 1,
+                          color: COLOR.primary_black,
+                          backgroundColor: COLOR.primary_gold,
+                          minWidth: 130,
+                        }}
+                        onClick={() => handleCreateSupplyContractClick()}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "end" }}>
+                          <NoteAddRoundedIcon
+                            sx={{ marginRight: "5px", marginBottom: "1px" }}
+                          />
+                          <Typography sx={{ fontWeight: 700 }}>Tạo hợp đồng</Typography>
+                        </Box>
+                      </Button>
+                      <FileUploadField
+                        label="Danh sách số lượng cần cung ứng"
+                        disabled={true}
+                        name="requestListFileLink"
+                      />
+                    </>
+                  ) : (
+                    <></>
                   )}
-                  <FileUploadField
-                    label="Danh sách số lượng cần cung ứng"
-                    disabled={true}
-                    name="requestListFileLink"
-                  />
                 </Box>
               </Box>
             </Box>

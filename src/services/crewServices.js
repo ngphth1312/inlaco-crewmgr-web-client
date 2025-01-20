@@ -25,6 +25,17 @@ export const getCrewMemberByID_API = async (crewMemberID) => {
   }
 };
 
+export const getProfileCurrentCrewMemberAPI = async () => {
+  try {
+    const response = await privateRequest.get(
+      `${CrewEndpoints.CURRENT_PROFILE}`
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 export const editCrewMemberProfileAPI = async (
   crewMemberID,
   crewMemberInfo

@@ -173,7 +173,7 @@ const SideBar = () => {
                 >
                   {isCollapsed ? "TV" : "Thuyền Viên"}
                 </Typography>
-                {isCrewMember && !isGeneralUser && (
+                {isCrewMember && !isAdmin && (
                   <Item
                     title="Hồ sơ cá nhân"
                     to="/my-profile"
@@ -234,34 +234,9 @@ const SideBar = () => {
                 ) : (
                   <>
                     <Item
-                      title="Thông tin Thuyền viên"
-                      to="/crews"
-                      icon={<PeopleOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                    />
-                    <Item
                       title="Lịch điều động"
                       to="/mobilizations"
                       icon={<DirectionsBoatOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                    />
-
-                    <Typography
-                      variant="h6"
-                      color={COLOR.primary_gold}
-                      sx={{
-                        m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
-                        textAlign: isCollapsed ? "center" : "left",
-                      }}
-                    >
-                      {isCollapsed ? "HĐ" : "Hợp Đồng"}
-                    </Typography>
-                    <Item
-                      title="Hợp đồng Thuyền viên"
-                      to="/crew-contracts"
-                      icon={<AssignmentIndOutlinedIcon />}
                       selected={selected}
                       setSelected={setSelected}
                     />
@@ -269,18 +244,18 @@ const SideBar = () => {
                 )}
               </>
             )}
+            <Typography
+              variant="h6"
+              color={COLOR.primary_gold}
+              sx={{
+                m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
+            >
+              Khác
+            </Typography>
             {(isAdmin || (isGeneralUser && !isCrewMember)) && ( //only show these items if user is admin or general user
               <>
-                <Typography
-                  variant="h6"
-                  color={COLOR.primary_gold}
-                  sx={{
-                    m: isCollapsed ? "15px 0 5px 0" : "15px 0 5px 20px",
-                    textAlign: isCollapsed ? "center" : "left",
-                  }}
-                >
-                  Khác
-                </Typography>
                 <Item
                   title="Yêu cầu Cung ứng"
                   to="/supply-requests"

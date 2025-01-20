@@ -1,38 +1,65 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PageTitle, NoValuesOverlay, SearchBar } from "../components/global";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { mockSupplyContracts } from "../data/mockData";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { getSupplyContractsAPI } from "../services/contractServices";
+import { isoStringToAppDateString } from "../utils/ValueConverter";
 
 const SupplyContract = () => {
   const navigate = useNavigate();
 
-  const onMemberDetailClick = (id) => {
+  const [supplyContracts, setSupplyContracts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchCrewContracts = async (signed) => {
+    setLoading(true);
+    try {
+      const response = await getSupplyContractsAPI(0, 10, signed);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
+      if (response.status === HttpStatusCodes.OK) {
+        // console.log("Supply contracts: ", response.data.content);
+        setSupplyContracts(response.data.content);
+      }
+    } catch (err) {
+      console.log("Error when fetching supply contracts: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statusFilters = [
+    { label: "Hợp đồng chính thức", value: true },
+    { label: "Đang chờ ký kết", value: false },
+  ];
+
+  const [isSignedContract, setIsSignedContract] = useState(true);
+  useEffect(() => {
+    fetchCrewContracts(isSignedContract);
+  }, [isSignedContract]);
+
+  const handleStatusChange = (event) => {
+    setIsSignedContract(event.target.value);
+  };
+
+  const onContractDetailClick = (id) => {
     navigate(`/supply-contracts/${id}`);
   };
 
   const columns = [
-    {
-      field: "id",
-      headerName: "Mã TV",
-      sortable: false,
-      flex: 0.75,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "parties",
-      headerName: "Tên công ty",
-      sortable: false,
-      flex: 2,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: (params) => params?.name,
-    },
     {
       field: "title",
       headerName: "Tiêu đề",
@@ -42,20 +69,26 @@ const SupplyContract = () => {
       headerAlign: "center",
     },
     {
-      field: "activationDate",
-      headerName: "Ngày bắt đầu",
+      field: "freezedAt",
+      headerName: "Ngày có hiệu lực",
       sortable: false,
       flex: 1,
       align: "center",
       headerAlign: "center",
+      valueFormatter: (params) => {
+        return params ? isoStringToAppDateString(params) : "";
+      },
     },
     {
       field: "expiredDate",
-      headerName: "Ngày kết thúc",
+      headerName: "Ngày hết hạn",
       sortable: false,
       flex: 1,
       align: "center",
       headerAlign: "center",
+      valueFormatter: (params) => {
+        return params ? isoStringToAppDateString(params) : "";
+      },
     },
     {
       field: "detail",
@@ -69,7 +102,7 @@ const SupplyContract = () => {
           <Button
             variant="contained"
             size="small"
-            onClick={() => onMemberDetailClick(params?.id)}
+            onClick={() => onContractDetailClick(params?.id)}
             sx={{
               backgroundColor: COLOR.primary_green,
               color: COLOR.primary_black,
@@ -135,49 +168,55 @@ const SupplyContract = () => {
                 width: "40%",
               }}
             />
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: COLOR.primary_gold,
-                color: COLOR.primary_black,
-                borderRadius: 2,
-              }}
-              onClick={() => navigate("/supply-contracts/create")}
+            <Select
+              label="Trạng thái"
+              value={isSignedContract}
+              size="small"
+              onChange={handleStatusChange}
+              sx={{ marginTop: 1 }}
             >
-              <AddCircleRoundedIcon />
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  marginLeft: "4px",
-                  textTransform: "capitalize",
-                }}
-              >
-                Tạo hợp đồng
-              </Typography>
-            </Button>
+              {statusFilters.map((status) => (
+                <MenuItem key={status.value} value={status.value}>
+                  {status.label}
+                </MenuItem>
+              ))}
+            </Select>
           </Box>
-          <DataGrid
-            disableRowSelectionOnClick
-            disableColumnMenu
-            disableColumnResize
-            rows={mockSupplyContracts}
-            columns={columns}
-            slots={{ noRowsOverlay: NoValuesOverlay }}
-            pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 5, page: 0 },
-              },
-            }}
-            sx={{
-              backgroundColor: "#FFF",
-              headerAlign: "center",
-              "& .MuiDataGrid-columnHeaderTitle": {
-                fontSize: 16,
-                fontWeight: 700,
-              },
-            }}
-          />
+          {!loading ? (
+            <DataGrid
+              disableRowSelectionOnClick
+              disableColumnMenu
+              disableColumnResize
+              rows={supplyContracts}
+              columns={columns}
+              slots={{ noRowsOverlay: NoValuesOverlay }}
+              pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 5, page: 0 },
+                },
+              }}
+              sx={{
+                backgroundColor: "#FFF",
+                headerAlign: "center",
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  fontSize: 16,
+                  fontWeight: 700,
+                },
+              }}
+            />
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "62vh",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
         </Box>
       </Box>
     </div>
