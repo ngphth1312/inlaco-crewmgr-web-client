@@ -1,28 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { PageTitle, NoValuesOverlay, } from "../components/global";
+import { PageTitle, NoValuesOverlay } from "../components/global";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { masterAssignmentSchedule } from "../data/mockData";
 import { ShipInfoCell, ScheduleCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
 import { getMyMobilizationAPI } from "../services/mobilizationServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 
-const CrewMobilization = () => {
+const CrewMyMobilization = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [mobilizations, setMobilizations] = useState([]);
 
   useEffect(() => {
-    
-  }, [])
+    const getMyMobilization = async () => {
+      setLoading(true);
+      try {
+        const response = await getMyMobilizationAPI();
+        await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+        
+        if (response.status === HttpStatusCodes.OK) {
+          console.log("My mobilization data: ", response.data);
+          setMobilizations(response.data);
+        }
+      } catch (err) {
+        console.log("Error when fetching my mobilization data: ", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const onMemberDetailClick = (id) => {
-    navigate(`/mobilizations/${id}`, { state: { isAdmin: true } });
+    getMyMobilization();
+  }, []);
+
+  const onMobilizationDetailClick = (id) => {
+    navigate(`/mobilizations/${id}`, { state: { isAdmin: false } });
   };
 
   const columns = [
@@ -34,7 +50,14 @@ const CrewMobilization = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
           {params.value}
         </div>
       ),
@@ -47,7 +70,14 @@ const CrewMobilization = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
           {params.value}
         </div>
       ),
@@ -108,7 +138,7 @@ const CrewMobilization = () => {
             <Button
               variant="contained"
               size="small"
-              onClick={() => onMemberDetailClick(params?.id)}
+              onClick={() => onMobilizationDetailClick(params?.id)}
               sx={{
                 backgroundColor: COLOR.primary_green,
                 color: COLOR.primary_black,
@@ -131,11 +161,20 @@ const CrewMobilization = () => {
     },
   ];
 
-  // const [tabValue, setTabValue] = useState(0);
-
-  // const handleTabChange = (newValue) => {
-  //   setTabValue(newValue);
-  // };
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -143,7 +182,7 @@ const CrewMobilization = () => {
         <Box>
           <PageTitle
             title="LỊCH ĐIỀU ĐỘNG"
-            subtitle={"Thông tin các điều động đã tạo"}
+            subtitle={"Thông tin các điều động của cá nhân"}
           />
         </Box>
         {/* Switch bar component only for Crew Member role */}
@@ -235,7 +274,7 @@ const CrewMobilization = () => {
         )} */}
         <Box
           m="40px 0 0 0"
-          height={"62vh"}
+          height={"72vh"}
           maxHeight={550}
           maxWidth={1600}
           sx={{
@@ -249,36 +288,6 @@ const CrewMobilization = () => {
             },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              paddingBottom: 2,
-              justifyContent: "end",
-            }}
-          >
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: COLOR.primary_gold,
-                color: COLOR.primary_black,
-                borderRadius: 2,
-              }}
-              onClick={() => navigate("/mobilizations/create")}
-            >
-              <AddCircleRoundedIcon />
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  marginLeft: "4px",
-                  textTransform: "capitalize",
-                }}
-              >
-                Tạo điều động
-              </Typography>
-            </Button>
-          </Box>
           <DataGrid
             disableRowSelectionOnClick
             disableColumnMenu
@@ -308,4 +317,4 @@ const CrewMobilization = () => {
   );
 };
 
-export default CrewMobilization;
+export default CrewMyMobilization;

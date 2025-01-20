@@ -176,7 +176,7 @@ const SideBar = () => {
                 {isCrewMember && !isAdmin && (
                   <Item
                     title="Hồ sơ cá nhân"
-                    to="/my-profile"
+                    to="/crews/my-profile"
                     icon={<AccountBoxRoundedIcon />}
                     selected={selected}
                     setSelected={setSelected}
@@ -235,7 +235,7 @@ const SideBar = () => {
                   <>
                     <Item
                       title="Lịch điều động"
-                      to="/mobilizations"
+                      to="/mobilizations/my-mobilizations"
                       icon={<DirectionsBoatOutlinedIcon />}
                       selected={selected}
                       setSelected={setSelected}

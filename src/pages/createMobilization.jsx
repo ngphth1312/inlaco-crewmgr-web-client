@@ -16,10 +16,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { createMobilizationAPI } from "../services/mobilizationServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
 
 const CreateMobilization = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const initialValues = {
     compName: "",
@@ -43,8 +45,8 @@ const CreateMobilization = () => {
     mobilizedCrewMembers: [],
   };
 
-  const phoneRegex =
-    "^(\\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])\\d{7}$";
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const mobilizationSchema = yup.object().shape({
     compName: yup.string().required("Tên công ty không được để trống"),
@@ -56,7 +58,7 @@ const CreateMobilization = () => {
     mobilizationInfo: yup.object().shape({
       timeOfDeparture: yup
         .date()
-        .max(new Date(), "Thời gian khởi hành không hợp lệ")
+        .min(yesterday, "Thời gian khởi hành không hợp lệ")
         .required("Thời gian khởi hành dự kiến không được để trống")
         .test(
           "is-before-end-datetime",
@@ -66,8 +68,12 @@ const CreateMobilization = () => {
             return !estimatedTimeOfArrival || value < estimatedTimeOfArrival;
           }
         ),
-      UN_LOCODE_DepartureLocation: yup.string().required("UN/LOCODE điểm khởi hành không được để trống"),
-      departureLocation: yup.string().required("Tên điểm khởi hành không được để trống"),
+      UN_LOCODE_DepartureLocation: yup
+        .string()
+        .required("UN/LOCODE điểm khởi hành không được để trống"),
+      departureLocation: yup
+        .string()
+        .required("Tên điểm khởi hành không được để trống"),
 
       estimatedTimeOfArrival: yup
         .date()
@@ -80,8 +86,12 @@ const CreateMobilization = () => {
             return !timeOfDeparture || value > timeOfDeparture;
           }
         ),
-      UN_LOCODE_ArrivalLocation: yup.string().required("UN/LOCODE điểm đến không được để trống"),
-      arrivalLocation: yup.string().required("Tên điểm đến không được để trống"),
+      UN_LOCODE_ArrivalLocation: yup
+        .string()
+        .required("UN/LOCODE điểm đến không được để trống"),
+      arrivalLocation: yup
+        .string()
+        .required("Tên điểm đến không được để trống"),
     }),
   });
 
@@ -91,10 +101,49 @@ const CreateMobilization = () => {
     setCreateMobilizationLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await createMobilizationAPI({
+        status: "PENDING",
+        partnerPhone: "",
+        partnerEmail: "",
+        partnerAddress: "",
 
-      console.log("Successfully submitted: ", values);
-      resetForm();
+        partnerName: values.compName,
+        totalSailors: values.numOfMobilizedCrew,
+        startDate: values.mobilizationInfo.timeOfDeparture,
+        departurePoint: values.mobilizationInfo.departureLocation,
+        departureUNLOCODE: values.mobilizationInfo.UN_LOCODE_DepartureLocation,
+
+        estimatedEndDate: values.mobilizationInfo.estimatedTimeOfArrival,
+        arrivalPoint: values.mobilizationInfo.arrivalLocation,
+        arrivalUNLOCODE: values.mobilizationInfo.UN_LOCODE_ArrivalLocation,
+
+        shipInfo: {
+          imageUrl: values.mobilizationInfo.shipImage,
+          imonumber: values.mobilizationInfo.shipIMO,
+          name: values.mobilizationInfo.shipName,
+          countryISO: values.mobilizationInfo.shipNationality,
+          shipType: values.mobilizationInfo.shipType,
+        },
+
+        // crewMembers: values.mobilizedCrewMembers,
+        crewMembers: [
+          {
+            cardId: "202500001",
+            professionalPosition: "Thợ máy",
+          },
+          {
+            cardId: "202500002",
+            professionalPosition: "Thuyền phó",
+          },
+        ],
+      });
+      await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
+      if(response.status === HttpStatusCodes.CREATED) {
+        console.log("Successfully submitted: ", values);
+        resetForm();
+        navigate("/mobilizations");
+      }
     } catch (err) {
       console.log("Error when creating mobilization: ", err);
     } finally {

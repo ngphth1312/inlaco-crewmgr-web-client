@@ -1,5 +1,4 @@
 import privateRequest from "../utils/privateRequest";
-import publicRequest from "../utils/publicRequest";
 import CrewEndpoints from "../api/crewEndpoints";
 import { dateStringToISOString } from "../utils/ValueConverter";
 

@@ -30,7 +30,8 @@ import { formatDate } from "../utils/ValueConverter";
 const MobilizationDetail = () => {
   const { id } = useParams();
   const location = useLocation();
-  const isAdmin = location.state.isAdmin;
+  // const isAdmin = location.state?.isAdmin;
+  const isAdmin = false;
 
   // useEffect(() => {
   //   fetchMobilizationInfos(id);
@@ -201,7 +202,7 @@ const MobilizationDetail = () => {
               >
                 <PageTitle
                   title="CHI TIẾT ĐIỀU ĐỘNG"
-                  subtitle={`Mã điều động: ${id}`} //Change this to the actual mobilizationID, this currently display an id, not mobilizationID
+                  subtitle={"Thông tin chi tiết của điều động"}
                 />
                 {isAdmin && (
                   <Box
@@ -372,45 +373,40 @@ const MobilizationDetail = () => {
                   }}
                 />
               </Grid>
-              <Grid size={4}>
-                <InfoTextField
-                  id="num-of-crew-member"
-                  type="number"
-                  label="Tổng số nhân lực cần điều động"
-                  size="small"
-                  margin="none"
-                  disabled={!isEditable}
-                  required
-                  fullWidth
-                  name="numOfMobilizedCrew"
-                  value={values.numOfMobilizedCrew}
-                  error={
-                    !!touched.numOfMobilizedCrew && !!errors.numOfMobilizedCrew
-                  }
-                  helperText={
-                    touched.numOfMobilizedCrew && errors.numOfMobilizedCrew
-                      ? errors.numOfMobilizedCrew
-                      : " "
-                  }
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">người</InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              </Grid>
+              {isAdmin && (
+                <Grid size={4}>
+                  <InfoTextField
+                    id="num-of-crew-member"
+                    type="number"
+                    label="Tổng số nhân lực cần điều động"
+                    size="small"
+                    margin="none"
+                    disabled={!isEditable}
+                    required
+                    fullWidth
+                    name="numOfMobilizedCrew"
+                    value={values.numOfMobilizedCrew}
+                    error={
+                      !!touched.numOfMobilizedCrew &&
+                      !!errors.numOfMobilizedCrew
+                    }
+                    helperText={
+                      touched.numOfMobilizedCrew && errors.numOfMobilizedCrew
+                        ? errors.numOfMobilizedCrew
+                        : " "
+                    }
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">người</InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </Grid>
+              )}
             </Grid>
             <SectionDivider sectionName="Thông tin điều động*: " />
             <Typography
@@ -793,51 +789,55 @@ const MobilizationDetail = () => {
                 />
               </Grid>
             </Grid>
-            <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
-            {!isEditable && isAdmin && (
-              <Box sx={{ display: "flex", justifyContent: "end" }} px={2}>
-                <Button
-                  variant="contained"
-                  type="button"
-                  sx={{
-                    color: COLOR.primary_black,
-                    backgroundColor: COLOR.primary_gold,
-                    padding: "10px",
-                    marginTop: "1px",
-                    marginBottom: "1px",
-                  }}
-                  onClick={() => handleDownloadExcel(values)}
-                >
-                  <Box sx={{ display: "flex", alignItems: "end" }}>
-                    <FileDownloadRoundedIcon
+            {isAdmin && (
+              <>
+                <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
+                {!isEditable && (
+                  <Box sx={{ display: "flex", justifyContent: "end" }} px={2}>
+                    <Button
+                      variant="contained"
+                      type="button"
                       sx={{
-                        width: 20,
-                        height: 20,
-                        marginRight: "4px",
+                        color: COLOR.primary_black,
+                        backgroundColor: COLOR.primary_gold,
+                        padding: "10px",
+                        marginTop: "1px",
                         marginBottom: "1px",
                       }}
-                    />
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: 14,
-                      }}
+                      onClick={() => handleDownloadExcel(values)}
                     >
-                      Tải xuống File Excel
-                    </Typography>
+                      <Box sx={{ display: "flex", alignItems: "end" }}>
+                        <FileDownloadRoundedIcon
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            marginRight: "4px",
+                            marginBottom: "1px",
+                          }}
+                        />
+                        <Typography
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: 14,
+                          }}
+                        >
+                          Tải xuống File Excel
+                        </Typography>
+                      </Box>
+                    </Button>
                   </Box>
-                </Button>
-              </Box>
+                )}
+                <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+                  <Grid size={12}>
+                    <EditableDataGrid
+                      name="mobilizedCrewMembers"
+                      initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
+                      disabled={!isEditable}
+                    />
+                  </Grid>
+                </Grid>
+              </>
             )}
-            <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
-              <Grid size={12}>
-                <EditableDataGrid
-                  name="mobilizedCrewMembers"
-                  initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
-                  disabled={!isEditable}
-                />
-              </Grid>
-            </Grid>
           </Box>
         )}
       </Formik>

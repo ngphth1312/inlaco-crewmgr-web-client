@@ -12,6 +12,7 @@ import CrewInfos from "./pages/crewInfos";
 import AddCrewMember from "./pages/addCrewMember";
 import CrewMemberDetail from "./pages/crewMemberDetail";
 import CrewProfile from "./pages/crewProfile";
+import CrewMyMobilization from "./pages/crewMyMobilization";
 
 import CrewMobilization from "./pages/crewMobilization";
 import CreateMobilization from "./pages/createMobilization";
@@ -134,21 +135,25 @@ function App() {
             <Route path="/" element={<HomePage />} />
             {(isAdmin || isCrewMember) && (
               <>
-                <Route path="my-profile" element={<CrewProfile />} />
                 <Route path="/crews">
                   <Route index element={<CrewInfos />} />
                   <Route path="add/:candidateID" element={<AddCrewMember />} />
                   <Route path=":id" element={<CrewMemberDetail />} />
+                  <Route path="my-profile" element={<CrewProfile />} />
                 </Route>
                 <Route path="/mobilizations">
                   <Route index element={<CrewMobilization />} />
                   <Route path="create" element={<CreateMobilization />} />
                   <Route path=":id" element={<MobilizationDetail />} />
+                  <Route path="my-mobilizations" element={<CrewMyMobilization />} />
                 </Route>
 
                 <Route path="/crew-contracts">
                   <Route index element={<CrewContract />} />
-                  <Route path="create/:crewMemberID" element={<CreateCrewContract />} />
+                  <Route
+                    path="create/:crewMemberID"
+                    element={<CreateCrewContract />}
+                  />
                   <Route path=":id" element={<CrewContractDetail />} />
                   <Route
                     path=":id/create-addendum"
@@ -157,7 +162,10 @@ function App() {
                 </Route>
                 <Route path="/supply-contracts">
                   <Route index element={<SupplyContract />} />
-                  <Route path="create/:supplyReqID" element={<CreateSupplyContract />} />
+                  <Route
+                    path="create/:supplyReqID"
+                    element={<CreateSupplyContract />}
+                  />
                   <Route path=":id" element={<SupplyContractDetail />} />
                   <Route
                     path=":id/create-addendum"
