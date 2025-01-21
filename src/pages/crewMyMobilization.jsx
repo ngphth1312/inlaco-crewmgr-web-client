@@ -2,30 +2,74 @@ import React, { useState, useEffect } from "react";
 import { PageTitle, NoValuesOverlay } from "../components/global";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { masterAssignmentSchedule } from "../data/mockData";
 import { ShipInfoCell, ScheduleCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
 import { getMyMobilizationAPI } from "../services/mobilizationServices";
+import { getProfileCurrentCrewMemberAPI } from "../services/crewServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { formatDateTime } from "../utils/ValueConverter";
 
 const CrewMyMobilization = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [mobilizations, setMobilizations] = useState([]);
+  const [cardID, setCardID] = useState("");
 
   useEffect(() => {
-    const getMyMobilization = async () => {
+    const getProfile = async () => {
       setLoading(true);
       try {
-        const response = await getMyMobilizationAPI();
+        const response = await getProfileCurrentCrewMemberAPI();
         await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
-        
+
         if (response.status === HttpStatusCodes.OK) {
-          console.log("My mobilization data: ", response.data);
-          setMobilizations(response.data);
+          setCardID(response.data.cardId);
+        }
+      } catch (err) {
+        console.log("Error when fetching crew member profile data: ", err);
+      }
+    };
+
+    getProfile();
+  }, []);
+
+  useEffect(() => {
+    const getMyMobilization = async (cardID) => {
+      setLoading(true);
+      try {
+        const response = await getMyMobilizationAPI(cardID);
+        await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
+
+        if (response.status === HttpStatusCodes.OK) {
+          const mobilizations = response.data;
+
+          const formattedMobilizations = mobilizations.map((mobilization) => ({
+            id: mobilization.detail.id,
+            partnerInfo: {
+              partnerName: mobilization.detail.partnerName,
+              email: mobilization.detail.partnerEmail,
+              phoneNumber: mobilization.detail.partnerPhone,
+            },
+            shipInfo: {
+              IMONumber: mobilization.detail.shipInfo.imonumber,
+              name: mobilization.detail.shipInfo.name,
+              countryCode: mobilization.detail.shipInfo.countryISO,
+              type: mobilization.detail.shipInfo.shipType,
+              // imageUrl: mobilization.detail?.shipInfo?.imageUrl?.url,
+            },
+            scheduleInfo: {
+              position: mobilization.professionalPosition,
+              startLocation: mobilization.detail.departurePoint,
+              startDate: mobilization.detail.startDate,
+              endLocation: mobilization.detail.arrivalPoint,
+              estimatedEndTime: mobilization.detail.estimatedEndDate,
+            },
+          }));
+
+          setMobilizations(formattedMobilizations);
         }
       } catch (err) {
         console.log("Error when fetching my mobilization data: ", err);
@@ -34,37 +78,19 @@ const CrewMyMobilization = () => {
       }
     };
 
-    getMyMobilization();
-  }, []);
+    if (cardID !== "") {
+      getMyMobilization(cardID);
+    }
+  }, [cardID]);
 
-  const onMobilizationDetailClick = (id) => {
-    navigate(`/mobilizations/${id}`, { state: { isAdmin: false } });
+  const onMobilizationDetailClick = (id, position) => {
+    navigate(`/mobilizations/${id}`, { state: { isAdmin: false, position: position } });
   };
 
   const columns = [
     {
-      field: "id",
-      headerName: "Mã ĐĐ",
-      sortable: false,
-      flex: 0.75,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: "partnerName",
-      headerName: "Tên công ty",
+      field: "partnerInfo",
+      headerName: "Thông tin Công ty",
       sortable: false,
       flex: 2,
       align: "center",
@@ -73,18 +99,30 @@ const CrewMyMobilization = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             height: "100%",
           }}
         >
-          {params.value}
+          <p style={{ margin: 0, textAlign: "left" }}>
+            <strong>Tên: </strong>
+            {params.value?.partnerName}
+          </p>
+          <p style={{ margin: 0, textAlign: "left" }}>
+            <strong>Email: </strong>
+            {params.value?.email}
+          </p>
+          <p style={{ margin: 0, textAlign: "left" }}>
+            <strong>SĐT: </strong>
+            {params.value?.phoneNumber}
+          </p>
         </div>
       ),
     },
     {
       field: "shipInfo",
-      headerName: "Thông tin tàu",
+      headerName: "Thông tin Tàu",
       sortable: false,
       flex: 3,
       headerAlign: "center",
@@ -101,19 +139,19 @@ const CrewMyMobilization = () => {
       },
     },
     {
-      field: "schedule",
+      field: "scheduleInfo",
       headerName: "Lịch trình",
       sortable: false,
-      flex: 2,
+      flex: 2.5,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
         return (
           <ScheduleCell
-            startLocation={params?.row?.startLocation}
-            startDate={params?.row?.startDate}
-            endLocation={params?.row?.endLocation}
-            estimatedEndTime={params?.row?.estimatedEndTime}
+            startLocation={params?.value?.startLocation}
+            startDate={formatDateTime(params?.value?.startDate)}
+            endLocation={params?.value?.endLocation}
+            estimatedEndTime={formatDateTime(params?.value?.estimatedEndTime)}
           />
         );
       },
@@ -126,6 +164,7 @@ const CrewMyMobilization = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
+        console.log(params);
         return (
           <div
             style={{
@@ -138,7 +177,7 @@ const CrewMyMobilization = () => {
             <Button
               variant="contained"
               size="small"
-              onClick={() => onMobilizationDetailClick(params?.id)}
+              onClick={() => onMobilizationDetailClick(params?.id, params?.row?.scheduleInfo?.position)}
               sx={{
                 backgroundColor: COLOR.primary_green,
                 color: COLOR.primary_black,
@@ -293,7 +332,7 @@ const CrewMyMobilization = () => {
             disableColumnMenu
             disableColumnResize
             getRowHeight={() => "auto"}
-            rows={masterAssignmentSchedule}
+            rows={mobilizations}
             columns={columns}
             slots={{ noRowsOverlay: NoValuesOverlay }}
             pageSizeOptions={[5, 10, { value: -1, label: "All" }]}

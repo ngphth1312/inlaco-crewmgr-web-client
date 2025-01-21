@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PageTitle } from "../components/global";
 import {
   Box,
@@ -8,10 +8,98 @@ import {
   CardContent,
   CardMedia,
   Button,
+  CircularProgress,
 } from "@mui/material";
 
-// Fake data for company news
+const HomePage = () => {
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const fetchNews = async () => {
+      setLoading(true);
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 400)); // delay UI for 200ms
+      } catch (error) {
+        console.error("Fetch news error: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  return (
+    <div>
+      <Box m="20px">
+        <PageTitle
+          title="TRANG CHỦ"
+          subtitle="Trang chủ website quản lý của công ty INLACO Hải Phòng"
+        />
+        <Typography variant="h5" sx={{ mt: 3, mb: 2, fontWeight: "bold" }}>
+          Tin tức công ty
+        </Typography>
+        <Grid container spacing={3}>
+          {newsData.map((news) => (
+            <Grid item xs={12} sm={6} md={4} key={news.id}>
+              <Card sx={{ boxShadow: 3 }}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={news.image}
+                  alt={news.title}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="div">
+                    {news.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {news.description}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    color="text.secondary"
+                    sx={{ mt: 1 }}
+                  >
+                    {news.date}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    sx={{ mt: 2 }}
+                  >
+                    Xem chi tiết
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </div>
+  );
+};
+
+export default HomePage;
+
+// Fake data for company news
 const newsData = [
   {
     id: 1,
@@ -146,59 +234,3 @@ const newsData = [
     date: "20/10/2024",
   },
 ];
-
-const HomePage = () => {
-  return (
-    <div>
-      <Box m="20px">
-        <PageTitle
-          title="TRANG CHỦ"
-          subtitle="Trang chủ website quản lý của công ty INLACO Hải Phòng"
-        />
-        <Typography variant="h5" sx={{ mt: 3, mb: 2, fontWeight: "bold" }}>
-          Tin tức công ty
-        </Typography>
-        <Grid container spacing={3}>
-          {newsData.map((news) => (
-            <Grid item xs={12} sm={6} md={4} key={news.id}>
-              <Card sx={{ boxShadow: 3 }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={news.image}
-                  alt={news.title}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {news.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {news.description}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    color="text.secondary"
-                    sx={{ mt: 1 }}
-                  >
-                    {news.date}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    sx={{ mt: 2 }}
-                  >
-                    Xem chi tiết
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    </div>
-  );
-};
-
-export default HomePage;

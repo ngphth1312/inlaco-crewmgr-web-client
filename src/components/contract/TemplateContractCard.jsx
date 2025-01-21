@@ -18,12 +18,13 @@ const TemplateContractCard = ({
   gridSize = 4,
   color = COLOR.primary_black,
   sx = [],
+  onClick,
 }) => {
 
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Grid size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
+    <Grid onClick={onClick} size={gridSize} sx={[...(Array.isArray(sx) ? sx : [sx])]}>
       <Card
         sx={{
           position: "relative",

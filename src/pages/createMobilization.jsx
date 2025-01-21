@@ -6,10 +6,7 @@ import {
   Box,
   Button,
   Typography,
-  TextField,
-  MenuItem,
   CircularProgress,
-  InputAdornment,
 } from "@mui/material";
 import { COLOR } from "../assets/Color";
 import SaveIcon from "@mui/icons-material/Save";
@@ -19,13 +16,13 @@ import * as yup from "yup";
 import { useNavigate } from "react-router";
 import { createMobilizationAPI } from "../services/mobilizationServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { dateTimeStringToISOString } from "../utils/ValueConverter";
 
 const CreateMobilization = () => {
   const navigate = useNavigate();
 
   const initialValues = {
     compName: "",
-    numOfMobilizedCrew: "",
     mobilizationInfo: {
       timeOfDeparture: "",
       departureLocation: "",
@@ -50,10 +47,6 @@ const CreateMobilization = () => {
 
   const mobilizationSchema = yup.object().shape({
     compName: yup.string().required("Tên công ty không được để trống"),
-    numOfMobilizedCrew: yup
-      .number()
-      .min(1, "Tổng số nhân lực cần điều động không hợp lệ")
-      .required("Tổng số nhân lực cần điều động không được để trống"),
 
     mobilizationInfo: yup.object().shape({
       timeOfDeparture: yup
@@ -103,17 +96,17 @@ const CreateMobilization = () => {
       //Calling API to create a new crew member
       const response = await createMobilizationAPI({
         status: "PENDING",
-        partnerPhone: "",
-        partnerEmail: "",
-        partnerAddress: "",
+        partnerPhone: values.phoneNumber,
+        partnerEmail: values.email,
+        partnerAddress: "Temporary Address",
 
         partnerName: values.compName,
-        totalSailors: values.numOfMobilizedCrew,
-        startDate: values.mobilizationInfo.timeOfDeparture,
+        // totalSailors: values.numOfMobilizedCrew,
+        startDate: dateTimeStringToISOString(values.mobilizationInfo.timeOfDeparture),
         departurePoint: values.mobilizationInfo.departureLocation,
         departureUNLOCODE: values.mobilizationInfo.UN_LOCODE_DepartureLocation,
 
-        estimatedEndDate: values.mobilizationInfo.estimatedTimeOfArrival,
+        estimatedEndDate: dateTimeStringToISOString(values.mobilizationInfo.estimatedTimeOfArrival),
         arrivalPoint: values.mobilizationInfo.arrivalLocation,
         arrivalUNLOCODE: values.mobilizationInfo.UN_LOCODE_ArrivalLocation,
 
@@ -125,17 +118,17 @@ const CreateMobilization = () => {
           shipType: values.mobilizationInfo.shipType,
         },
 
-        // crewMembers: values.mobilizedCrewMembers,
-        crewMembers: [
-          {
-            cardId: "202500001",
-            professionalPosition: "Thợ máy",
-          },
-          {
-            cardId: "202500002",
-            professionalPosition: "Thuyền phó",
-          },
-        ],
+        crewMembers: values.mobilizedCrewMembers,
+        // crewMembers: [
+        //   {
+        //     cardId: "202500001",
+        //     professionalPosition: "Thợ máy",
+        //   },
+        //   {
+        //     cardId: "202500002",
+        //     professionalPosition: "Thuyền phó",
+        //   },
+        // ],
       });
       await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
 
@@ -238,39 +231,54 @@ const CreateMobilization = () => {
               </Grid>
               <Grid size={4}>
                 <InfoTextField
-                  id="num-of-crew-member"
-                  type="number"
-                  label="Tổng số nhân lực cần điều động"
+                  id="comp-email"
+                  label="Email công ty"
                   size="small"
                   margin="none"
                   required
                   fullWidth
-                  name="numOfMobilizedCrew"
-                  value={values.numOfMobilizedCrew}
-                  error={
-                    !!touched.numOfMobilizedCrew && !!errors.numOfMobilizedCrew
-                  }
+                  name="email"
+                  value={values.email}
+                  error={!!touched.email && !!errors.email}
                   helperText={
-                    touched.numOfMobilizedCrew && errors.numOfMobilizedCrew
-                      ? errors.numOfMobilizedCrew
+                    touched.email && errors.email ? errors.email : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  id="comp-phoneNumber"
+                  label="SĐT Công ty"
+                  size="small"
+                  margin="none"
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  value={values.phoneNumber}
+                  error={!!touched.phoneNumber && !!errors.phoneNumber}
+                  helperText={
+                    touched.phoneNumber && errors.phoneNumber
+                      ? errors.phoneNumber
                       : " "
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">người</InputAdornment>
-                      ),
-                    },
-                  }}
                   sx={{
-                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                      {
-                        display: "none",
-                      },
-                    "& input[type=number]": {
-                      MozAppearance: "textfield",
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      color: COLOR.primary_black,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                      borderColor: COLOR.primary_black,
                     },
                   }}
                 />
@@ -569,7 +577,7 @@ const CreateMobilization = () => {
             <SectionDivider sectionName="Danh sách thuyền viên được điều động*: " />
             <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
               <Grid size={12}>
-                <EditableDataGrid name="mobilizedCrewMembers" />
+                <EditableDataGrid name="mobilizedCrewMembers" initialIsEditable={false} />
               </Grid>
             </Grid>
           </Box>

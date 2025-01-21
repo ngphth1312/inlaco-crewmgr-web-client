@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PageTitle,
   SectionDivider,
   InfoTextField,
   HorizontalImageInput,
-  EditableDataGrid,
+  NoValuesOverlay,
 } from "../components/global";
 import { NationalityTextField } from "../components/mobilization";
-import { FileUploadField } from "../components/contract";
 import {
   Box,
   Button,
   Typography,
+  CircularProgress,
   TextField,
-  InputAdornment,
 } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import SaveIcon from "@mui/icons-material/Save";
@@ -23,53 +23,89 @@ import { COLOR } from "../assets/Color";
 import Grid from "@mui/material/Grid2";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useLocation, useParams } from "react-router";
 import * as XLSX from "xlsx";
+import { useLocation, useParams } from "react-router";
 import { formatDate } from "../utils/ValueConverter";
+import {
+  getMobilizationByID_API,
+  editMobilizationAPI,
+} from "../services/mobilizationServices";
+import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import {
+  isoStringToMUIDateTime,
+  dateTimeStringToISOString,
+} from "../utils/ValueConverter";
 
 const MobilizationDetail = () => {
   const { id } = useParams();
   const location = useLocation();
-  // const isAdmin = location.state?.isAdmin;
-  const isAdmin = false;
+  const isAdmin = location.state?.isAdmin;
+  const position = location.state?.position;
+  // const isAdmin = true;
 
-  // useEffect(() => {
-  //   fetchMobilizationInfos(id);
-  // },[]);
+  const [mobilizationInfos, setMobilizationInfos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [crewMembers, setCrewMembers] = useState([]);
+
+  const fetchMobilizationInfos = async (id) => {
+    setLoading(true);
+    try {
+      const response = await getMobilizationByID_API(id);
+      if (response.status === HttpStatusCodes.OK) {
+        setMobilizationInfos(response.data);
+        setCrewMembers(response.data.crewMembers);
+      }
+    } catch (err) {
+      console.log("Error when fetching mobilization info: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMobilizationInfos(id);
+  }, []);
 
   const initialValues = {
-    compName: "",
-    numOfMobilizedCrew: "",
+    compName: mobilizationInfos?.partnerName || "",
+    email: mobilizationInfos.partnerEmail || "",
+    phoneNumber: mobilizationInfos.partnerPhone || "",
+
     mobilizationInfo: {
-      timeOfDeparture: "",
-      departureLocation: "",
-      UN_LOCODE_DepartureLocation: "",
+      timeOfDeparture: mobilizationInfos?.startDate
+        ? isoStringToMUIDateTime(mobilizationInfos?.startDate)
+        : "",
+      departureLocation: mobilizationInfos?.departurePoint || "",
+      UN_LOCODE_DepartureLocation: mobilizationInfos?.departureUNLOCODE || "",
 
-      estimatedTimeOfArrival: "",
-      arrivalLocation: "",
-      UN_LOCODE_ArrivalLocation: "",
+      estimatedTimeOfArrival: mobilizationInfos?.startDate
+        ? isoStringToMUIDateTime(mobilizationInfos?.estimatedEndDate)
+        : "",
+      arrivalLocation: mobilizationInfos?.arrivalPoint || "",
+      UN_LOCODE_ArrivalLocation: mobilizationInfos?.arrivalUNLOCODE || "",
 
-      shipImage: "",
-      shipIMO: "",
-      shipName: "",
-      shipNationality: "",
-      shipType: "",
+      shipImage: mobilizationInfos?.shipInfo?.imageUrl?.url || "",
+      shipIMO: mobilizationInfos?.shipInfo?.imonumber || "",
+      shipName: mobilizationInfos?.shipInfo?.name || "",
+      shipNationality: mobilizationInfos?.shipInfo?.countryISO || "",
+      shipType: mobilizationInfos?.shipInfo?.shipType || "",
     },
 
-    mobilizedCrewMembers: [],
+    mobilizedCrewMembers: mobilizationInfos?.crewMembers || [],
   };
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const mobilizationSchema = yup.object().shape({
     compName: yup.string().required("Tên công ty không được để trống"),
-    numOfMobilizedCrew: yup
-      .number()
-      .min(1, "Tổng số nhân lực cần điều động không hợp lệ")
-      .required("Tổng số nhân lực cần điều động không được để trống"),
+    email: yup.string().required("Email không được để trống"),
+    phoneNumber: yup.string().required("Số điện thoại không được để trống"),
 
     mobilizationInfo: yup.object().shape({
       timeOfDeparture: yup
         .date()
-        .max(new Date(), "Thời gian khởi hành không hợp lệ")
+        .min(yesterday, "Thời gian khởi hành không hợp lệ")
         .required("Thời gian khởi hành dự kiến không được để trống")
         .test(
           "is-before-end-datetime",
@@ -106,6 +142,61 @@ const MobilizationDetail = () => {
     }),
   });
 
+  const columns = [
+    {
+      field: "cardId",
+      headerName: "Mã TV",
+      flex: 2,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "fullName",
+      headerName: "Họ tên",
+      flex: 3,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "birthDate",
+      headerName: "Ngày sinh",
+      type: "date",
+      flex: 2,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
+      valueGetter: (params) => {
+        return params ? new Date(params) : null;
+      },
+      valueFormatter: (params) => {
+        if (!params) return "Invalid date";
+        const date = new Date(params);
+        return `${date.getDate().toString().padStart(2, "0")}/${(
+          date.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, "0")}/${date.getFullYear()}`;
+      },
+    },
+    {
+      field: "phoneNumber",
+      headerName: "SĐT",
+      flex: 2,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "professionalPosition",
+      headerName: "Vị trí chuyên môn",
+      flex: 3,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
+    },
+  ]
   //   const [createMobilizationLoading, setCreateMobilizationLoading] =
   //     useState(false);
 
@@ -123,34 +214,57 @@ const MobilizationDetail = () => {
     // setCreateMobilizationLoading(true);
     try {
       //Calling API to create a new crew member
-      await new Promise((resolve) => setTimeout(resolve, 2000)); //Mock API call
+      const response = await editMobilizationAPI(id, {
+        partnerName: values.compName,
+        partnerEmail: values.email,
+        partnerPhone: values.phoneNumber,
+        startDate: dateTimeStringToISOString(
+          values.mobilizationInfo.timeOfDeparture
+        ),
+        departurePoint: values.mobilizationInfo.departureLocation,
+        departureUNLOCODE: values.mobilizationInfo.UN_LOCODE_DepartureLocation,
+        estimatedEndDate: dateTimeStringToISOString(
+          values.mobilizationInfo.estimatedTimeOfArrival
+        ),
+        arrivalPoint: values.mobilizationInfo.arrivalLocation,
+        arrivalUNLOCODE: values.mobilizationInfo.UN_LOCODE_ArrivalLocation,
+        shipInfo: {
+          // imageUrl: { url: values.mobilizationInfo.shipImage },
+          imonumber: values.mobilizationInfo.shipIMO,
+          name: values.mobilizationInfo.shipName,
+          countryISO: values.mobilizationInfo.shipNationality,
+          shipType: values.mobilizationInfo.shipType,
+        },
+        crewMembers: values.mobilizedCrewMembers,
+      });
 
-      console.log("Successfully saving update: ", values);
-      setIsEditable(false);
+      if (response.status === HttpStatusCodes.OK) {
+        setIsEditable(false);
+      }
     } catch (err) {
       console.log("Error when saving editing mobilization: ", err);
     } finally {
-      //   setCreateMobilizationLoading(false);
+      // setCreateMobilizationLoading(false);
     }
   };
 
   const handleDownloadExcel = (values) => {
     // Define the headers in Vietnamese
     const columnHeaders = [
-      { header: "Mã thuyền viên", key: "crewID" },
+      { header: "Mã thuyền viên", key: "cardId" },
       { header: "Họ và tên", key: "fullName" },
-      { header: "Ngày sinh", key: "dob" },
+      { header: "Ngày sinh", key: "birthDate" },
       { header: "Số điện thoại", key: "phoneNumber" },
-      { header: "Chức vụ", key: "positionName" },
+      { header: "Chức vụ", key: "professionalPosition" },
     ];
 
     // Map the data to include only the keys defined in headers
     const crewMembers = values.mobilizedCrewMembers.map((member) => ({
-      crewID: member.crewID,
+      cardId: member.cardId,
       fullName: member.fullName,
-      dob: formatDate(member.dob),
+      birthDate: formatDate(member.birthDate),
       phoneNumber: member.phoneNumber,
-      positionName: member.positionName,
+      professionalPosition: member.professionalPosition,
     }));
 
     // Create an array with the headers and data
@@ -171,6 +285,20 @@ const MobilizationDetail = () => {
     console.log("Download excel file successfully");
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -363,52 +491,103 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
-              {isAdmin && (
-                <Grid size={4}>
-                  <InfoTextField
-                    id="num-of-crew-member"
-                    type="number"
-                    label="Tổng số nhân lực cần điều động"
-                    size="small"
-                    margin="none"
-                    disabled={!isEditable}
-                    required
-                    fullWidth
-                    name="numOfMobilizedCrew"
-                    value={values.numOfMobilizedCrew}
-                    error={
-                      !!touched.numOfMobilizedCrew &&
-                      !!errors.numOfMobilizedCrew
-                    }
-                    helperText={
-                      touched.numOfMobilizedCrew && errors.numOfMobilizedCrew
-                        ? errors.numOfMobilizedCrew
-                        : " "
-                    }
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    slotProps={{
-                      input: {
-                        endAdornment: (
-                          <InputAdornment position="end">người</InputAdornment>
-                        ),
-                      },
-                    }}
-                  />
-                </Grid>
-              )}
+              <Grid size={4}>
+                <InfoTextField
+                  id="comp-email"
+                  label="Email công ty"
+                  size="small"
+                  margin="none"
+                  disabled={!isEditable}
+                  required
+                  fullWidth
+                  name="email"
+                  value={values.email}
+                  error={!!touched.email && !!errors.email}
+                  helperText={
+                    touched.email && errors.email ? errors.email : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
+              <Grid size={3}>
+                <InfoTextField
+                  id="comp-phoneNumber"
+                  label="SĐT Công ty"
+                  size="small"
+                  margin="none"
+                  disabled={!isEditable}
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  value={values.phoneNumber}
+                  error={!!touched.phoneNumber && !!errors.phoneNumber}
+                  helperText={
+                    touched.phoneNumber && errors.phoneNumber
+                      ? errors.phoneNumber
+                      : " "
+                  }
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Grid>
             </Grid>
             <SectionDivider sectionName="Thông tin điều động*: " />
+            {position && (
+              <>
+                <Typography
+                  sx={{
+                    ml: 2,
+                    fontSize: 18,
+                    textDecoration: "underline",
+                    fontStyle: "italic",
+                    color: COLOR.primary_black_placeholder,
+                  }}
+                >
+                  Công việc:
+                </Typography>
+                <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
+                  <Grid size={4}>
+                    <TextField
+                      id="position"
+                      label="Vị trí chuyên môn trên tàu"
+                      required
+                      size="small"
+                      margin="none"
+                      fullWidth
+                      value={position}
+                      disabled={true}
+                      sx={[
+                        { backgroundColor: "#FFF", marginBottom: 1 },
+                        {
+                          "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: COLOR.primary_black,
+                          },
+                          "& .MuiOutlinedInput-root.Mui-disabled": {
+                            WebkitTextFillColor: COLOR.primary_black,
+                          },
+                          "& .MuiInputLabel-root.Mui-disabled": {
+                            WebkitTextFillColor: COLOR.primary_black,
+                          },
+                        },
+                      ]} // Merging styles with spread operator
+                      slotProps={{
+                        formHelperText: {
+                          sx: {
+                            margin: 0,
+                            paddingRight: 1,
+                            paddingLeft: 1,
+                            backgroundColor: COLOR.primary_white,
+                          },
+                        },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            )}
             <Typography
               sx={{
                 ml: 2,
@@ -416,6 +595,7 @@ const MobilizationDetail = () => {
                 textDecoration: "underline",
                 fontStyle: "italic",
                 color: COLOR.primary_black_placeholder,
+                marginTop: 4,
               }}
             >
               Lịch trình dự kiến:
@@ -445,14 +625,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -483,14 +655,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -516,14 +680,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -550,14 +706,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -588,14 +736,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={6}>
@@ -621,14 +761,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
             </Grid>
@@ -639,6 +771,7 @@ const MobilizationDetail = () => {
                 textDecoration: "underline",
                 fontStyle: "italic",
                 color: COLOR.primary_black_placeholder,
+                marginTop: 4,
               }}
             >
               Thông tin Tàu:
@@ -682,14 +815,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -714,14 +839,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={2}>
@@ -746,14 +863,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
               <Grid size={4}>
@@ -778,14 +887,6 @@ const MobilizationDetail = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      color: COLOR.primary_black,
-                    },
-                    "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
-                      borderColor: COLOR.primary_black,
-                    },
-                  }}
                 />
               </Grid>
             </Grid>
@@ -829,11 +930,51 @@ const MobilizationDetail = () => {
                 )}
                 <Grid container spacing={2} mx={2} rowSpacing={1} pt={2}>
                   <Grid size={12}>
-                    <EditableDataGrid
-                      name="mobilizedCrewMembers"
-                      initialIsEditable={false} //this must be set to false and when working with the disabled prop below to achieve the desired behavior
-                      disabled={!isEditable}
-                    />
+                    <Box
+                      sx={[
+                        {
+                          width: "100%",
+                          "& .actions": {
+                            color: COLOR.primary_black_placeholder,
+                          },
+                          "& .MuiDataGrid-columnHeader": {
+                            backgroundColor: COLOR.secondary_blue,
+                            color: COLOR.primary_white,
+                          },
+                          "& .MuiTablePagination-root": {
+                            backgroundColor: COLOR.secondary_blue,
+                            color: COLOR.primary_white,
+                          },
+                        },
+                      ]}
+                    >
+                      <DataGrid
+                        rows={crewMembers}
+                        columns={columns}
+                        disableColumnMenu
+                        disableRowSelectionOnClick
+                        pageSizeOptions={[5, 10, { value: -1, label: "All" }]}
+                        slots={{ noRowsOverlay: NoValuesOverlay }}
+                        slotProps={{
+                          noRowsOverlay: {
+                            text: "CHƯA CÓ THUYỀN VIÊN NÀO ĐƯỢC THÊM",
+                          },
+                        }}
+                        initialState={{
+                          pagination: {
+                            paginationModel: { pageSize: 5, page: 0 },
+                          },
+                        }}
+                        sx={{
+                          backgroundColor: "#FFF",
+                          headerAlign: "center",
+                          "& .MuiDataGrid-columnHeaderTitle": {
+                            fontSize: 16,
+                            fontWeight: 700,
+                          },
+                        }}
+                      />
+                    </Box>
                   </Grid>
                 </Grid>
               </>

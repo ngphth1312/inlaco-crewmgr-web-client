@@ -408,6 +408,7 @@ const CrewContractDetail = () => {
 
         // Set dynamic values for placeholders
         doc.setData({
+          title: values.title,
           compName: values.partyA.compName,
           compAddress: values.partyA.compAddress,
           compPhoneNumber: values.partyA.compPhoneNumber,

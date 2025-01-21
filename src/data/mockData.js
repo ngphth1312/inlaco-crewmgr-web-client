@@ -555,18 +555,18 @@ export const mockTemplateContracts = [
     type: "Hợp đồng cung ứng",
     image: require("../assets/images/preview-template-hop-dong-cung-ung-thuyen-vien.png"),
   },
-  {
-    id: "TCT-003",
-    title: "Mẫu Phụ lục Hợp đồng lao động",
-    type: "Phụ lục hợp đồng",
-    image: "",
-  },
-  {
-    id: "TCT-004",
-    title: "Mẫu Phụ lục Hợp đồng cung ứng lao động",
-    type: "Phụ lục hợp đồng",
-    image: "",
-  },
+  // {
+  //   id: "TCT-003",
+  //   title: "Mẫu Phụ lục Hợp đồng lao động",
+  //   type: "Phụ lục hợp đồng",
+  //   image: "",
+  // },
+  // {
+  //   id: "TCT-004",
+  //   title: "Mẫu Phụ lục Hợp đồng cung ứng lao động",
+  //   type: "Phụ lục hợp đồng",
+  //   image: "",
+  // },
 ];
 
 export const mockCourses = [

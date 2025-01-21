@@ -14,7 +14,7 @@ import {
 // import { mockCrewMemberInfos } from "../../data/mockData";
 import { COLOR } from "../../assets/Color";
 import { NoValuesOverlay } from "../global";
-import { useFormikContext } from "formik";
+import { useFormikContext, useField } from "formik";
 
 // Use to replace the "position.name" field with "positionName" field
 // function replacePositionName(arr) {
@@ -45,7 +45,8 @@ const EditableDataGrid = ({
   const [isEditable, setIsEditable] = useState(initialIsEditable);
 
   const { setFieldValue } = useFormikContext();
-  // const [field, meta] = useField(name);
+  const [field, meta] = useField(name);
+  console.log("Field: ", field)
 
   const handleEditButtonClick = () => {
     setIsEditable(true);
@@ -63,18 +64,18 @@ const EditableDataGrid = ({
       ...oldRows,
       {
         id,
-        crewID: "",
-        fullName: "",
-        dob: "",
-        phoneNumber: "",
-        positionName: "",
+        cardId: "",
+        // fullName: "",
+        // birthDate: "",
+        // phoneNumber: "",
+        // professionalPosition: "",
         isNew: true,
       },
     ]);
 
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "crewID" },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "cardId" },
     }));
   };
 
@@ -109,12 +110,12 @@ const EditableDataGrid = ({
   };
 
   const processRowUpdate = (newRow) => {
-    if (newRow.dob) {
-      const date = new Date(newRow.dob);
-      newRow.dob = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-      ).toISOString(); // Convert to ISOString and format as YYYY-MM-DD
-    }
+    // if (newRow.birthDate) {
+    //   const date = new Date(newRow.birthDate);
+    //   newRow.birthDate = new Date(
+    //     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    //   ).toISOString(); // Convert to ISOString and format as YYYY-MM-DD
+    // }
 
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
@@ -133,63 +134,63 @@ const EditableDataGrid = ({
 
   const columns = [
     {
-      field: "crewID",
+      field: "cardId",
       headerName: "Mã TV",
       flex: 2,
       editable: isEditable,
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "fullName",
-      headerName: "Họ tên",
-      flex: 3,
-      editable: isEditable,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "dob",
-      headerName: "Ngày sinh",
-      type: "date",
-      flex: 2,
-      editable: isEditable,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: (params) => {
-        return params ? new Date(params) : null;
-      },
-      valueFormatter: (params) => {
-        if (!params) return "Invalid date";
-        const date = new Date(params);
-        return `${date.getDate().toString().padStart(2, "0")}/${(
-          date.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, "0")}/${date.getFullYear()}`;
-      },
-    },
-    {
-      field: "phoneNumber",
-      headerName: "SĐT",
-      flex: 2,
-      editable: isEditable,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "positionName",
-      headerName: "Vị trí chuyên môn",
-      flex: 3,
-      editable: isEditable,
-      align: "center",
-      headerAlign: "center",
-    },
+    // {
+    //   field: "fullName",
+    //   headerName: "Họ tên",
+    //   flex: 3,
+    //   editable: isEditable,
+    //   align: "center",
+    //   headerAlign: "center",
+    // },
+    // {
+    //   field: "birthDate",
+    //   headerName: "Ngày sinh",
+    //   type: "date",
+    //   flex: 2,
+    //   editable: isEditable,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   valueGetter: (params) => {
+    //     return params ? new Date(params) : null;
+    //   },
+    //   valueFormatter: (params) => {
+    //     if (!params) return "Invalid date";
+    //     const date = new Date(params);
+    //     return `${date.getDate().toString().padStart(2, "0")}/${(
+    //       date.getMonth() + 1
+    //     )
+    //       .toString()
+    //       .padStart(2, "0")}/${date.getFullYear()}`;
+    //   },
+    // },
+    // {
+    //   field: "phoneNumber",
+    //   headerName: "SĐT",
+    //   flex: 2,
+    //   editable: isEditable,
+    //   align: "center",
+    //   headerAlign: "center",
+    // },
+    // {
+    //   field: "professionalPosition",
+    //   headerName: "Vị trí chuyên môn",
+    //   flex: 3,
+    //   editable: isEditable,
+    //   align: "center",
+    //   headerAlign: "center",
+    // },
     {
       field: "actions",
       type: "actions",
       headerName: "Thao tác",
-      flex: 2,
+      flex: 0.75,
       align: "center",
       headerAlign: "center",
       cellClassName: "actions",

@@ -19,10 +19,9 @@ import { useNavigate } from "react-router";
 
 const CreateRecruitment = () => {
   const navigate = useNavigate();
-  const today = new Date(); // Get the current date
-  const tomorrow = new Date(today); // Create a copy of today's date
-  tomorrow.setDate(today.getDate() + 1); // Increment the day by 1
-  tomorrow.setHours(0, 0, 0, 0); // Set the time to 00:00:00.000
+
+  const yesterday = new Date(); // Create a copy of today's date
+  yesterday.setDate(yesterday.getDate() - 1); // Increment the day by 1
 
   const initialValues = {
     title: "",
@@ -44,30 +43,28 @@ const CreateRecruitment = () => {
       .min(1, "Mức lương không hợp lệ")
       .required("Mức lương không được để trống"),
 
-    // recruitmentStartDate: yup
-    //   .date()
-    //   .min(tomorrow, "Ngày mở đăng ký phải là ngày ở tương lai")
-    //   .required("Ngày mở đăng ký không được để trống")
-    //   .test(
-    //     "is-before-end-date",
-    //     "Ngày mở đăng ký phải trước ngày đóng đăng ký",
-    //     function (value) {
-    //       const { recruitmentEndDate } = this.parent; // Access sibling field recruitmentEndDate
-    //       return !recruitmentEndDate || value < recruitmentEndDate;
-    //     }
-    //   ),
+    recruitmentStartDate: yup
+      .date()
+      .min(yesterday, "Ngày mở đăng ký không hợp lệ")
+      .test(
+        "is-before-end-date",
+        "Ngày mở đăng ký phải trước ngày đóng đăng ký",
+        function (value) {
+          const { recruitmentEndDate } = this.parent; // Access sibling field recruitmentEndDate
+          return !recruitmentEndDate || value < recruitmentEndDate;
+        }
+      ),
 
-    // recruitmentEndDate: yup
-    //   .date()
-    //   .required("Ngày đóng đăng ký không được để trống")
-    //   .test(
-    //     "is-after-start-date",
-    //     "Ngày đóng đăng ký phải sau ngày bắt đầu mở đăng ký",
-    //     function (value) {
-    //       const { recruitmentStartDate } = this.parent; // Access sibling field recruitmentStartDate
-    //       return !recruitmentStartDate || value > recruitmentStartDate;
-    //     }
-    //   ),
+    recruitmentEndDate: yup
+      .date()
+      .test(
+        "is-after-start-date",
+        "Ngày đóng đăng ký phải sau ngày bắt đầu mở đăng ký",
+        function (value) {
+          const { recruitmentStartDate } = this.parent; // Access sibling field recruitmentStartDate
+          return !recruitmentStartDate || value > recruitmentStartDate;
+        }
+      ),
   });
 
   const [createCourseLoading, setCreateCourseLoading] = useState(false);
@@ -83,7 +80,7 @@ const CreateRecruitment = () => {
         // recruitmentStartDate: dateStringToISOString(
         //   values.recruitmentStartDate
         // ),
-        // recruitmentEndDate: dateStringToISOString(values.recruitmentEndDate),
+        recruitmentEndDate: dateStringToISOString(values.recruitmentEndDate),
         position: values.position,
         expectedSalary: [1000, values.salary], // Changed to double[2] which is the salary range
         workLocation: values.workLocation,

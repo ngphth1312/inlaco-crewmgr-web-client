@@ -192,7 +192,8 @@ const CreateCrewContract = () => {
           {
             partyName: values.partyB.fullName,
             address: values.partyB.permanentAddr,
-            type: "LABOR",
+            phone: "0865474654",
+            type: "DYNAMIC",
             customAttributes: [
               {
                 key: "dob",
@@ -263,9 +264,95 @@ const CreateCrewContract = () => {
         ],
       });
       await new Promise((resolve) => setTimeout(resolve, 200)); //Delay UI for 200ms
+      // const temp = {
+      //   title: values.title,
+      //   initiator: {
+      //     partyName: values.partyA.compName,
+      //     address: values.partyA.compAddress,
+      //     phone: values.partyA.compPhoneNumber,
+      //     representer: values.partyA.representative,
+      //     email: "thong2046@gmail.com",
+      //     type: "STATIC",
+      //   },
+      //   signedPartners: [
+      //     {
+      //       partyName: values.partyB.fullName,
+      //       address: values.partyB.permanentAddr,
+      //       type: "DYNAMIC",
+      //       customAttributes: [
+      //         {
+      //           key: "dob",
+      //           value: dateStringToISOString(values.partyB.dob),
+      //         },
+      //         {
+      //           key: "birthplace",
+      //           value: values.partyB.birthplace,
+      //         },
+      //         {
+      //           key: "nationality",
+      //           value: values.partyB.nationality,
+      //         },
+      //         {
+      //           key: "temporaryAddr",
+      //           value: values.partyB.temporaryAddr,
+      //         },
+      //         {
+      //           key: "ciNumber",
+      //           value: values.partyB.ciNumber,
+      //         },
+      //         {
+      //           key: "ciIssueDate",
+      //           value: dateStringToISOString(values.partyB.ciIssueDate),
+      //         },
+      //         {
+      //           key: "ciIssuePlace",
+      //           value: values.partyB.ciIssuePlace,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      //   activationDate: dateStringToISOString(values.jobInfo.startDate),
+      //   expiredDate: dateStringToISOString(values.jobInfo.endDate),
+      //   customAttributes: [
+      //     {
+      //       key: "workingLocation",
+      //       value: values.jobInfo.workingLocation,
+      //     },
+      //     {
+      //       key: "position",
+      //       value: values.jobInfo.position,
+      //     },
+      //     {
+      //       key: "jobDescription",
+      //       value: values.jobInfo.jobDescription,
+      //     },
+      //     {
+      //       key: "basicSalary",
+      //       value: values.salaryInfo.basicSalary,
+      //     },
+      //     {
+      //       key: "allowance",
+      //       value: values.salaryInfo.allowance,
+      //     },
+      //     {
+      //       key: "receiveMethod",
+      //       value: values.salaryInfo.receiveMethod,
+      //     },
+      //     {
+      //       key: "payday",
+      //       value: values.salaryInfo.payday,
+      //     },
+      //     {
+      //       key: "salaryReviewPeriod",
+      //       value: values.salaryInfo.salaryReviewPeriod,
+      //     },
+      //   ],
+      // };
+
+      
+      console.log("Response: ", values);
 
       if(response.status === HttpStatusCodes.CREATED){
-        console.log("Successfully created contract");
         resetForm();
         navigate("/crew-contracts");
       }

@@ -4,7 +4,7 @@ import MobilizationEndpoints from "../api/mobilizationEndpoints";
 export const getMyMobilizationAPI = async (cardID) => {
   try {
     const response = await privateRequest.get(
-      `${MobilizationEndpoints.CURRENT_MOBILIZATION}/cardID`
+      `${MobilizationEndpoints.CURRENT_MOBILIZATION}/${cardID}`
     );
     return response;
   } catch (err) {
@@ -23,10 +23,33 @@ export const getAllMobilizationsAPI = async (page, size, status) => {
   }
 };
 
+export const getMobilizationByID_API = async (mobilizationID) => {
+  try {
+    const response = await privateRequest.get(
+      `${MobilizationEndpoints.GENERAL}/${mobilizationID}`
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 export const createMobilizationAPI = async (mobilizationInfo) => {
   try {
     const response = await privateRequest.post(
       `${MobilizationEndpoints.GENERAL}`,
+      mobilizationInfo
+    );
+    return response;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+export const editMobilizationAPI = async (mobilizationID, mobilizationInfo) => {
+  try {
+    const response = await privateRequest.patch(
+      `${MobilizationEndpoints.GENERAL}/${mobilizationID}`,
       mobilizationInfo
     );
     return response;

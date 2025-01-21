@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { PageTitle, NoValuesOverlay, } from "../components/global";
+import { PageTitle, NoValuesOverlay } from "../components/global";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { masterAssignmentSchedule } from "../data/mockData";
 import { ShipInfoCell, ScheduleCell } from "../components/mobilization";
 import { COLOR } from "../assets/Color";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { useNavigate } from "react-router";
-import { getMyMobilizationAPI } from "../services/mobilizationServices";
+import { getAllMobilizationsAPI } from "../services/mobilizationServices";
 import HttpStatusCodes from "../assets/constants/httpStatusCodes";
+import { formatDateTime } from "../utils/ValueConverter";
 
 const CrewMobilization = () => {
   const navigate = useNavigate();
@@ -18,43 +18,90 @@ const CrewMobilization = () => {
   const [mobilizations, setMobilizations] = useState([]);
 
   useEffect(() => {
-    
-  }, [])
+    setLoading(true);
+    const fetchMobilizations = async () => {
+      try {
+        const response = await getAllMobilizationsAPI(0, 10, "");
+        await new Promise((resolve) => setTimeout(resolve, 200)); // delay UI for 200ms
 
-  const onMemberDetailClick = (id) => {
+        if (response.status === HttpStatusCodes.OK) {
+          console.log(response.data.content);
+          const mobilizations = response.data.content;
+
+          const formattedMobilizations = mobilizations.map((mobilization) => ({
+            id: mobilization.id,
+            partnerInfo: {
+              partnerName: mobilization.partnerName,
+              email: mobilization.partnerEmail,
+              phoneNumber: mobilization.partnerPhone,
+            },
+            shipInfo: {
+              IMONumber: mobilization.shipInfo.imonumber,
+              name: mobilization.shipInfo.name,
+              countryCode: mobilization.shipInfo.countryISO,
+              type: mobilization.shipInfo.shipType,
+              // imageUrl: mobilization.shipInfo.imageUrl,
+            },
+            scheduleInfo: {
+              startLocation: mobilization.departurePoint,
+              startDate: mobilization.startDate,
+              endLocation: mobilization.arrivalPoint,
+              estimatedEndTime: mobilization.estimatedEndDate,
+            },
+          }));
+
+          setMobilizations(formattedMobilizations);
+        }
+      } catch (err) {
+        console.log("Error when fetching mobilization: ", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMobilizations();
+  }, []);
+
+  const onMobilizationDetailClick = (id) => {
     navigate(`/mobilizations/${id}`, { state: { isAdmin: true } });
   };
 
   const columns = [
     {
-      field: "id",
-      headerName: "Mã ĐĐ",
-      sortable: false,
-      flex: 0.75,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: "partnerName",
-      headerName: "Tên công ty",
+      field: "partnerInfo",
+      headerName: "Thông tin Công ty",
       sortable: false,
       flex: 2,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-          {params.value}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
+          <p style={{ margin: 0, textAlign: "left" }}>
+            <strong>Tên: </strong>
+            {params.value?.partnerName}
+          </p>
+          <p style={{ margin: 0, textAlign: "left" }}>
+            <strong>Email: </strong>
+            {params.value?.email}
+          </p>
+          <p style={{ margin: 0, textAlign: "left" }}>
+            <strong>SĐT: </strong>
+            {params.value?.phoneNumber}
+          </p>
         </div>
       ),
     },
     {
       field: "shipInfo",
-      headerName: "Thông tin tàu",
+      headerName: "Thông tin Tàu",
       sortable: false,
       flex: 3,
       headerAlign: "center",
@@ -71,19 +118,19 @@ const CrewMobilization = () => {
       },
     },
     {
-      field: "schedule",
+      field: "scheduleInfo",
       headerName: "Lịch trình",
       sortable: false,
-      flex: 2,
+      flex: 2.5,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
         return (
           <ScheduleCell
-            startLocation={params?.row?.startLocation}
-            startDate={params?.row?.startDate}
-            endLocation={params?.row?.endLocation}
-            estimatedEndTime={params?.row?.estimatedEndTime}
+            startLocation={params?.value?.startLocation}
+            startDate={formatDateTime(params?.value?.startDate)}
+            endLocation={params?.value?.endLocation}
+            estimatedEndTime={formatDateTime(params?.value?.estimatedEndTime)}
           />
         );
       },
@@ -108,7 +155,7 @@ const CrewMobilization = () => {
             <Button
               variant="contained"
               size="small"
-              onClick={() => onMemberDetailClick(params?.id)}
+              onClick={() => onMobilizationDetailClick(params?.id)}
               sx={{
                 backgroundColor: COLOR.primary_green,
                 color: COLOR.primary_black,
@@ -136,6 +183,21 @@ const CrewMobilization = () => {
   // const handleTabChange = (newValue) => {
   //   setTabValue(newValue);
   // };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -284,7 +346,7 @@ const CrewMobilization = () => {
             disableColumnMenu
             disableColumnResize
             getRowHeight={() => "auto"}
-            rows={masterAssignmentSchedule}
+            rows={mobilizations}
             columns={columns}
             slots={{ noRowsOverlay: NoValuesOverlay }}
             pageSizeOptions={[5, 10, { value: -1, label: "All" }]}

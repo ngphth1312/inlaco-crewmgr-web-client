@@ -205,7 +205,7 @@ const SupplyRequest = () => {
           </div>
         );
       },
-  },
+    },
   ];
 
   if (loading) {
